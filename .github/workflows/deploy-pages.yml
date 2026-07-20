@@ -29,19 +29,19 @@ jobs:
           cache: npm
 
       - name: Install dependencies
+        id: install
+        run: npm ci
+        continue-on-error: true
+
+      - name: Report install failure
+        if: steps.install.outcome == 'failure'
         run: |
-          set +e
-          npm ci > npm-install.log 2>&1
-          code=$?
-          cat npm-install.log
-          if [ $code -ne 0 ]; then
-            python3 -c "
-data = open('npm-install.log').read()[-3000:]
-data = data.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
-print('::error::' + data)
-"
-            exit $code
-          fi
+          echo "Re-running npm ci verbosely to capture the real error as annotations:"
+          npm ci --loglevel verbose > npm-install-verbose.log 2>&1 || true
+          tail -n 60 npm-install-verbose.log | while IFS= read -r line; do
+            echo "::error::${line}"
+          done
+          exit 1
 
       - name: Lint
         run: npm run lint
