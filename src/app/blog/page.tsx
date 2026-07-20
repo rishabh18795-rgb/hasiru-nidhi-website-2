@@ -6,12 +6,13 @@ import { PageHero } from "@/components/site/page-hero";
 import { StaggerGroup, StaggerItem } from "@/components/site/reveal";
 import { CtaBand } from "@/components/site/cta-band";
 import { blogPosts, images } from "@/lib/content";
+import { basePath } from "@/lib/base-path";
 
 export const metadata: Metadata = {
   title: "The Journal",
   description:
     "Notes on gardening, cycling, corporate retreats and slow living from the Hasiru Nidhi team.",
-  alternates: { canonical: "/blog" },
+  alternates: { canonical: `${basePath}/blog/` },
 };
 
 export default function BlogIndexPage() {

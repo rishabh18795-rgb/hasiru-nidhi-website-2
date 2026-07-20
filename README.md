@@ -14,7 +14,8 @@ Motion.
 - **Styling:** Tailwind CSS v4, custom design tokens (forest / olive / earth / sand palette)
 - **UI Primitives:** shadcn/ui on Base UI
 - **Motion:** Framer Motion (scroll reveals, parallax hero)
-- **Forms:** React Hook Form + Zod, submitted via a Next.js Server Action
+- **Forms:** React Hook Form + Zod, submitted client-side (see Deployment —
+  this is a static export, so there is no server to run a Server Action)
 - **Icons:** Lucide React
 - **Fonts:** Fraunces (display/serif) + Manrope (body), via `next/font`
 
@@ -58,9 +59,13 @@ src/
                           blog posts — the single source of truth for content
     site.ts               Site config, nav links, contact details
     fonts.ts               next/font definitions
+    base-path.ts          GitHub Pages basePath/site URL (see Deployment)
     enquiry-schema.ts   Shared Zod schema for the contact form
 public/
   brand/logo-mark.png   Official Hasiru Nidhi logo (client-supplied)
+  .nojekyll              Required for GitHub Pages (see Deployment)
+.github/workflows/
+  deploy-pages.yml       Build + deploy to GitHub Pages on push to main
 ```
 
 ## Content & Design Notes
@@ -77,10 +82,11 @@ public/
 - **Contact details, address, and pricing** (`src/lib/site.ts`,
   `src/lib/content.ts`) are realistic placeholders and must be confirmed
   against the real business before going live.
-- **Contact form** validates and logs enquiries server-side
-  (`src/app/contact/actions.ts`) but is not yet wired to an email/CRM
-  provider — connect a transactional email service (e.g. Resend, Postmark)
-  or CRM webhook before launch.
+- **Contact form** validates in the browser and logs the enquiry to the
+  console (`src/app/contact/actions.ts`) but is not yet wired to an
+  email/CRM provider — connect a transactional email service (e.g. Resend,
+  Postmark) or a form backend (e.g. Formspree) before launch. It runs
+  entirely client-side because this is a static export with no backend.
 - **Design system**: colour tokens (`forest`, `olive`, `earth`, `sand`,
   `cream`) and typography scale live in `src/app/globals.css` under the
   `@theme` block.
@@ -94,18 +100,64 @@ public/
 - JSON-LD structured data: `TouristAttraction` (site-wide), `FAQPage`
   (`/faq`), `BlogPosting` (each journal post)
 
-Update `siteConfig.url` in `src/lib/site.ts` to the real production domain
-before deploying.
+`siteConfig.url` (`src/lib/site.ts`) currently points at the GitHub Pages URL
+via `src/lib/base-path.ts`. **Once a custom domain is live, update
+`src/lib/base-path.ts` and remove the `basePath`/`assetPrefix` config in
+`next.config.ts`** (see below) rather than editing `siteConfig.url` alone.
 
-## Deployment
+## Deployment — GitHub Pages (current)
 
-The app builds to standard Next.js output and deploys cleanly to Vercel or
-any Node-compatible host:
+This repo is statically exported (`output: "export"` in `next.config.ts`)
+and deployed to **GitHub Pages** by
+[`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml)
+on every push to `main`: it installs, lints, typechecks, builds, and
+publishes the `out/` folder via `actions/upload-pages-artifact` +
+`actions/deploy-pages`.
 
-```bash
-npm run build
-npm run start
-```
+**Live URL:** https://rishabh18795-rgb.github.io/hasiru-nidhi-website-2/
+
+### One-time repo setting (required, cannot be done via git push)
+
+GitHub Pages must be configured to build from **GitHub Actions**, not the
+default "Deploy from a branch":
+
+> Repo → **Settings → Pages → Build and deployment → Source** → select
+> **"GitHub Actions"**.
+
+If this is still set to "Deploy from a branch", the deploy job in the
+workflow will fail even though the build succeeds — this is exactly what
+caused the README to render in place of the site.
+
+### Why the config looks the way it does
+
+Because this is a **project page** (`username.github.io/repo-name/`, no
+custom domain), every internal reference needs the repo name as a prefix:
+
+- `next.config.ts` sets `basePath`/`assetPrefix` to `/hasiru-nidhi-website-2`
+  in production only, plus `trailingSlash: true` (GitHub Pages has no
+  server to redirect `/about` → `/about/`, so routes must be exported as
+  `/about/index.html` and linked with the trailing slash) and
+  `images.unoptimized: true` (no image-optimization server on static
+  hosting).
+- `src/lib/base-path.ts` exports that same prefix for the handful of things
+  Next.js does **not** auto-prefix: `next/image` `src`, `metadata.icons`,
+  and OG/canonical URLs. (`next/link` and `next/router` *are* auto-prefixed.)
+- Server Actions are unsupported by static export, so the contact form
+  (`src/app/contact/actions.ts`) is a plain client-callable function, not
+  a `"use server"` action.
+- `public/.nojekyll` is required — GitHub Pages runs Jekyll by default,
+  which silently deletes any folder starting with `_`, including Next's
+  `_next` asset folder. Its presence in `public/` means static export
+  copies it straight into `out/`.
+
+### Deploying elsewhere later (Vercel, etc.)
+
+Static export is a constraint specific to GitHub Pages. If you move to
+Vercel or another Node-capable host, you get back Server Actions and
+`next/image` optimization by reverting `next.config.ts` to a normal
+config (drop `output`, `basePath`, `assetPrefix`, `trailingSlash`,
+`images.unoptimized`) and restoring `"use server"` in
+`src/app/contact/actions.ts`.
 
 ## Not Yet Wired Up (by design)
 

@@ -7,12 +7,13 @@ import { SectionHeading } from "@/components/site/section-heading";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/site/reveal";
 import { CtaBand } from "@/components/site/cta-band";
 import { images } from "@/lib/content";
+import { basePath } from "@/lib/base-path";
 
 export const metadata: Metadata = {
   title: "Cycling",
   description:
     "Guided cycling trails through working farmland at Hasiru Nidhi, near Bengaluru — paced for scenery, not speed.",
-  alternates: { canonical: "/cycling" },
+  alternates: { canonical: `${basePath}/cycling/` },
 };
 
 const stats = [

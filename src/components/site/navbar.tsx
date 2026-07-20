@@ -9,6 +9,7 @@ import { ChevronDown, Menu } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { navLinks, siteConfig } from "@/lib/site";
+import { basePath } from "@/lib/base-path";
 import { Button } from "@/components/ui/button";
 import { LinkButton } from "@/components/site/link-button";
 import {
@@ -46,7 +47,7 @@ export function Navbar() {
       <nav className="container-nidhi flex h-20 items-center justify-between">
         <Link href="/" className="flex items-center gap-3" aria-label="Hasiru Nidhi home">
           <Image
-            src="/brand/logo-mark.png"
+            src={`${basePath}/brand/logo-mark.png`}
             alt=""
             width={40}
             height={40}

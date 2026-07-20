@@ -11,12 +11,13 @@ import {
 } from "@/components/ui/accordion";
 import { faqs, images } from "@/lib/content";
 import { siteConfig } from "@/lib/site";
+import { basePath } from "@/lib/base-path";
 
 export const metadata: Metadata = {
   title: "FAQ",
   description:
     "Answers to common questions about visiting Hasiru Nidhi — location, bookings, food, pets and more.",
-  alternates: { canonical: "/faq" },
+  alternates: { canonical: `${basePath}/faq/` },
 };
 
 export default function FaqPage() {

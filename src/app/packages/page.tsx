@@ -8,12 +8,13 @@ import { LinkButton } from "@/components/site/link-button";
 import { CtaBand } from "@/components/site/cta-band";
 import { packages, images } from "@/lib/content";
 import { cn } from "@/lib/utils";
+import { basePath } from "@/lib/base-path";
 
 export const metadata: Metadata = {
   title: "Packages",
   description:
     "Day escapes, farmhouse overnights, weekend retreats and corporate offsites at Hasiru Nidhi — nature experience packages near Bengaluru.",
-  alternates: { canonical: "/packages" },
+  alternates: { canonical: `${basePath}/packages/` },
 };
 
 export default function PackagesPage() {

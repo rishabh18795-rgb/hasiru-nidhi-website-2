@@ -6,12 +6,13 @@ import { Reveal } from "@/components/site/reveal";
 import { ContactForm } from "@/components/site/contact-form";
 import { images } from "@/lib/content";
 import { siteConfig } from "@/lib/site";
+import { basePath } from "@/lib/base-path";
 
 export const metadata: Metadata = {
   title: "Contact",
   description:
     "Get in touch with Hasiru Nidhi to plan your visit — day escapes, farmhouse stays, weekend retreats and corporate offsites near Bengaluru.",
-  alternates: { canonical: "/contact" },
+  alternates: { canonical: `${basePath}/contact/` },
 };
 
 const mapQuery = encodeURIComponent(

@@ -20,11 +20,12 @@ import {
   blogPosts,
 } from "@/lib/content";
 import { siteConfig } from "@/lib/site";
+import { basePath } from "@/lib/base-path";
 
 export const metadata: Metadata = {
   title: `${siteConfig.name} — ${siteConfig.tagline}`,
   description: siteConfig.description,
-  alternates: { canonical: "/" },
+  alternates: { canonical: `${basePath}/` },
 };
 
 export default function HomePage() {

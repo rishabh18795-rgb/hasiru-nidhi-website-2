@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 
 import { siteConfig } from "@/lib/site";
+import { basePath } from "@/lib/base-path";
 
 export const metadata: Metadata = {
   title: "Terms & Conditions",
   description: `Terms and conditions for bookings and use of the ${siteConfig.name} website.`,
-  alternates: { canonical: "/terms" },
+  alternates: { canonical: `${basePath}/terms/` },
   robots: { index: false, follow: true },
 };
 

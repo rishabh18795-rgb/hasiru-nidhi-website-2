@@ -1,11 +1,14 @@
+import { siteUrl } from "@/lib/base-path";
+
 export const siteConfig = {
   name: "Hasiru Nidhi",
   legalName: "Hasiru Nidhi Horizons Private Limited",
   tagline: "Cultivating Nature, Creating Memories",
   description:
     "A nature experience retreat in the hills off Kanakapura Road, Bengaluru — cycling trails, working gardens, farmhouse stays, and slow, unhurried days spent outdoors.",
-  url: "https://www.hasirunidhi.com",
-  ogImage: "/og/hasiru-nidhi-cover.jpg",
+  // Deployed on GitHub Pages (no custom domain yet). Switch this to the
+  // real domain (and drop the basePath machinery) once one is set up.
+  url: siteUrl,
   locale: "en_IN",
   keywords: [
     "nature resort Bengaluru",

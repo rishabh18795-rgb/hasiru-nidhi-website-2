@@ -7,12 +7,13 @@ import { ExperienceCard } from "@/components/site/experience-card";
 import { PillarCard } from "@/components/site/pillar-card";
 import { CtaBand } from "@/components/site/cta-band";
 import { experiences, images, pillars } from "@/lib/content";
+import { basePath } from "@/lib/base-path";
 
 export const metadata: Metadata = {
   title: "Experiences",
   description:
     "Nine ways to spend a day at Hasiru Nidhi — from cycling and gardening to bonfire evenings and village walks, near Bengaluru.",
-  alternates: { canonical: "/experiences" },
+  alternates: { canonical: `${basePath}/experiences/` },
 };
 
 export default function ExperiencesPage() {

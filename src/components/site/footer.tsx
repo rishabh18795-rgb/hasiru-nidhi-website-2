@@ -3,6 +3,7 @@ import Image from "next/image";
 import { MapPin, Mail, Phone } from "lucide-react";
 
 import { footerLinks, siteConfig } from "@/lib/site";
+import { basePath } from "@/lib/base-path";
 import { InstagramIcon, FacebookIcon, YoutubeIcon } from "@/components/site/social-icons";
 
 export function Footer() {
@@ -12,7 +13,7 @@ export function Footer() {
         <div>
           <Link href="/" className="flex items-center gap-3">
             <Image
-              src="/brand/logo-mark.png"
+              src={`${basePath}/brand/logo-mark.png`}
               alt=""
               width={44}
               height={44}

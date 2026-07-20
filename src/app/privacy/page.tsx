@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 
 import { siteConfig } from "@/lib/site";
+import { basePath } from "@/lib/base-path";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description: `How ${siteConfig.legalName} collects, uses and protects your information.`,
-  alternates: { canonical: "/privacy" },
+  alternates: { canonical: `${basePath}/privacy/` },
   robots: { index: false, follow: true },
 };
 

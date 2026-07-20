@@ -7,12 +7,13 @@ import { SectionHeading } from "@/components/site/section-heading";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/site/reveal";
 import { CtaBand } from "@/components/site/cta-band";
 import { images } from "@/lib/content";
+import { basePath } from "@/lib/base-path";
 
 export const metadata: Metadata = {
   title: "Gardening Services",
   description:
     "Hands-in-the-soil gardening experiences at Hasiru Nidhi, plus a preview of our upcoming plant store and nursery near Bengaluru.",
-  alternates: { canonical: "/gardening" },
+  alternates: { canonical: `${basePath}/gardening/` },
 };
 
 const activities = [

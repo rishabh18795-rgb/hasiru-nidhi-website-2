@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { Check } from "lucide-react";
 
@@ -7,12 +8,13 @@ import { LinkButton } from "@/components/site/link-button";
 import { CtaBand } from "@/components/site/cta-band";
 import { pricingTiers, images } from "@/lib/content";
 import { cn } from "@/lib/utils";
+import { basePath } from "@/lib/base-path";
 
 export const metadata: Metadata = {
   title: "Pricing",
   description:
     "Transparent pricing for Hasiru Nidhi day visits, farmhouse overnights, weekend retreats and corporate offsites near Bengaluru.",
-  alternates: { canonical: "/pricing" },
+  alternates: { canonical: `${basePath}/pricing/` },
 };
 
 export default function PricingPage() {
@@ -81,9 +83,9 @@ export default function PricingPage() {
               under 6 stay and eat free; ages 6–12 are charged 50% of the
               adult rate. Group and corporate pricing is quoted separately —
               see our{" "}
-              <a href="/contact" className="underline underline-offset-2">
+              <Link href="/contact" className="underline underline-offset-2">
                 contact page
-              </a>{" "}
+              </Link>{" "}
               to enquire.
             </p>
           </Reveal>

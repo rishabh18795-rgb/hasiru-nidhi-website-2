@@ -5,12 +5,13 @@ import { PageHero } from "@/components/site/page-hero";
 import { Reveal } from "@/components/site/reveal";
 import { CtaBand } from "@/components/site/cta-band";
 import { images } from "@/lib/content";
+import { basePath } from "@/lib/base-path";
 
 export const metadata: Metadata = {
   title: "Gallery",
   description:
     "A visual tour of Hasiru Nidhi — farmhouse stays, cycling trails, gardens, bonfire evenings and the working landscape near Bengaluru.",
-  alternates: { canonical: "/gallery" },
+  alternates: { canonical: `${basePath}/gallery/` },
 };
 
 const galleryItems = [

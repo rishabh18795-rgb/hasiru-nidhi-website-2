@@ -7,12 +7,13 @@ import { SectionHeading } from "@/components/site/section-heading";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/site/reveal";
 import { CtaBand } from "@/components/site/cta-band";
 import { images } from "@/lib/content";
+import { basePath } from "@/lib/base-path";
 
 export const metadata: Metadata = {
   title: "Landscaping",
   description:
     "The land design philosophy behind Hasiru Nidhi's grounds, and a look ahead at our upcoming landscaping studio for private gardens near Bengaluru.",
-  alternates: { canonical: "/landscaping" },
+  alternates: { canonical: `${basePath}/landscaping/` },
 };
 
 const principles = [

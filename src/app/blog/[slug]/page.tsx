@@ -8,6 +8,7 @@ import { Reveal } from "@/components/site/reveal";
 import { CtaBand } from "@/components/site/cta-band";
 import { blogPosts } from "@/lib/content";
 import { siteConfig } from "@/lib/site";
+import { basePath } from "@/lib/base-path";
 
 type Params = Promise<{ slug: string }>;
 
@@ -23,14 +24,14 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   return {
     title: post.title,
     description: post.excerpt,
-    alternates: { canonical: `/blog/${post.slug}` },
+    alternates: { canonical: `${basePath}/blog/${post.slug}/` },
     openGraph: {
       type: "article",
       title: post.title,
       description: post.excerpt,
-      url: `${siteConfig.url}/blog/${post.slug}`,
+      url: `${siteConfig.url}/blog/${post.slug}/`,
       publishedTime: post.date,
-      images: [{ url: "/opengraph-image" }],
+      images: [{ url: `${siteConfig.url}/opengraph-image` }],
     },
   };
 }

@@ -9,12 +9,13 @@ import { StatRow } from "@/components/site/stat-row";
 import { CtaBand } from "@/components/site/cta-band";
 import { images, futureVentures } from "@/lib/content";
 import { siteConfig } from "@/lib/site";
+import { basePath } from "@/lib/base-path";
 
 export const metadata: Metadata = {
   title: "About Us",
   description:
     "The story behind Hasiru Nidhi — a working farm and nature experience retreat built around a simple idea: cultivate the land, and the memories follow.",
-  alternates: { canonical: "/about" },
+  alternates: { canonical: `${basePath}/about/` },
 };
 
 const ventureIcons = { Sprout, TreePine, Leaf };

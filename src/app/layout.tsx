@@ -2,12 +2,16 @@ import type { Metadata, Viewport } from "next";
 
 import { fraunces, manrope } from "@/lib/fonts";
 import { siteConfig } from "@/lib/site";
+import { basePath, siteOrigin } from "@/lib/base-path";
 import { Navbar } from "@/components/site/navbar";
 import { Footer } from "@/components/site/footer";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteConfig.url),
+  // Origin only (no repo sub-path) — combined with basePath-prefixed,
+  // leading-slash `alternates.canonical` values below, this resolves to
+  // the correct GitHub Pages URL. See src/lib/base-path.ts.
+  metadataBase: new URL(siteOrigin),
   title: {
     default: `${siteConfig.name} — ${siteConfig.tagline}`,
     template: `%s — ${siteConfig.name}`,
@@ -17,26 +21,26 @@ export const metadata: Metadata = {
   authors: [{ name: siteConfig.legalName }],
   creator: siteConfig.legalName,
   alternates: {
-    canonical: "/",
+    canonical: `${basePath}/`,
   },
   openGraph: {
     type: "website",
     locale: siteConfig.locale,
-    url: siteConfig.url,
+    url: `${siteConfig.url}/`,
     siteName: siteConfig.name,
     title: `${siteConfig.name} — ${siteConfig.tagline}`,
     description: siteConfig.description,
-    images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
+    images: [{ url: `${siteConfig.url}/opengraph-image`, width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: `${siteConfig.name} — ${siteConfig.tagline}`,
     description: siteConfig.description,
-    images: ["/opengraph-image"],
+    images: [`${siteConfig.url}/opengraph-image`],
   },
   icons: {
-    icon: "/brand/logo-mark.png",
-    apple: "/brand/logo-mark.png",
+    icon: `${basePath}/brand/logo-mark.png`,
+    apple: `${basePath}/brand/logo-mark.png`,
   },
   robots: {
     index: true,
