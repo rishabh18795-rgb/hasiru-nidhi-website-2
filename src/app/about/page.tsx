@@ -71,7 +71,7 @@ export default function AboutPage() {
           <Reveal className="relative aspect-[4/5] overflow-hidden rounded-[2.5rem]">
             <Image
               src={images.forestLightBeam}
-              alt="Morning light through the forest at Hasiru Nidhi"
+              alt="Wooded hills near Hasiru Nidhi at dusk, Western Ghats-facing countryside"
               fill
               sizes="(min-width: 1024px) 45vw, 90vw"
               className="object-cover"
@@ -113,7 +113,7 @@ export default function AboutPage() {
             <Reveal className="relative aspect-[3/4] overflow-hidden rounded-[2rem]">
               <Image
                 src={images.seedlingsPots}
-                alt="Seedlings ready for planting in the nursery beds"
+                alt="A hand planting a rice seedling in the paddy at Hasiru Nidhi"
                 fill
                 sizes="25vw"
                 className="object-cover"
@@ -122,7 +122,7 @@ export default function AboutPage() {
             <Reveal delay={0.12} className="relative mt-10 aspect-[3/4] overflow-hidden rounded-[2rem]">
               <Image
                 src={images.rosePathway}
-                alt="A pathway through the landscaped gardens"
+                alt="A natural path through the grounds at Hasiru Nidhi"
                 fill
                 sizes="25vw"
                 className="object-cover"

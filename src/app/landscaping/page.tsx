@@ -141,7 +141,7 @@ export default function LandscapingPage() {
           <Reveal className="relative mt-14 aspect-[21/9] overflow-hidden rounded-[2.5rem]">
             <Image
               src={images.rosePathway}
-              alt="A landscaped pathway through the Hasiru Nidhi gardens"
+              alt="A natural laterite-soil path through native planting at Hasiru Nidhi"
               fill
               sizes="100vw"
               className="object-cover"

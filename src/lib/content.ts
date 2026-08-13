@@ -10,52 +10,42 @@ function localImage(filename: string) {
 }
 
 export const images = {
-  heroSunriseFields: localImage("hero-sunrise-fields-bengaluru.jpg"),
-  forestPath: localImage("forest-path-karnataka.jpg"),
+  heroSunriseFields: localImage("hero/hero-sunrise-paddy-coconut-karnataka.jpg"),
+  forestPath: localImage("gallery/aerial-rice-field-patchwork-karnataka.jpg"),
   treeOfLife: localImage("tree-of-life-farmland.jpg"),
-  aerialCanopy: localImage("aerial-forest-canopy.jpg"),
-  mistyHills: localImage("misty-hills-karnataka.jpg"),
-  forestLightBeam: localImage("forest-light-beam.jpg"),
-  pineForestSoft: localImage("pine-forest-soft-light.jpg"),
-  forestRoadGold: localImage("countryside-road-gold-light.jpg"),
+  aerialCanopy: localImage("gallery/aerial-rice-field-patchwork-karnataka.jpg"),
+  mistyHills: localImage("gallery/misty-hills-village-karnataka.jpg"),
+  forestLightBeam: localImage("gallery/forest-valley-dusk-western-ghats.jpg"),
+  pineForestSoft: localImage("gallery/farmer-oxen-rice-field-karnataka.jpg"),
+  forestRoadGold: localImage("cycling/rural-road-coconut-trees-karnataka.jpg"),
 
-  cabinMisty: localImage("farmhouse-cabin-misty-morning.jpg"),
-  farmhouseCottage: localImage("farmhouse-cottage-golden-hour.jpg"),
-  campingTentDusk: localImage("camping-tent-dusk-farmland.jpg"),
+  cabinMisty: localImage("stay/farmhouse-tiled-roof-verandah-karnataka.jpg"),
+  farmhouseCottage: localImage("stay/farmhouse-cottage-courtyard-karnataka.jpg"),
+  campingTentDusk: localImage("stay/evening-firelight-gathering-karnataka.jpg"),
   milkyWay: localImage("night-sky-stargazing.jpg"),
-  cozyInterior: localImage("cozy-farmhouse-interior.jpg"),
+  cozyInterior: localImage("stay/verandah-corridor-karnataka.jpg"),
 
-  gardeningTools: localImage("kitchen-garden-tools.jpg"),
-  seedlingsPots: localImage("seedlings-pots-nursery.jpg"),
-  strawberryHarvest: localImage("strawberry-harvest-baskets.jpg"),
-  cropRowsAerial: localImage("aerial-crop-rows-farmland.jpg"),
-  seedTrays: localImage("seed-trays-sprouts.jpg"),
-  eucalyptusBranch: localImage("eucalyptus-branch-plant-store.jpg"),
-  poppyFlowers: localImage("flowering-plants-garden.jpg"),
-  carrotsHarvest: localImage("fresh-vegetable-harvest.jpg"),
+  gardeningTools: localImage("gardening/farmer-tending-kitchen-garden-karnataka.jpg"),
+  seedlingsPots: localImage("gardening/hand-planting-rice-seedling-karnataka.jpg"),
+  strawberryHarvest: localImage("gardening/mixed-vegetable-harvest-karnataka.jpg"),
+  seedTrays: localImage("gardening/hand-planting-rice-seedling-karnataka.jpg"),
+  eucalyptusBranch: localImage("gardening/marigold-flowers-garden-karnataka.jpg"),
+  carrotsHarvest: localImage("gardening/assorted-vegetables-harvest-karnataka.jpg"),
 
-  rosePathway: localImage("landscaped-garden-pathway.jpg"),
+  rosePathway: localImage("landscaping/forest-path-red-soil-karnataka.jpg"),
 
-  cyclistSoloHill: localImage("cyclist-countryside-hill-road.jpg"),
-  cyclistsDuo: localImage("cyclists-countryside-duo.jpg"),
-  bicycleDetail: localImage("bicycle-detail-vintage.jpg"),
+  cyclistSoloHill: localImage("cycling/cyclist-village-lane-karnataka.jpg"),
+  cyclistsDuo: localImage("cycling/village-road-coconut-palms-karnataka.jpg"),
+  bicycleDetail: localImage("cycling/rural-road-coconut-trees-karnataka.jpg"),
 
-  bonfireGroup: localImage("bonfire-evening-group.jpg"),
-  familyBonfireSilhouette: localImage("family-bonfire-silhouette.jpg"),
+  bonfireGroup: localImage("stay/evening-firelight-gathering-karnataka.jpg"),
 
-  soupBowl: localImage("pumpkin-soup-farm-table.jpg"),
-  breakfastSpread: localImage("farm-breakfast-spread.jpg"),
-  saladBowl: localImage("fresh-salad-bowl.jpg"),
-  latteHands: localImage("coffee-hands-morning.jpg"),
-  blueberriesMacro: localImage("blueberries-macro-organic.jpg"),
+  breakfastSpread: localImage("gallery/south-indian-breakfast-idli-sambar.jpg"),
+  saladBowl: localImage("gardening/farmer-tending-kitchen-garden-karnataka.jpg"),
 
-  kidsPlayingMisty: localImage("kids-playing-misty-field.jpg"),
-  yogaDockSilhouette: localImage("yoga-silhouette-dock-sunset.jpg"),
-  yogaBeachSilhouette: localImage("yoga-silhouette-beach-sunset.jpg"),
+  kidsPlayingMisty: localImage("gallery/children-playing-open-field-karnataka.jpg"),
 
-  corporateLaptops: localImage("team-collaboration-laptops.jpg"),
-  corporateWhiteboard: localImage("team-whiteboard-brainstorm.jpg"),
-  corporateRusticMeeting: localImage("corporate-offsite-rustic-meeting.jpg"),
+  corporateRusticMeeting: localImage("gallery/group-walking-grove-karnataka.jpg"),
 } as const;
 
 export type PillarSlug =

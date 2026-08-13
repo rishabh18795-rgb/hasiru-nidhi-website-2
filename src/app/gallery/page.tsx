@@ -15,21 +15,21 @@ export const metadata: Metadata = {
 };
 
 const galleryItems = [
-  { src: images.heroSunriseFields, caption: "Sunrise over the fields", tall: true },
-  { src: images.cabinMisty, caption: "A farmhouse room in the morning mist" },
-  { src: images.strawberryHarvest, caption: "Harvest baskets, kitchen garden" },
-  { src: images.cyclistSoloHill, caption: "The farmland cycling loop" },
-  { src: images.rosePathway, caption: "The landscaped garden pathway", tall: true },
+  { src: images.heroSunriseFields, caption: "Sunrise over the paddy fields", tall: true },
+  { src: images.cabinMisty, caption: "A tiled-roof farmhouse verandah" },
+  { src: images.strawberryHarvest, caption: "Fresh vegetables from the kitchen garden" },
+  { src: images.cyclistSoloHill, caption: "The village cycling loop" },
+  { src: images.rosePathway, caption: "A natural path through the grounds", tall: true },
   { src: images.bonfireGroup, caption: "Bonfire evening, after dinner" },
   { src: images.breakfastSpread, caption: "Breakfast, largely from our own beds" },
   { src: images.kidsPlayingMisty, caption: "An afternoon on open ground" },
-  { src: images.seedlingsPots, caption: "Seedlings in the nursery beds" },
-  { src: images.farmhouseCottage, caption: "The farmhouse at golden hour", tall: true },
+  { src: images.seedlingsPots, caption: "Planting rice seedlings by hand" },
+  { src: images.farmhouseCottage, caption: "The farmhouse courtyard at golden hour", tall: true },
   { src: images.milkyWay, caption: "Clear skies, away from city light" },
   { src: images.cyclistsDuo, caption: "An easy ride through the village extension" },
-  { src: images.saladBowl, caption: "A shared table, seasonal produce" },
-  { src: images.corporateRusticMeeting, caption: "An offsite, mid-conversation" },
-  { src: images.forestLightBeam, caption: "Morning light through the tree line" },
+  { src: images.saladBowl, caption: "Tending the kitchen garden" },
+  { src: images.corporateRusticMeeting, caption: "An offsite walk through the grounds" },
+  { src: images.forestLightBeam, caption: "Hills at dusk, near Hasiru Nidhi" },
 ];
 
 export default function GalleryPage() {

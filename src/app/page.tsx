@@ -180,7 +180,7 @@ export default function HomePage() {
             <Reveal className="relative aspect-[3/4] overflow-hidden rounded-[2rem]">
               <Image
                 src={images.cabinMisty}
-                alt="Rustic cabin at Hasiru Nidhi surrounded by morning mist"
+                alt="A tiled-roof farmhouse verandah near Hasiru Nidhi, Karnataka"
                 fill
                 sizes="25vw"
                 className="object-cover"
@@ -189,7 +189,7 @@ export default function HomePage() {
             <Reveal delay={0.12} className="relative mt-10 aspect-[3/4] overflow-hidden rounded-[2rem]">
               <Image
                 src={images.farmhouseCottage}
-                alt="Farmhouse cottage at golden hour"
+                alt="A farmhouse cottage courtyard at golden hour"
                 fill
                 sizes="25vw"
                 className="object-cover"

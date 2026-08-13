@@ -73,7 +73,7 @@ export default function NatureStayPage() {
           <Reveal className="relative aspect-[4/5] overflow-hidden rounded-[2.5rem]">
             <Image
               src={images.cozyInterior}
-              alt="A quiet farmhouse interior at Hasiru Nidhi"
+              alt="A wooden verandah corridor at Hasiru Nidhi"
               fill
               sizes="(min-width: 1024px) 45vw, 90vw"
               className="object-cover"
@@ -164,7 +164,7 @@ export default function NatureStayPage() {
           <Reveal className="relative aspect-[4/5] overflow-hidden rounded-[2.5rem]">
             <Image
               src={images.campingTentDusk}
-              alt="Evening at the Hasiru Nidhi campsite"
+              alt="An evening bonfire gathering at Hasiru Nidhi"
               fill
               sizes="(min-width: 1024px) 45vw, 90vw"
               className="object-cover"

@@ -152,7 +152,7 @@ export default function CyclingPage() {
           <Reveal delay={0.1} className="relative aspect-[4/3] overflow-hidden rounded-[2rem]">
             <Image
               src={images.bicycleDetail}
-              alt="A bicycle ready for the trail at Hasiru Nidhi"
+              alt="A quiet countryside road on the Hasiru Nidhi cycling trail"
               fill
               sizes="(min-width: 1024px) 45vw, 90vw"
               className="object-cover"

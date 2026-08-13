@@ -96,7 +96,7 @@ export default function GardeningPage() {
           <Reveal className="relative aspect-[4/5] overflow-hidden rounded-[2.5rem] lg:order-2">
             <Image
               src={images.eucalyptusBranch}
-              alt="Eucalyptus cutting from the Hasiru Nidhi nursery"
+              alt="Marigold flowers in bloom in the Hasiru Nidhi garden"
               fill
               sizes="(min-width: 1024px) 45vw, 90vw"
               className="object-cover"
@@ -117,8 +117,8 @@ export default function GardeningPage() {
         <div className="container-nidhi grid gap-8 sm:grid-cols-3">
           {[
             { image: images.strawberryHarvest, caption: "Harvest day in the kitchen garden" },
-            { image: images.seedTrays, caption: "Seed trays ahead of the monsoon planting" },
-            { image: images.carrotsHarvest, caption: "Root vegetables, ready for the kitchen" },
+            { image: images.seedTrays, caption: "Planting by hand, ahead of the monsoon" },
+            { image: images.carrotsHarvest, caption: "Vegetables, ready for the kitchen" },
           ].map((item) => (
             <Reveal key={item.caption} className="group overflow-hidden rounded-2xl">
               <div className="relative aspect-[4/5]">

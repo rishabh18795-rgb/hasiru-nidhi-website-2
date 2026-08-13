@@ -24,7 +24,7 @@ export function HeroBackdrop({ image }: { image: string }) {
         >
           <Image
             src={image}
-            alt="Sunrise over the fields at Hasiru Nidhi"
+            alt="Sunrise over paddy fields and coconut palms near Hasiru Nidhi, Karnataka"
             fill
             priority
             sizes="100vw"
