@@ -19,7 +19,7 @@ export function CtaBand({
   title = "Ready to trade the city for a while?",
   description = "Tell us your dates and group size — we'll help you choose the right experience and hold your spot.",
   primaryLabel = "Book Your Experience",
-  primaryHref = "/contact",
+  primaryHref = "/book",
   secondaryLabel = "Call " + siteConfig.contact.phoneDisplay,
   secondaryHref = `tel:${siteConfig.contact.phone.replace(/\s/g, "")}`,
 }: CtaBandProps) {

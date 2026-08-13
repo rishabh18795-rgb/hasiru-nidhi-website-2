@@ -54,33 +54,53 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-const localBusinessSchema = {
+const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "TouristAttraction",
-  name: siteConfig.legalName,
-  alternateName: siteConfig.name,
-  description: siteConfig.description,
-  url: siteConfig.url,
-  telephone: siteConfig.contact.phone,
-  email: siteConfig.contact.email,
-  image: `${siteConfig.url}/opengraph-image`,
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: `${siteConfig.contact.address.line1}, ${siteConfig.contact.address.line2}`,
-    addressLocality: siteConfig.contact.address.city,
-    addressRegion: siteConfig.contact.address.state,
-    postalCode: siteConfig.contact.address.postalCode,
-    addressCountry: "IN",
-  },
-  geo: {
-    "@type": "GeoCoordinates",
-    latitude: siteConfig.contact.coordinates.lat,
-    longitude: siteConfig.contact.coordinates.lng,
-  },
-  sameAs: [
-    siteConfig.social.instagram,
-    siteConfig.social.facebook,
-    siteConfig.social.youtube,
+  "@graph": [
+    {
+      "@type": "TouristAttraction",
+      "@id": `${siteConfig.url}/#attraction`,
+      name: siteConfig.legalName,
+      alternateName: siteConfig.name,
+      description: siteConfig.description,
+      url: siteConfig.url,
+      telephone: siteConfig.contact.phone,
+      email: siteConfig.contact.email,
+      image: `${siteConfig.url}/opengraph-image`,
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: `${siteConfig.contact.address.line1}, ${siteConfig.contact.address.line2}`,
+        addressLocality: siteConfig.contact.address.city,
+        addressRegion: siteConfig.contact.address.state,
+        postalCode: siteConfig.contact.address.postalCode,
+        addressCountry: "IN",
+      },
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: siteConfig.contact.coordinates.lat,
+        longitude: siteConfig.contact.coordinates.lng,
+      },
+      sameAs: [
+        siteConfig.social.instagram,
+        siteConfig.social.facebook,
+        siteConfig.social.youtube,
+      ],
+    },
+    {
+      "@type": "Organization",
+      "@id": `${siteConfig.url}/#organization`,
+      name: siteConfig.legalName,
+      alternateName: siteConfig.name,
+      url: siteConfig.url,
+      logo: `${siteConfig.url}/brand/logo-mark.png`,
+      email: siteConfig.contact.email,
+      telephone: siteConfig.contact.phone,
+      sameAs: [
+        siteConfig.social.instagram,
+        siteConfig.social.facebook,
+        siteConfig.social.youtube,
+      ],
+    },
   ],
 };
 
@@ -97,7 +117,7 @@ export default function RootLayout({
       <body className="flex min-h-full flex-col bg-cream text-ink font-sans">
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <Navbar />
         <main className="flex-1">{children}</main>

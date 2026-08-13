@@ -17,6 +17,13 @@ export const metadata: Metadata = {
   alternates: { canonical: `${basePath}/packages/` },
 };
 
+function bookingHrefFor(slug: string) {
+  // Corporate offsites are a group/enquiry-led conversation, not a
+  // self-serve booking — route those to Contact instead.
+  if (slug === "corporate-offsite") return "/contact";
+  return `/book?experience=nature-stay&package=${slug}`;
+}
+
 export default function PackagesPage() {
   return (
     <>
@@ -71,7 +78,7 @@ export default function PackagesPage() {
                       ))}
                     </ul>
                     <LinkButton
-                      href="/contact"
+                      href={bookingHrefFor(pkg.slug)}
                       size="lg"
                       className="mt-7 rounded-full bg-forest-800 text-cream hover:bg-forest-700"
                     >

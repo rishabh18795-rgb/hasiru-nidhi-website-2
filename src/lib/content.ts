@@ -1,57 +1,61 @@
-// Curated photography used across the site. Sourced from Unsplash (free-to-use
-// licence) as premium placeholder imagery — swap for on-site photography of
-// Hasiru Nidhi before launch.
-function unsplash(id: string, params = "auto=format&fit=crop&q=80") {
-  return `https://images.unsplash.com/photo-${id}?${params}`;
+import { basePath } from "@/lib/base-path";
+
+// Curated photography, downloaded locally into /public/images so production
+// doesn't depend on an external host. Illustrative imagery chosen to evoke
+// the brand's Indian-countryside-with-premium-hospitality feel — not actual
+// property photography. Swap for verified on-site photography of Hasiru
+// Nidhi before launch (see README).
+function localImage(filename: string) {
+  return `${basePath}/images/${filename}`;
 }
 
 export const images = {
-  heroSunriseFields: unsplash("1470252649378-9c29740c9fa8"),
-  forestPath: unsplash("1441974231531-c6227db76b6e"),
-  treeOfLife: unsplash("1502082553048-f009c37129b9"),
-  aerialCanopy: unsplash("1476231682828-37e571bc172f"),
-  mistyHills: unsplash("1487621167305-5d248087c724"),
-  forestLightBeam: unsplash("1500673922987-e212871fec22"),
-  pineForestSoft: unsplash("1425913397330-cf8af2ff40a1"),
-  forestRoadGold: unsplash("1476820865390-c52aeebb9891"),
+  heroSunriseFields: localImage("hero-sunrise-fields-bengaluru.jpg"),
+  forestPath: localImage("forest-path-karnataka.jpg"),
+  treeOfLife: localImage("tree-of-life-farmland.jpg"),
+  aerialCanopy: localImage("aerial-forest-canopy.jpg"),
+  mistyHills: localImage("misty-hills-karnataka.jpg"),
+  forestLightBeam: localImage("forest-light-beam.jpg"),
+  pineForestSoft: localImage("pine-forest-soft-light.jpg"),
+  forestRoadGold: localImage("countryside-road-gold-light.jpg"),
 
-  cabinMisty: unsplash("1449158743715-0a90ebb6d2d8"),
-  farmhouseCottage: unsplash("1449844908441-8829872d2607"),
-  campingTentDusk: unsplash("1487730116645-74489c95b41b"),
-  milkyWay: unsplash("1465101162946-4377e57745c3"),
-  cozyInterior: unsplash("1505691938895-1758d7feb511"),
+  cabinMisty: localImage("farmhouse-cabin-misty-morning.jpg"),
+  farmhouseCottage: localImage("farmhouse-cottage-golden-hour.jpg"),
+  campingTentDusk: localImage("camping-tent-dusk-farmland.jpg"),
+  milkyWay: localImage("night-sky-stargazing.jpg"),
+  cozyInterior: localImage("cozy-farmhouse-interior.jpg"),
 
-  gardeningTools: unsplash("1416879595882-3373a0480b5b"),
-  seedlingsPots: unsplash("1523348837708-15d4a09cfac2"),
-  strawberryHarvest: unsplash("1500651230702-0e2d8a49d4ad"),
-  cropRowsAerial: unsplash("1592982537447-7440770cbfc9"),
-  seedTrays: unsplash("1466692476868-aef1dfb1e735"),
-  eucalyptusBranch: unsplash("1466781783364-36c955e42a7f"),
-  poppyFlowers: unsplash("1490750967868-88aa4486c946"),
-  carrotsHarvest: unsplash("1471193945509-9ad0617afabf"),
+  gardeningTools: localImage("kitchen-garden-tools.jpg"),
+  seedlingsPots: localImage("seedlings-pots-nursery.jpg"),
+  strawberryHarvest: localImage("strawberry-harvest-baskets.jpg"),
+  cropRowsAerial: localImage("aerial-crop-rows-farmland.jpg"),
+  seedTrays: localImage("seed-trays-sprouts.jpg"),
+  eucalyptusBranch: localImage("eucalyptus-branch-plant-store.jpg"),
+  poppyFlowers: localImage("flowering-plants-garden.jpg"),
+  carrotsHarvest: localImage("fresh-vegetable-harvest.jpg"),
 
-  rosePathway: unsplash("1585320806297-9794b3e4eeae"),
+  rosePathway: localImage("landscaped-garden-pathway.jpg"),
 
-  cyclistSoloHill: unsplash("1471506480208-91b3a4cc78be"),
-  cyclistsDuo: unsplash("1541625602330-2277a4c46182"),
-  bicycleDetail: unsplash("1485965120184-e220f721d03e"),
+  cyclistSoloHill: localImage("cyclist-countryside-hill-road.jpg"),
+  cyclistsDuo: localImage("cyclists-countryside-duo.jpg"),
+  bicycleDetail: localImage("bicycle-detail-vintage.jpg"),
 
-  bonfireGroup: unsplash("1475483768296-6163e08872a1"),
-  familyBonfireSilhouette: unsplash("1478131143081-80f7f84ca84d"),
+  bonfireGroup: localImage("bonfire-evening-group.jpg"),
+  familyBonfireSilhouette: localImage("family-bonfire-silhouette.jpg"),
 
-  soupBowl: unsplash("1476718406336-bb5a9690ee2a"),
-  breakfastSpread: unsplash("1490645935967-10de6ba17061"),
-  saladBowl: unsplash("1512621776951-a57141f2eefd"),
-  latteHands: unsplash("1495474472287-4d71bcdd2085"),
-  blueberriesMacro: unsplash("1502741338009-cac2772e18bc"),
+  soupBowl: localImage("pumpkin-soup-farm-table.jpg"),
+  breakfastSpread: localImage("farm-breakfast-spread.jpg"),
+  saladBowl: localImage("fresh-salad-bowl.jpg"),
+  latteHands: localImage("coffee-hands-morning.jpg"),
+  blueberriesMacro: localImage("blueberries-macro-organic.jpg"),
 
-  kidsPlayingMisty: unsplash("1502086223501-7ea6ecd79368"),
-  yogaDockSilhouette: unsplash("1506126613408-eca07ce68773"),
-  yogaBeachSilhouette: unsplash("1544367567-0f2fcb009e0b"),
+  kidsPlayingMisty: localImage("kids-playing-misty-field.jpg"),
+  yogaDockSilhouette: localImage("yoga-silhouette-dock-sunset.jpg"),
+  yogaBeachSilhouette: localImage("yoga-silhouette-beach-sunset.jpg"),
 
-  corporateLaptops: unsplash("1522071820081-009f0129c71c"),
-  corporateWhiteboard: unsplash("1552664730-d307ca884978"),
-  corporateRusticMeeting: unsplash("1521737604893-d14cc237f11d"),
+  corporateLaptops: localImage("team-collaboration-laptops.jpg"),
+  corporateWhiteboard: localImage("team-whiteboard-brainstorm.jpg"),
+  corporateRusticMeeting: localImage("corporate-offsite-rustic-meeting.jpg"),
 } as const;
 
 export type PillarSlug =
@@ -393,7 +397,7 @@ export const faqs: FaqEntry[] = [
   {
     question: "How does booking and payment work?",
     answer:
-      "Submit an enquiry through the Contact page or WhatsApp with your preferred dates and group size. We confirm availability within 24 hours and hold your booking with a 30% advance; the balance is settled on arrival.",
+      "Submit a request through our Book Your Experience page or WhatsApp with your preferred dates and group size. We confirm availability within 24 hours and hold your booking with a 30% advance; the balance is settled on arrival.",
   },
   {
     question: "Can Hasiru Nidhi host a group larger than 20 people?",

@@ -11,7 +11,7 @@ export function PillarCard({ pillar }: { pillar: Pillar }) {
   return (
     <Link
       href={pillar.href}
-      className="group relative flex h-[26rem] flex-col justify-end overflow-hidden rounded-[2rem] border border-forest-900/8"
+      className="group relative flex h-[26rem] flex-col justify-end overflow-hidden rounded-[2rem] border border-forest-900/8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sand-300 focus-visible:ring-offset-2 focus-visible:ring-offset-forest-950"
     >
       <Image
         src={pillar.image}
@@ -36,8 +36,8 @@ export function PillarCard({ pillar }: { pillar: Pillar }) {
         </p>
         <h3 className="mt-2 font-display text-2xl text-cream">{pillar.title}</h3>
         <p className="mt-2 text-sm leading-relaxed text-cream/70">{pillar.summary}</p>
-        <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-cream opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100">
-          Discover more
+        <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-cream opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100 group-focus-visible:translate-x-1 group-focus-visible:opacity-100">
+          Explore {pillar.title}
           <ArrowUpRight className="h-3.5 w-3.5" />
         </span>
       </div>

@@ -13,7 +13,7 @@ export function ExperienceCard({
   className?: string;
 }) {
   const cardClass = cn(
-    "group flex flex-col overflow-hidden rounded-3xl bg-white ring-1 ring-forest-900/8 transition-shadow duration-300 hover:shadow-xl hover:shadow-forest-950/10",
+    "group flex flex-col overflow-hidden rounded-3xl bg-white ring-1 ring-forest-900/8 transition-shadow duration-300 hover:shadow-xl hover:shadow-forest-950/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest-600 focus-visible:ring-offset-2 focus-visible:ring-offset-cream",
     className
   );
 

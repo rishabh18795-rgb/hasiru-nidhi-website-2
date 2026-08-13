@@ -19,13 +19,8 @@ const nextConfig: NextConfig = {
   },
   images: {
     // No image optimization server on GitHub Pages (static export only).
+    // All photography is local under /public/images.
     unoptimized: true,
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "images.unsplash.com",
-      },
-    ],
   },
   reactStrictMode: true,
 };

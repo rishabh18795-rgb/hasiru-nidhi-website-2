@@ -1,6 +1,6 @@
 import Image from "next/image";
 import type { Metadata } from "next";
-import { Flame, Moon, Sunrise, Wind } from "lucide-react";
+import { Bike, Flame, Sprout, Sunrise, Users } from "lucide-react";
 
 import { PageHero } from "@/components/site/page-hero";
 import { SectionHeading } from "@/components/site/section-heading";
@@ -20,25 +20,32 @@ export const metadata: Metadata = {
 const rooms = [
   {
     name: "Farmhouse Room",
+    slug: "farmhouse-room",
     description:
       "Our original stay — four rooms inside the main farmhouse, each with a private verandah facing the fields. Simple, quiet, and close to the kitchen and bonfire circle.",
     image: images.farmhouseCottage,
+    occupancy: "2 adults + 1 child",
+    privacy: "Shared farmhouse building, private room",
     details: ["Twin or double bed", "Attached bath, hot water", "Verandah seating", "Fan-cooled, ceiling height for airflow"],
   },
   {
     name: "Cottage",
+    slug: "cottage",
     description:
       "Set slightly apart from the main house for guests who want more distance from the common areas — same natural materials, a touch more privacy.",
     image: images.cabinMisty,
+    occupancy: "2 adults + 1 child",
+    privacy: "Standalone, fully private",
     details: ["Double bed", "Attached bath, hot water", "Private sit-out", "Closer to the cycling trailhead"],
   },
 ];
 
 const included = [
   { icon: Sunrise, title: "Full Farm Access", copy: "Gardens, trails, animals and grounds, open from check-in to check-out." },
+  { icon: Sprout, title: "Garden Access", copy: "Walk the working kitchen garden any time, guided sessions included." },
+  { icon: Bike, title: "Cycling Access", copy: "Bicycles and helmets provided for the farmland loop, no extra charge." },
   { icon: Flame, title: "Bonfire Evenings", copy: "Lit most nights, weather permitting — part of every overnight stay." },
-  { icon: Wind, title: "All Meals", copy: "Vegetarian, largely from our own beds, served at a shared table." },
-  { icon: Moon, title: "Genuinely Quiet Nights", copy: "No amplified music after dinner. Just the farm, settling in." },
+  { icon: Users, title: "All Meals", copy: "Vegetarian, largely from our own beds, served at a shared table." },
 ];
 
 export default function NatureStayPage() {
@@ -46,13 +53,36 @@ export default function NatureStayPage() {
     <>
       <PageHero
         eyebrow="Pillar 01 — Stay"
-        title="Wake up to birdsong, not traffic."
+        title="Wake up closer to the land."
         description="Rooms built into the landscape rather than on top of it — natural materials, deep shade, and views chosen over amenities."
         image={images.cabinMisty}
         crumb="Nature Stay"
+        primaryCta={{ label: "Enquire About Your Stay", href: "/book?experience=nature-stay" }}
+        secondaryCta={{ label: "View Stay Options", href: "#stay-options" }}
       />
 
       <section className="bg-cream py-28">
+        <div className="container-nidhi grid gap-14 lg:grid-cols-2 lg:items-center">
+          <div>
+            <SectionHeading
+              eyebrow="What the Stay Feels Like"
+              title="Slow mornings, full days, quiet nights."
+              description="A stay here moves between a handful of farmhouse rooms and standalone cottages, each opening onto the working grounds rather than a hallway. Days are loosely structured around the garden and the cycling trail; evenings settle around the bonfire once the light goes. Guests have full run of the farm for the length of their stay — the gardens, the animals, the paths between them — with nothing scheduled that doesn't need to be."
+            />
+          </div>
+          <Reveal className="relative aspect-[4/5] overflow-hidden rounded-[2.5rem]">
+            <Image
+              src={images.cozyInterior}
+              alt="A quiet farmhouse interior at Hasiru Nidhi"
+              fill
+              sizes="(min-width: 1024px) 45vw, 90vw"
+              className="object-cover"
+            />
+          </Reveal>
+        </div>
+      </section>
+
+      <section id="stay-options" className="scroll-mt-24 bg-sand-50 py-28">
         <div className="container-nidhi">
           <SectionHeading
             eyebrow="Where You'll Sleep"
@@ -62,7 +92,7 @@ export default function NatureStayPage() {
           <div className="mt-14 grid gap-8 lg:grid-cols-2">
             {rooms.map((room) => (
               <Reveal key={room.name}>
-                <div className="overflow-hidden rounded-[2rem] bg-white ring-1 ring-forest-900/8">
+                <div className="flex h-full flex-col overflow-hidden rounded-[2rem] bg-white ring-1 ring-forest-900/8">
                   <div className="relative aspect-[16/10]">
                     <Image
                       src={room.image}
@@ -72,9 +102,19 @@ export default function NatureStayPage() {
                       className="object-cover"
                     />
                   </div>
-                  <div className="p-8">
+                  <div className="flex flex-1 flex-col p-8">
                     <h3 className="font-display text-2xl text-forest-950">{room.name}</h3>
                     <p className="mt-3 text-sm leading-relaxed text-ink/65">{room.description}</p>
+                    <dl className="mt-5 grid grid-cols-2 gap-x-4 gap-y-3 text-xs text-ink/55">
+                      <div>
+                        <dt className="uppercase tracking-wide">Occupancy</dt>
+                        <dd className="mt-0.5 text-sm text-ink/75">{room.occupancy}</dd>
+                      </div>
+                      <div>
+                        <dt className="uppercase tracking-wide">Privacy</dt>
+                        <dd className="mt-0.5 text-sm text-ink/75">{room.privacy}</dd>
+                      </div>
+                    </dl>
                     <ul className="mt-5 grid grid-cols-2 gap-2 text-sm text-ink/60">
                       {room.details.map((detail) => (
                         <li key={detail} className="flex items-center gap-2">
@@ -83,6 +123,13 @@ export default function NatureStayPage() {
                         </li>
                       ))}
                     </ul>
+                    <LinkButton
+                      href={`/book?experience=nature-stay&stay=${room.slug}`}
+                      size="lg"
+                      className="mt-7 w-fit rounded-full bg-forest-800 text-cream hover:bg-forest-700"
+                    >
+                      Enquire About This Stay
+                    </LinkButton>
                   </div>
                 </div>
               </Reveal>
@@ -98,10 +145,10 @@ export default function NatureStayPage() {
             title="Everything you need, nothing you don't."
             tone="light"
           />
-          <StaggerGroup className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <StaggerGroup className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
             {included.map((item) => (
               <StaggerItem key={item.title}>
-                <div className="rounded-2xl bg-cream/5 p-6 ring-1 ring-cream/10">
+                <div className="h-full rounded-2xl bg-cream/5 p-6 ring-1 ring-cream/10">
                   <item.icon className="h-6 w-6 text-sand-300" />
                   <h3 className="mt-4 font-display text-lg text-cream">{item.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-cream/60">{item.copy}</p>
@@ -139,8 +186,12 @@ export default function NatureStayPage() {
       </section>
 
       <CtaBand
-        title="Ready to book your stay?"
+        title="Ready to slow down?"
         description="Share your preferred dates and group size — we'll confirm availability within 24 hours."
+        primaryLabel="Plan Your Stay"
+        primaryHref="/book?experience=nature-stay"
+        secondaryLabel="Talk to Us"
+        secondaryHref="/contact"
       />
     </>
   );

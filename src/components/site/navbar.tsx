@@ -118,7 +118,7 @@ export function Navbar() {
 
         <div className="hidden lg:block">
           <LinkButton
-            href="/contact"
+            href="/book"
             className="rounded-full bg-forest-800 px-6 text-cream hover:bg-forest-700"
             size="lg"
           >
@@ -171,7 +171,7 @@ export function Navbar() {
             </div>
             <div className="mt-auto p-6">
               <LinkButton
-                href="/contact"
+                href="/book"
                 onClick={() => setMobileOpen(false)}
                 className="w-full rounded-full bg-forest-800 text-cream hover:bg-forest-700"
                 size="lg"

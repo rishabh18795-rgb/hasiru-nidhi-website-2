@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 
@@ -11,7 +12,7 @@ import { basePath } from "@/lib/base-path";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Get in touch with Hasiru Nidhi to plan your visit — day escapes, farmhouse stays, weekend retreats and corporate offsites near Bengaluru.",
+    "Questions, partnerships, corporate visits or general enquiries — get in touch with the Hasiru Nidhi team near Bengaluru.",
   alternates: { canonical: `${basePath}/contact/` },
 };
 
@@ -24,8 +25,8 @@ export default function ContactPage() {
     <>
       <PageHero
         eyebrow="Contact"
-        title="Let's plan your visit."
-        description="Share a few details and we'll help you choose the right package, dates and experiences."
+        title="Let's talk about Hasiru Nidhi."
+        description="Have a question, planning a visit, exploring a partnership, or simply want to know more? Reach out to us."
         image={images.forestPath}
         crumb="Contact"
       />
@@ -108,9 +109,20 @@ export default function ContactPage() {
             </Reveal>
           </div>
 
-          <Reveal delay={0.1} className="rounded-[2rem] bg-white p-8 ring-1 ring-forest-900/8 sm:p-10">
-            <ContactForm />
-          </Reveal>
+          <div>
+            <Reveal delay={0.1} className="rounded-[2rem] bg-white p-8 ring-1 ring-forest-900/8 sm:p-10">
+              <ContactForm />
+            </Reveal>
+            <Reveal delay={0.15}>
+              <p className="mt-6 text-center text-sm text-ink/50">
+                Already know you&apos;d like to visit?{" "}
+                <Link href="/book" className="underline underline-offset-2">
+                  Book Your Experience
+                </Link>{" "}
+                instead.
+              </p>
+            </Reveal>
+          </div>
         </div>
       </section>
     </>

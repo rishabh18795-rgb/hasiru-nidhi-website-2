@@ -1,6 +1,7 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { Metadata } from "next";
-import { Calendar, ClipboardList, Droplets, Sprout } from "lucide-react";
+import { ArrowUpRight, Calendar, ClipboardList, Droplets, Sprout } from "lucide-react";
 
 import { PageHero } from "@/components/site/page-hero";
 import { SectionHeading } from "@/components/site/section-heading";
@@ -21,21 +22,25 @@ const activities = [
     icon: Sprout,
     title: "Kitchen Garden Walkthrough",
     copy: "A guided walk through our working vegetable beds — what's in season, how we rotate crops, and why we've stayed away from synthetic inputs since day one.",
+    audience: "Everyone — no experience needed",
   },
   {
     icon: ClipboardList,
     title: "Hands-On Sessions",
     copy: "Roll up your sleeves for transplanting, mulching or harvesting, depending on the week. Genuinely useful farm work, not a staged demonstration.",
+    audience: "Guests who want to get their hands dirty",
   },
   {
     icon: Droplets,
     title: "Composting & Soil Health",
     copy: "A look at how we build soil from kitchen and farm waste — the unglamorous practice that everything else here depends on.",
+    audience: "Curious gardeners, aspiring growers",
   },
   {
     icon: Calendar,
     title: "Seasonal Workshops",
     copy: "Periodic half-day workshops on topics like seed saving, container gardening and natural pest management, open to day visitors.",
+    audience: "Day visitors, by seasonal schedule",
   },
 ];
 
@@ -44,10 +49,12 @@ export default function GardeningPage() {
     <>
       <PageHero
         eyebrow="Pillar 03 — Grow"
-        title="Hands in the soil, season by season."
+        title="Get your hands in the soil."
         description="Our kitchen garden isn't a backdrop — it feeds the table. Guests are welcome to walk it, work it, and take home whatever they learn."
         image={images.gardeningTools}
         crumb="Gardening Services"
+        primaryCta={{ label: "Book a Gardening Experience", href: "/book?experience=gardening" }}
+        secondaryCta={{ label: "Ask About Upcoming Sessions", href: "/contact" }}
       />
 
       <section className="bg-cream py-28">
@@ -59,13 +66,23 @@ export default function GardeningPage() {
           <StaggerGroup className="mt-14 grid gap-6 sm:grid-cols-2">
             {activities.map((activity) => (
               <StaggerItem key={activity.title}>
-                <div className="flex gap-4 rounded-2xl bg-forest-50 p-6">
+                <div className="flex h-full flex-col gap-4 rounded-2xl bg-forest-50 p-6 sm:flex-row">
                   <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-forest-800 text-cream">
                     <activity.icon className="h-5 w-5" />
                   </span>
-                  <div>
+                  <div className="flex flex-1 flex-col">
                     <h3 className="font-display text-lg text-forest-950">{activity.title}</h3>
                     <p className="mt-1.5 text-sm leading-relaxed text-ink/65">{activity.copy}</p>
+                    <p className="mt-3 text-xs font-medium uppercase tracking-wide text-forest-600">
+                      {activity.audience}
+                    </p>
+                    <Link
+                      href="/contact"
+                      className="mt-auto inline-flex w-fit items-center gap-1 pt-3 text-sm font-medium text-forest-700 hover:text-forest-900"
+                    >
+                      Ask about this
+                      <ArrowUpRight className="h-3.5 w-3.5" />
+                    </Link>
                   </div>
                 </div>
               </StaggerItem>
@@ -120,8 +137,12 @@ export default function GardeningPage() {
       </section>
 
       <CtaBand
-        title="Come learn what the season is teaching us."
+        title="Come grow with us."
         description="Gardening walkthroughs are included in every stay, and available to day visitors on request."
+        primaryLabel="Book a Gardening Experience"
+        primaryHref="/book?experience=gardening"
+        secondaryLabel="Ask About Upcoming Sessions"
+        secondaryHref="/contact"
       />
     </>
   );

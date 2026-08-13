@@ -1,6 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+import { ArrowUpRight, ChevronRight } from "lucide-react";
+
+import { LinkButton } from "@/components/site/link-button";
+
+interface PageHeroCta {
+  label: string;
+  href: string;
+}
 
 interface PageHeroProps {
   eyebrow: string;
@@ -8,9 +15,19 @@ interface PageHeroProps {
   description: string;
   image: string;
   crumb: string;
+  primaryCta?: PageHeroCta;
+  secondaryCta?: PageHeroCta;
 }
 
-export function PageHero({ eyebrow, title, description, image, crumb }: PageHeroProps) {
+export function PageHero({
+  eyebrow,
+  title,
+  description,
+  image,
+  crumb,
+  primaryCta,
+  secondaryCta,
+}: PageHeroProps) {
   return (
     <section className="relative flex min-h-[64vh] items-end overflow-hidden bg-forest-950 pt-28">
       <Image
@@ -37,6 +54,30 @@ export function PageHero({ eyebrow, title, description, image, crumb }: PageHero
         <p className="mt-6 max-w-xl text-lg leading-relaxed text-cream/75">
           {description}
         </p>
+        {primaryCta || secondaryCta ? (
+          <div className="mt-8 flex flex-wrap items-center gap-4">
+            {primaryCta ? (
+              <LinkButton
+                href={primaryCta.href}
+                size="lg"
+                className="rounded-full bg-sand-400 px-7 text-forest-950 hover:bg-sand-300"
+              >
+                {primaryCta.label}
+                <ArrowUpRight className="h-4 w-4" />
+              </LinkButton>
+            ) : null}
+            {secondaryCta ? (
+              <LinkButton
+                href={secondaryCta.href}
+                variant="outline"
+                size="lg"
+                className="rounded-full border-cream/30 bg-transparent px-7 text-cream hover:bg-cream/10"
+              >
+                {secondaryCta.label}
+              </LinkButton>
+            ) : null}
+          </div>
+        ) : null}
       </div>
     </section>
   );

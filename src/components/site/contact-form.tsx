@@ -17,15 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { submitEnquiry } from "@/app/contact/actions";
-import { enquirySchema, type EnquiryInput } from "@/lib/enquiry-schema";
-
-const interests = [
-  "Day Escape",
-  "Farmhouse Overnight",
-  "Weekend Retreat",
-  "Corporate Offsite",
-  "Something else",
-];
+import { contactSubjects, enquirySchema, type EnquiryInput } from "@/lib/enquiry-schema";
 
 export function ContactForm() {
   const [submitted, setSubmitted] = useState(false);
@@ -41,11 +33,9 @@ export function ContactForm() {
     resolver: zodResolver(enquirySchema),
     defaultValues: {
       name: "",
-      email: "",
       phone: "",
-      groupSize: "",
-      preferredDate: "",
-      interest: "",
+      email: "",
+      subject: "",
       message: "",
     },
   });
@@ -66,18 +56,17 @@ export function ContactForm() {
       <div className="flex flex-col items-center rounded-3xl bg-forest-50 p-12 text-center">
         <CheckCircle2 className="h-10 w-10 text-forest-600" />
         <h3 className="mt-4 font-display text-2xl text-forest-950">
-          Thank you — we&apos;ve received your enquiry.
+          Thank you — we&apos;ve received your message.
         </h3>
         <p className="mt-2 max-w-sm text-sm leading-relaxed text-ink/60">
-          Our team will get back to you within 24 hours to confirm
-          availability and next steps.
+          Our team will get back to you within 24 hours.
         </p>
         <Button
           variant="outline"
           className="mt-6 rounded-full"
           onClick={() => setSubmitted(false)}
         >
-          Send another enquiry
+          Send another message
         </Button>
       </div>
     );
@@ -104,56 +93,46 @@ export function ContactForm() {
         {errors.email ? <p className="text-xs text-destructive">{errors.email.message}</p> : null}
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-2">
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="groupSize">Group Size</Label>
-          <Input id="groupSize" placeholder="e.g. 2 adults, 1 child" {...register("groupSize")} />
-          {errors.groupSize ? (
-            <p className="text-xs text-destructive">{errors.groupSize.message}</p>
-          ) : null}
-        </div>
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="preferredDate">Preferred Date</Label>
-          <Input id="preferredDate" type="date" {...register("preferredDate")} />
-          {errors.preferredDate ? (
-            <p className="text-xs text-destructive">{errors.preferredDate.message}</p>
-          ) : null}
-        </div>
-      </div>
-
       <div className="flex flex-col gap-2">
-        <Label htmlFor="interest">I&apos;m Enquiring About</Label>
+        <Label htmlFor="subject">How Can We Help?</Label>
         <Controller
-          name="interest"
+          name="subject"
           control={control}
           render={({ field }) => (
-            <Select value={field.value} onValueChange={field.onChange}>
-              <SelectTrigger id="interest" className="w-full">
-                <SelectValue placeholder="Select an option" />
+            <Select
+              items={contactSubjects.map((subject) => ({ value: subject, label: subject }))}
+              value={field.value}
+              onValueChange={field.onChange}
+            >
+              <SelectTrigger id="subject" className="w-full">
+                <SelectValue placeholder="Select a reason" />
               </SelectTrigger>
               <SelectContent>
-                {interests.map((interest) => (
-                  <SelectItem key={interest} value={interest}>
-                    {interest}
+                {contactSubjects.map((subject) => (
+                  <SelectItem key={subject} value={subject}>
+                    {subject}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           )}
         />
-        {errors.interest ? (
-          <p className="text-xs text-destructive">{errors.interest.message}</p>
+        {errors.subject ? (
+          <p className="text-xs text-destructive">{errors.subject.message}</p>
         ) : null}
       </div>
 
       <div className="flex flex-col gap-2">
-        <Label htmlFor="message">Message (Optional)</Label>
+        <Label htmlFor="message">Message</Label>
         <Textarea
           id="message"
           rows={4}
-          placeholder="Tell us anything else that would help us plan your visit."
+          placeholder="How can we help?"
           {...register("message")}
         />
+        {errors.message ? (
+          <p className="text-xs text-destructive">{errors.message.message}</p>
+        ) : null}
       </div>
 
       {submitError ? <p className="text-sm text-destructive">{submitError}</p> : null}
@@ -170,7 +149,7 @@ export function ContactForm() {
             Sending
           </>
         ) : (
-          "Send Enquiry"
+          "Send Message"
         )}
       </Button>
     </form>

@@ -1,13 +1,22 @@
 import { z } from "zod";
 
+export const contactSubjects = [
+  "General enquiry",
+  "Nature Stay",
+  "Cycling",
+  "Gardening",
+  "Landscaping",
+  "Corporate/Group visit",
+  "Partnership",
+  "Other",
+] as const;
+
 export const enquirySchema = z.object({
   name: z.string().min(2, "Please enter your full name."),
-  email: z.string().email("Please enter a valid email address."),
   phone: z.string().min(8, "Please enter a valid phone number."),
-  groupSize: z.string().min(1, "Let us know how many are coming."),
-  preferredDate: z.string().min(1, "Let us know your preferred date."),
-  interest: z.string().min(1, "Select what you're enquiring about."),
-  message: z.string().max(1000).optional(),
+  email: z.string().email("Please enter a valid email address."),
+  subject: z.string().min(1, "Let us know how we can help."),
+  message: z.string().min(1, "Please add a short message.").max(1000),
 });
 
 export type EnquiryInput = z.infer<typeof enquirySchema>;

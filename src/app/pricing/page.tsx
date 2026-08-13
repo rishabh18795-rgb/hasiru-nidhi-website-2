@@ -17,6 +17,13 @@ export const metadata: Metadata = {
   alternates: { canonical: `${basePath}/pricing/` },
 };
 
+function bookingHrefFor(tierName: string) {
+  // Corporate offsites are a group/enquiry-led conversation, not a
+  // self-serve booking — route those to Contact instead.
+  if (tierName === "Corporate Offsite") return "/contact";
+  return "/book?experience=nature-stay";
+}
+
 export default function PricingPage() {
   return (
     <>
@@ -61,7 +68,7 @@ export default function PricingPage() {
                     ))}
                   </ul>
                   <LinkButton
-                    href="/contact"
+                    href={bookingHrefFor(tier.name)}
                     size="lg"
                     className={cn(
                       "mt-7 rounded-full",

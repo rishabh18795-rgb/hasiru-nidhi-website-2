@@ -63,7 +63,7 @@ export default function HomePage() {
           <Reveal delay={0.28}>
             <div className="mt-10 flex flex-wrap items-center gap-4">
               <LinkButton
-                href="/contact"
+                href="/book"
                 size="lg"
                 className="rounded-full bg-sand-400 px-8 text-forest-950 hover:bg-sand-300"
               >

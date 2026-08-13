@@ -78,6 +78,7 @@ export const footerLinks = {
     { label: "The Journal", href: "/blog" },
   ],
   plan: [
+    { label: "Book Your Experience", href: "/book" },
     { label: "Packages", href: "/packages" },
     { label: "Pricing", href: "/pricing" },
     { label: "FAQ", href: "/faq" },
