@@ -11,12 +11,12 @@ function localImage(filename: string) {
 
 export const images = {
   heroSunriseFields: localImage("hero/hero-sunrise-paddy-coconut-karnataka.jpg"),
-  forestPath: localImage("gallery/aerial-rice-field-patchwork-karnataka.jpg"),
+  forestPath: localImage("gallery/winding-green-hill-road-karnataka.jpg"),
   treeOfLife: localImage("tree-of-life-farmland.jpg"),
-  aerialCanopy: localImage("gallery/aerial-rice-field-patchwork-karnataka.jpg"),
+  aerialCanopy: localImage("gallery/winding-green-hill-road-karnataka.jpg"),
   mistyHills: localImage("gallery/misty-hills-village-karnataka.jpg"),
   forestLightBeam: localImage("gallery/forest-valley-dusk-western-ghats.jpg"),
-  pineForestSoft: localImage("gallery/farmer-oxen-rice-field-karnataka.jpg"),
+  pineForestSoft: localImage("gallery/winding-green-hill-road-karnataka.jpg"),
   forestRoadGold: localImage("cycling/rural-road-coconut-trees-karnataka.jpg"),
 
   cabinMisty: localImage("stay/farmhouse-tiled-roof-verandah-karnataka.jpg"),
@@ -25,23 +25,23 @@ export const images = {
   milkyWay: localImage("night-sky-stargazing.jpg"),
   cozyInterior: localImage("stay/verandah-corridor-karnataka.jpg"),
 
-  gardeningTools: localImage("gardening/farmer-tending-kitchen-garden-karnataka.jpg"),
-  seedlingsPots: localImage("gardening/hand-planting-rice-seedling-karnataka.jpg"),
-  strawberryHarvest: localImage("gardening/mixed-vegetable-harvest-karnataka.jpg"),
-  seedTrays: localImage("gardening/hand-planting-rice-seedling-karnataka.jpg"),
+  gardeningTools: localImage("gardening/woman-in-garden-portrait-karnataka.jpg"),
+  seedlingsPots: localImage("gardening/assorted-vegetables-harvest-karnataka.jpg"),
+  strawberryHarvest: localImage("gardening/smiling-woman-flower-bed-karnataka.jpg"),
+  seedTrays: localImage("gardening/assorted-vegetables-harvest-karnataka.jpg"),
   eucalyptusBranch: localImage("gardening/marigold-flowers-garden-karnataka.jpg"),
-  carrotsHarvest: localImage("gardening/assorted-vegetables-harvest-karnataka.jpg"),
+  carrotsHarvest: localImage("gardening/mixed-vegetable-harvest-karnataka.jpg"),
 
   rosePathway: localImage("landscaping/forest-path-red-soil-karnataka.jpg"),
 
-  cyclistSoloHill: localImage("cycling/cyclist-village-lane-karnataka.jpg"),
-  cyclistsDuo: localImage("cycling/village-road-coconut-palms-karnataka.jpg"),
+  cyclistSoloHill: localImage("cycling/father-daughter-cycling-tree-lane-karnataka.jpg"),
+  cyclistsDuo: localImage("cycling/scenic-plantation-road-karnataka.jpg"),
   bicycleDetail: localImage("cycling/rural-road-coconut-trees-karnataka.jpg"),
 
   bonfireGroup: localImage("stay/evening-firelight-gathering-karnataka.jpg"),
 
   breakfastSpread: localImage("gallery/south-indian-breakfast-idli-sambar.jpg"),
-  saladBowl: localImage("gardening/farmer-tending-kitchen-garden-karnataka.jpg"),
+  saladBowl: localImage("gardening/woman-in-garden-portrait-karnataka.jpg"),
 
   kidsPlayingMisty: localImage("gallery/children-playing-open-field-karnataka.jpg"),
 

@@ -113,7 +113,7 @@ export default function AboutPage() {
             <Reveal className="relative aspect-[3/4] overflow-hidden rounded-[2rem]">
               <Image
                 src={images.seedlingsPots}
-                alt="A hand planting a rice seedling in the paddy at Hasiru Nidhi"
+                alt="Fresh produce from the kitchen garden at Hasiru Nidhi"
                 fill
                 sizes="25vw"
                 className="object-cover"

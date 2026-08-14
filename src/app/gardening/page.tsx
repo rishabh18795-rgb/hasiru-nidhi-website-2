@@ -27,8 +27,8 @@ const activities = [
   {
     icon: ClipboardList,
     title: "Hands-On Sessions",
-    copy: "Roll up your sleeves for transplanting, mulching or harvesting, depending on the week. Genuinely useful farm work, not a staged demonstration.",
-    audience: "Guests who want to get their hands dirty",
+    copy: "Join in on transplanting, mulching or harvesting, depending on the week — a genuine part of how the garden runs, not a staged demonstration.",
+    audience: "Guests who want a closer, hands-on visit",
   },
   {
     icon: Droplets,
@@ -50,7 +50,7 @@ export default function GardeningPage() {
       <PageHero
         eyebrow="Pillar 03 — Grow"
         title="Get your hands in the soil."
-        description="Our kitchen garden isn't a backdrop — it feeds the table. Guests are welcome to walk it, work it, and take home whatever they learn."
+        description="Our kitchen garden isn't a backdrop — it feeds the table. Guests are welcome to walk it, spend an unhurried hour among the beds, and take home whatever they learn."
         image={images.gardeningTools}
         crumb="Gardening Services"
         primaryCta={{ label: "Book a Gardening Experience", href: "/book?experience=gardening" }}
@@ -116,8 +116,8 @@ export default function GardeningPage() {
       <section className="bg-sand-50 py-28">
         <div className="container-nidhi grid gap-8 sm:grid-cols-3">
           {[
-            { image: images.strawberryHarvest, caption: "Harvest day in the kitchen garden" },
-            { image: images.seedTrays, caption: "Planting by hand, ahead of the monsoon" },
+            { image: images.strawberryHarvest, caption: "An easy afternoon among the beds" },
+            { image: images.seedTrays, caption: "Fresh from the garden that morning" },
             { image: images.carrotsHarvest, caption: "Vegetables, ready for the kitchen" },
           ].map((item) => (
             <Reveal key={item.caption} className="group overflow-hidden rounded-2xl">

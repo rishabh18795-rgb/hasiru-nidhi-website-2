@@ -12,7 +12,7 @@ import { basePath } from "@/lib/base-path";
 export const metadata: Metadata = {
   title: "Cycling",
   description:
-    "Guided cycling trails through working farmland at Hasiru Nidhi, near Bengaluru — paced for scenery, not speed.",
+    "Guided cycling trails through lush Karnataka countryside at Hasiru Nidhi, near Bengaluru — paced for scenery, not speed.",
   alternates: { canonical: `${basePath}/cycling/` },
 };
 
@@ -62,7 +62,7 @@ export default function CyclingPage() {
       <PageHero
         eyebrow="Pillar 02 — Ride"
         title="Ride slower. See more."
-        description="Our cycling trail was never built for speed. It's a route chosen for what you notice at ten kilometres an hour — a heron at the pond, a farmer transplanting rice, the particular gold of morning light over the fields."
+        description="Our cycling trail was never built for speed. It's a route chosen for what you notice at ten kilometres an hour — a heron at the pond, the tree-lined lanes, the particular gold of morning light over the fields."
         image={images.cyclistSoloHill}
         crumb="Cycling"
         primaryCta={{ label: "Book a Cycling Experience", href: "/book?experience=cycling" }}
