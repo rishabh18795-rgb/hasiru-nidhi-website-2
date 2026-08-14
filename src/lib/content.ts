@@ -34,7 +34,7 @@ export const images = {
 
   rosePathway: localImage("landscaping/forest-path-red-soil-karnataka.jpg"),
 
-  cyclistSoloHill: localImage("cycling/father-daughter-cycling-tree-lane-karnataka.jpg"),
+  cyclistSoloHill: localImage("cycling/family-of-three-cycling-tree-lane-karnataka.jpg"),
   cyclistsDuo: localImage("cycling/scenic-plantation-road-karnataka.jpg"),
   bicycleDetail: localImage("cycling/rural-road-coconut-trees-karnataka.jpg"),
 
