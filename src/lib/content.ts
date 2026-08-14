@@ -25,7 +25,7 @@ export const images = {
   milkyWay: localImage("night-sky-stargazing.jpg"),
   cozyInterior: localImage("stay/verandah-corridor-karnataka.jpg"),
 
-  gardeningTools: localImage("gardening/woman-in-garden-portrait-karnataka.jpg"),
+  gardeningTools: localImage("gardening/child-with-leaf-garden-karnataka.jpg"),
   seedlingsPots: localImage("gardening/assorted-vegetables-harvest-karnataka.jpg"),
   strawberryHarvest: localImage("gardening/smiling-woman-flower-bed-karnataka.jpg"),
   seedTrays: localImage("gardening/assorted-vegetables-harvest-karnataka.jpg"),
@@ -41,7 +41,7 @@ export const images = {
   bonfireGroup: localImage("stay/evening-firelight-gathering-karnataka.jpg"),
 
   breakfastSpread: localImage("gallery/south-indian-breakfast-idli-sambar.jpg"),
-  saladBowl: localImage("gardening/woman-in-garden-portrait-karnataka.jpg"),
+  saladBowl: localImage("gardening/child-with-leaf-garden-karnataka.jpg"),
 
   kidsPlayingMisty: localImage("gallery/children-playing-open-field-karnataka.jpg"),
 

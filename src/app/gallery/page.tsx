@@ -27,7 +27,7 @@ const galleryItems = [
   { src: images.farmhouseCottage, caption: "The farmhouse courtyard at golden hour", tall: true },
   { src: images.milkyWay, caption: "Clear skies, away from city light" },
   { src: images.cyclistsDuo, caption: "A scenic stretch of the cycling route" },
-  { src: images.saladBowl, caption: "A quiet moment in the garden" },
+  { src: images.saladBowl, caption: "Discovering the garden, one leaf at a time" },
   { src: images.corporateRusticMeeting, caption: "An offsite walk through the grounds" },
   { src: images.forestLightBeam, caption: "Hills at dusk, near Hasiru Nidhi" },
 ];
