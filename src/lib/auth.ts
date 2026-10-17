@@ -1,4 +1,5 @@
 import { cache } from "react";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import type { SupabaseClient, User } from "@supabase/supabase-js";
 
@@ -20,6 +21,10 @@ export function safeNextPath(next: string | null | undefined, fallback = "/dashb
 
 /** Current session or null. Validates the JWT with the Auth server (getUser), never trusts cookies alone. */
 export const getSession = cache(async (): Promise<Session | null> => {
+  // Reading cookies opts the calling page into per-request (dynamic) rendering — ALWAYS, even when
+  // Supabase is unconfigured at build time. Without this, auth redirects could be prerendered
+  // (frozen) into static output and then served to signed-in users in production.
+  await cookies();
   if (!isSupabaseConfigured()) return null;
   const supabase = await createServerSupabase();
   const {

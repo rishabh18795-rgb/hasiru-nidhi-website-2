@@ -7,6 +7,8 @@ import { ResetPasswordForm } from "@/components/auth/auth-forms";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { getSession } from "@/lib/auth";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Choose a new password",
   robots: { index: false, follow: false },

@@ -84,7 +84,7 @@ export default function LandscapingPage() {
         description="The grounds at Hasiru Nidhi weren't landscaped so much as gradually revealed — native planting, stone paths, and water-wise design that lets the site do most of the talking. We now bring the same practice to gardens beyond our own gate."
         image={images.rosePathway}
         crumb="Landscaping"
-        primaryCta={{ label: "Discuss Your Landscape", href: "/book?experience=landscaping" }}
+        primaryCta={{ label: "Request a Landscaping Quote", href: "/gardening-landscaping#quote" }}
         secondaryCta={{ label: "View Our Approach", href: "#approach" }}
       />
 
@@ -154,7 +154,7 @@ export default function LandscapingPage() {
         title="Have a project in mind?"
         description="Tell us about your site — its size, location and what you're hoping for — and we'll start with a conversation, not a quote."
         primaryLabel="Discuss Your Landscape"
-        primaryHref="/book?experience=landscaping"
+        primaryHref="/gardening-landscaping#quote"
         secondaryLabel="Talk to Us"
         secondaryHref="/contact"
       />

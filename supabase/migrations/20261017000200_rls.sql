@@ -138,6 +138,9 @@ create policy contact_insert on public.contact_enquiries for insert to anon, aut
   with check (status = 'new' and admin_notes is null and (user_id is null or user_id = auth.uid()));
 create policy contact_select on public.contact_enquiries for select to authenticated
   using (public.is_admin() or user_id = auth.uid());
+-- Hosts can read enquiries made about THEIR OWN listings (never anyone else's).
+create policy contact_host_select on public.contact_enquiries for select to authenticated
+  using (property_id is not null and public.owns_property(property_id));
 create policy contact_admin_update on public.contact_enquiries for update to authenticated
   using (public.is_admin()) with check (public.is_admin());
 

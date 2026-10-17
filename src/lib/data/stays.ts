@@ -1,3 +1,5 @@
+import { cache } from "react";
+
 import { createPublicSupabase, createServerSupabase } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { PAGE_SIZE, type StayFilters } from "@/lib/stays/filters";
@@ -51,7 +53,7 @@ export interface StayDetail {
   unavailable: { start_date: string; end_date: string }[];
 }
 
-export async function getStayBySlug(slug: string): Promise<StayDetail | null> {
+export const getStayBySlug = cache(async function getStayBySlug(slug: string): Promise<StayDetail | null> {
   if (!isSupabaseConfigured() || !/^[a-z0-9-]{1,80}$/.test(slug)) return null;
   try {
     const db = await createServerSupabase();
@@ -92,7 +94,7 @@ export async function getStayBySlug(slug: string): Promise<StayDetail | null> {
     console.error("getStayBySlug failed", err);
     return null;
   }
-}
+});
 
 export async function getSimilarStays(property: Property, limit = 3): Promise<SearchResult[]> {
   if (!isSupabaseConfigured()) return [];
@@ -116,6 +118,17 @@ export async function listApprovedSlugs(): Promise<{ slug: string; updated_at: s
       .eq("is_sample", false)
       .limit(2000);
     return (data ?? []) as { slug: string; updated_at: string }[];
+  } catch {
+    return [];
+  }
+}
+
+/** Featured live listings for the home page (public, cookie-less so the page can stay cached). */
+export async function getFeaturedStays(limit = 3): Promise<SearchResult[]> {
+  if (!isSupabaseConfigured()) return [];
+  try {
+    const { data } = await createPublicSupabase(120).rpc("search_properties", { p_sort: "featured", p_limit: limit });
+    return ((data ?? []) as SearchResult[]).map((r) => ({ ...r, total_count: Number(r.total_count) }));
   } catch {
     return [];
   }

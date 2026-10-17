@@ -187,7 +187,7 @@ export default function NatureStayPage() {
 
       <CtaBand
         title="Ready to slow down?"
-        description="Share your preferred dates and group size — we'll confirm availability within 24 hours."
+        description="Share your preferred dates and group size — we'll get back to you to confirm availability."
         primaryLabel="Plan Your Stay"
         primaryHref="/book?experience=nature-stay"
         secondaryLabel="Talk to Us"

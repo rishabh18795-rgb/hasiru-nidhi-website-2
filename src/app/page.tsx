@@ -20,6 +20,10 @@ import {
   blogPosts,
 } from "@/lib/content";
 import { siteConfig } from "@/lib/site";
+import { StaySearchBar } from "@/components/stays/search-bar";
+import { StayCard } from "@/components/stays/stay-card";
+import { getFeaturedStays } from "@/lib/data/stays";
+import { getCatalog } from "@/lib/data/catalog";
 
 export const metadata: Metadata = {
   title: `${siteConfig.name} — ${siteConfig.tagline}`,
@@ -27,14 +31,15 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const [featuredStays, catalog] = await Promise.all([getFeaturedStays(3), getCatalog()]);
   const featuredExperiences = experiences.slice(0, 6);
   const recentPosts = blogPosts.slice(0, 3);
 
   return (
     <>
       {/* HERO */}
-      <section className="relative flex h-[100svh] min-h-[640px] items-center overflow-hidden bg-forest-950">
+      <section className="relative flex min-h-[100svh] items-center overflow-hidden bg-forest-950 py-32">
         <HeroBackdrop image={images.heroSunriseFields} />
         <div className="container-nidhi relative flex flex-col items-start pt-20">
           <Reveal>
@@ -78,6 +83,9 @@ export default function HomePage() {
                 Explore Experiences
               </LinkButton>
             </div>
+          </Reveal>
+          <Reveal delay={0.38} className="mt-10 w-full max-w-4xl">
+            <StaySearchBar tone="dark" />
           </Reveal>
         </div>
 
@@ -146,6 +154,38 @@ export default function HomePage() {
           <StatRow />
         </div>
       </section>
+
+      {/* FEATURED STAYS + CATEGORIES */}
+      {featuredStays.length > 0 || catalog.categories.length > 0 ? (
+        <section className="bg-cream pb-28">
+          <div className="container-nidhi">
+            <div className="flex flex-wrap items-end justify-between gap-6">
+              <SectionHeading eyebrow="Explore Stays" title="Find your quiet place in nature." className="mb-0" />
+              <Reveal delay={0.1}>
+                <Link href="/stays" className="inline-flex items-center gap-1.5 text-sm font-medium text-forest-700 hover:text-forest-900">
+                  Browse all stays <ArrowUpRight className="h-3.5 w-3.5" />
+                </Link>
+              </Reveal>
+            </div>
+            {catalog.categories.length > 0 ? (
+              <ul className="mt-8 flex flex-wrap gap-3" aria-label="Browse by type">
+                {catalog.categories.map((c) => (
+                  <li key={c.slug}>
+                    <Link href={`/stays?category=${c.slug}`} className="inline-flex rounded-full bg-white px-5 py-2.5 text-sm text-forest-900 ring-1 ring-forest-900/12 transition-colors hover:bg-forest-50">
+                      {c.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+            {featuredStays.length > 0 ? (
+              <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {featuredStays.map((s) => <StayCard key={s.id} stay={s} />)}
+              </div>
+            ) : null}
+          </div>
+        </section>
+      ) : null}
 
       {/* NATURE STAY SPOTLIGHT */}
       <section className="bg-sand-50 py-28">
@@ -227,7 +267,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* TESTIMONIALS */}
+      {/* TESTIMONIALS — only rendered when real, verified quotes exist */}
+      {testimonials.length > 0 ? (
       <section className="bg-forest-50 py-28">
         <div className="container-nidhi">
           <SectionHeading
@@ -243,6 +284,27 @@ export default function HomePage() {
               </StaggerItem>
             ))}
           </StaggerGroup>
+        </div>
+      </section>
+      ) : null}
+
+      {/* PARTNER WITH US */}
+      <section className="bg-forest-950 py-24">
+        <div className="container-nidhi grid gap-10 lg:grid-cols-[1.2fr_1fr] lg:items-center">
+          <SectionHeading
+            eyebrow="For property owners"
+            title="Own a place in nature? List it with us."
+            description="Hasiru Nidhi is growing a network of farm stays, cottages, homestays and eco-retreats across Karnataka. Apply to list your property — every listing is reviewed, and you stay in control of your calendar and booking requests."
+            tone="light"
+          />
+          <Reveal delay={0.1} className="flex flex-wrap gap-4 lg:justify-end">
+            <LinkButton href="/list-your-property" size="lg" className="rounded-full bg-sand-400 px-8 text-forest-950 hover:bg-sand-300">
+              List Your Property <ArrowUpRight className="h-4 w-4" />
+            </LinkButton>
+            <LinkButton href="/become-a-host" variant="outline" size="lg" className="rounded-full border-cream/30 bg-transparent px-8 text-cream hover:bg-cream/10">
+              About hosting
+            </LinkButton>
+          </Reveal>
         </div>
       </section>
 

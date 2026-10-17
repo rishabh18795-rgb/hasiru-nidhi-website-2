@@ -2,6 +2,10 @@ import { z } from "zod";
 
 import { emailSchema, honeypot, optionalEmail, optionalPhone, phoneSchema } from "@/lib/validation/common";
 
+/** Optional integer field: a blank input means "not provided", not 0. */
+const optionalInt = (min: number, max: number) =>
+  z.preprocess((v) => (v === "" || v === null || v === undefined ? undefined : v), z.coerce.number().int().min(min).max(max).optional());
+
 export const contactKinds = ["general", "property", "group", "experience_request", "host_partnership", "support"] as const;
 
 export const contactEnquirySchema = z
@@ -25,8 +29,8 @@ export const partnerApplicationSchema = z.object({
   city: z.string().trim().min(2, "Enter the city or town").max(120),
   state: z.string().trim().min(2).max(120).default("Karnataka"),
   category: z.string().trim().max(80).optional(),
-  rooms_count: z.coerce.number().int().min(1).max(200).optional(),
-  max_guests: z.coerce.number().int().min(1).max(500).optional(),
+  rooms_count: optionalInt(1, 200),
+  max_guests: optionalInt(1, 500),
   description: z.string().trim().max(3000).optional(),
   current_platforms: z.string().trim().max(300).optional(),
   partnership_model: z.string().trim().max(300).optional(),

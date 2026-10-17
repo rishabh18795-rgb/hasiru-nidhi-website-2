@@ -29,32 +29,37 @@ export default function TermsPage() {
           </p>
 
           <section>
-            <h2 className="font-display text-xl text-forest-950">Bookings & Confirmation</h2>
+            <h2 className="font-display text-xl text-forest-950">Bookings &amp; Confirmation</h2>
             <p className="mt-3">
-              All bookings are subject to availability and are confirmed only
-              upon receipt of the applicable advance payment. Enquiries
-              submitted through this website do not constitute a confirmed
-              booking until acknowledged in writing by our team.
+              All bookings are subject to availability. A request or enquiry
+              submitted through this website is <strong>not</strong> a confirmed
+              booking. For stays listed by hosts, a booking is confirmed when
+              the host accepts your request and you are notified through your
+              account. For Hasiru Nidhi&apos;s own stays and experiences, a
+              booking is confirmed when our team acknowledges it in writing.
             </p>
           </section>
 
           <section>
             <h2 className="font-display text-xl text-forest-950">Payments</h2>
             <p className="mt-3">
-              A 30% advance is required to hold a booking, with the balance
-              payable on arrival unless otherwise agreed in writing. We do
-              not collect payment details through this website; all payment
-              is arranged directly with our team.
+              This website does not currently take online payments or collect
+              payment details. Any advance or balance is arranged directly
+              between you and the host (or, for Hasiru Nidhi&apos;s own
+              experiences, with our team), and the amounts and timing are
+              confirmed at the time of booking. Prices shown on the website
+              are indicative until confirmed.
             </p>
           </section>
 
           <section>
-            <h2 className="font-display text-xl text-forest-950">Cancellations & Rescheduling</h2>
+            <h2 className="font-display text-xl text-forest-950">Cancellations &amp; Rescheduling</h2>
             <p className="mt-3">
-              Cancellations made more than 7 days before the visit date are
-              eligible for a full refund of the advance. Cancellations within
-              7 days are eligible for rescheduling, subject to availability,
-              but are non-refundable. No-shows are non-refundable.
+              Stays listed by hosts follow the cancellation policy shown on the
+              listing and on your booking; see our{" "}
+              <a href="/cancellation-policy" className="underline underline-offset-2">Cancellation &amp; Refund Policy</a>.
+              For Hasiru Nidhi&apos;s own experiences, cancellation and
+              rescheduling terms are confirmed in writing when you book.
             </p>
           </section>
 
@@ -79,6 +84,32 @@ export default function TermsPage() {
               children&apos;s supervision needs. Hasiru Nidhi is not liable
               for personal injury arising from failure to follow posted
               safety guidance.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="font-display text-xl text-forest-950">Accounts</h2>
+            <p className="mt-3">
+              You are responsible for keeping your sign-in details secure and
+              for activity under your account. You must provide accurate
+              information. We may suspend accounts that breach these terms or
+              put others at risk.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="font-display text-xl text-forest-950">Listings, Hosts and Travellers</h2>
+            <p className="mt-3">
+              Properties on the platform are offered by independent hosts.
+              Every listing is reviewed by Hasiru Nidhi before it is
+              published, but we do not own, operate or control listed
+              properties unless a listing says it is managed by Hasiru Nidhi.
+              Hosts are responsible for the accuracy of their listings, the
+              safety of their premises, and for holding any licences their
+              property requires. A booking <em>request</em> is not a reservation:
+              a stay is confirmed only when the host accepts it and you are
+              notified. We do not guarantee that any listing will receive
+              bookings or any level of income.
             </p>
           </section>
 

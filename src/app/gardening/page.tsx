@@ -54,7 +54,7 @@ export default function GardeningPage() {
         image={images.gardeningTools}
         crumb="Gardening Services"
         primaryCta={{ label: "Book a Gardening Experience", href: "/book?experience=gardening" }}
-        secondaryCta={{ label: "Ask About Upcoming Sessions", href: "/contact" }}
+        secondaryCta={{ label: "Garden design & landscaping services", href: "/gardening-landscaping" }}
       />
 
       <section className="bg-cream py-28">

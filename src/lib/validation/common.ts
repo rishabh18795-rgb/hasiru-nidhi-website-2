@@ -6,21 +6,30 @@ export const phoneSchema = z
   .transform((v) => v.replace(/[\s()-]/g, ""))
   .refine((v) => /^\+?\d{8,15}$/.test(v), "Enter a valid phone number, e.g. +91 98765 43210");
 
-export const optionalPhone = z
-  .string()
-  .trim()
-  .transform((v) => v.replace(/[\s()-]/g, ""))
-  .refine((v) => v === "" || /^\+?\d{8,15}$/.test(v), "Enter a valid phone number")
-  .transform((v) => (v === "" ? undefined : v));
+/** A missing field and an empty string both mean "not provided". */
+const blankIfMissing = (v: unknown) => (v === undefined || v === null ? "" : v);
+
+export const optionalPhone = z.preprocess(
+  blankIfMissing,
+  z
+    .string()
+    .trim()
+    .transform((v) => v.replace(/[\s()-]/g, ""))
+    .refine((v) => v === "" || /^\+?\d{8,15}$/.test(v), "Enter a valid phone number")
+    .transform((v) => (v === "" ? undefined : v)),
+);
 
 export const emailSchema = z.string().trim().toLowerCase().pipe(z.email("Enter a valid email address").max(254));
 
-export const optionalEmail = z
-  .string()
-  .trim()
-  .toLowerCase()
-  .refine((v) => v === "" || z.email().safeParse(v).success, "Enter a valid email address")
-  .transform((v) => (v === "" ? undefined : v));
+export const optionalEmail = z.preprocess(
+  blankIfMissing,
+  z
+    .string()
+    .trim()
+    .toLowerCase()
+    .refine((v) => v === "" || z.email().safeParse(v).success, "Enter a valid email address")
+    .transform((v) => (v === "" ? undefined : v)),
+);
 
 export const isoDate = z
   .string()

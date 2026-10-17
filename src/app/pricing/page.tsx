@@ -30,7 +30,7 @@ export default function PricingPage() {
       <PageHero
         eyebrow="Pricing"
         title="Simple, transparent tariffs."
-        description="No hidden charges — every rate below includes the full farm experience. Taxes are added at checkout."
+        description="Indicative tariffs for Hasiru Nidhi's own stays and experiences. Final prices and any applicable taxes are confirmed when you book."
         image={images.mistyHills}
         crumb="Pricing"
       />
@@ -101,7 +101,7 @@ export default function PricingPage() {
 
       <CtaBand
         title="Ready to lock in your dates?"
-        description="We hold bookings with a 30% advance — the rest is settled on arrival."
+        description="Payment arrangements are confirmed when you book. Prices shown are indicative."
       />
     </>
   );

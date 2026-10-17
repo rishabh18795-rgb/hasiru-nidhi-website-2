@@ -38,8 +38,8 @@ export function AppPage({
   );
 }
 
-export function Card({ className, children }: { className?: string; children: ReactNode }) {
-  return <div className={cn("rounded-2xl border border-forest-900/10 bg-white p-6 shadow-sm shadow-forest-950/[0.03]", className)}>{children}</div>;
+export function Card({ className, children, id }: { className?: string; children: ReactNode; id?: string }) {
+  return <div id={id} className={cn("rounded-2xl border border-forest-900/10 bg-white p-6 shadow-sm shadow-forest-950/[0.03]", className)}>{children}</div>;
 }
 
 export function CardTitle({ children, aside }: { children: ReactNode; aside?: ReactNode }) {

@@ -1,170 +1,139 @@
-# Hasiru Nidhi — Website
+# Hasiru Nidhi — nature stays & experiences marketplace
 
-Production website for **Hasiru Nidhi Horizons Private Limited**, a nature
-experience retreat off Kanakapura Road near Bengaluru. Built with Next.js 16
-(App Router), TypeScript, Tailwind CSS v4, shadcn/ui (Base UI), and Framer
-Motion.
+Production application for **Hasiru Nidhi Horizons Private Limited** — *Cultivating Nature, Creating Memories.*
+A responsive marketing site **plus** a working accommodation marketplace: stay search, property pages,
+traveller / host / admin dashboards, listing review, booking requests with double-booking protection,
+gardening quote enquiries and partner applications.
 
-> **Cultivating Nature, Creating Memories.**
+| | |
+|---|---|
+| Framework | Next.js 16 (App Router, React 19, server actions), TypeScript, Tailwind CSS v4 |
+| Backend | Supabase — PostgreSQL, Auth, Storage, Row Level Security |
+| Hosting | Vercel (full-stack). *GitHub is the source repository.* |
+| Tests | Vitest — 184 tests incl. a real-Postgres (PGlite) suite for RLS and booking logic |
 
-## Tech Stack
+> **Deployment note.** The earlier GitHub Pages static export was retired: authentication, server actions and
+> booking transactions need a server runtime, which static hosting cannot provide. The last static build remains
+> published at the old Pages URL (frozen) until you unpublish it in *Settings → Pages*. Production = Vercel.
 
-- **Framework:** Next.js 16 (App Router, Turbopack, React 19)
-- **Language:** TypeScript
-- **Styling:** Tailwind CSS v4, custom design tokens (forest / olive / earth / sand palette)
-- **UI Primitives:** shadcn/ui on Base UI
-- **Motion:** Framer Motion (scroll reveals, parallax hero)
-- **Forms:** React Hook Form + Zod, submitted client-side (see Deployment —
-  this is a static export, so there is no server to run a Server Action)
-- **Icons:** Lucide React
-- **Fonts:** Fraunces (display/serif) + Manrope (body), via `next/font`
+## What is implemented
 
-## Getting Started
+See [docs/FEATURE_STATUS.md](docs/FEATURE_STATUS.md) for the honest, per-feature status and what is blocked on credentials.
+
+* **Public:** home (with stay search), explore stays (filters, sort, pagination, URL-preserved), stay detail
+  (gallery lightbox, availability calendar, booking request, save, report, contact host), experiences, cycling,
+  gardening & landscaping services (quote form with private photo upload), nature stay, gallery, packages, pricing,
+  journal, FAQ, contact, list-your-property, become-a-host, privacy, terms, cancellation policy, 404.
+* **Accounts:** sign up (traveller or host), sign in/out, forgot/reset password, e-mail verification, profile editing.
+* **Traveller dashboard** `/dashboard`: bookings by status, cancel, review finished stays, saved stays, notifications.
+* **Host portal** `/host`: listing editor (draft → submit → review), photo upload, room types, availability calendar,
+  booking-request inbox (accept / decline / cancel), enquiries, partnership-application status.
+* **Admin** `/admin`: review queue (approve / reject / suspend / reinstate / feature), user management, bookings,
+  enquiries & applications, reports, catalogue, platform settings, setup-status checklist, audit log.
+
+## Quick start (local)
 
 ```bash
 npm install
-npm run dev
+cp .env.example .env.local        # fill in the Supabase values — see docs/SETUP.md
+npm run dev                       # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) (or the port shown in
-your terminal) to view the site.
+Without Supabase variables the **public marketing site still runs**; account, stay-search and form features show a
+clear “coming online” notice instead of breaking. This is also the state a brand-new deployment starts in.
 
-### Quality checks
+### Quality gates
 
 ```bash
-npm run lint        # ESLint (flat config)
+npm run lint         # ESLint
 npm run typecheck    # tsc --noEmit
+npm test             # Vitest: unit + database policy tests (no Supabase needed)
 npm run build        # production build
 ```
 
-All three currently run clean with zero errors and zero warnings.
+CI (`.github/workflows/ci.yml`) runs all four on every push and pull request.
 
-## Project Structure
+## Setup you must do (≈20 minutes)
+
+Full step-by-step instructions are in **[docs/SETUP.md](docs/SETUP.md)**:
+
+1. Create a Supabase project and run the three migrations in `supabase/migrations/` (in order).
+2. Configure Auth URLs and (recommended) custom SMTP.
+3. Create the first administrator with `supabase/scripts/create_first_admin.sql`.
+4. Import the GitHub repo into Vercel and set the environment variables.
+5. Enter the official WhatsApp number / contact details in **Admin → Settings**.
+
+### Environment variables
+
+| Variable | Required | Purpose |
+|---|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | yes | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | yes | Public anon/publishable key (safe in the browser; protected by RLS) |
+| `SUPABASE_SERVICE_ROLE_KEY` | for enquiry photos & e-mail look-ups | **Server only.** Bypasses RLS. Never prefix with `NEXT_PUBLIC_`. |
+| `NEXT_PUBLIC_SITE_URL` | recommended | Production URL for canonical links, sitemap, e-mail links |
+| `NEXT_PUBLIC_WHATSAPP_NUMBER` | optional | Official WhatsApp number (digits + country code). Also settable in Admin. WhatsApp buttons are hidden until set. |
+| `NEXT_PUBLIC_CONTACT_PHONE`, `NEXT_PUBLIC_CONTACT_EMAIL` | optional | Shown in footer/contact when set. Never invented. |
+| `NEXT_PUBLIC_INSTAGRAM_URL`, `…_FACEBOOK_URL`, `…_YOUTUBE_URL` | optional | Social links (hidden when empty) |
+| `RESEND_API_KEY`, `EMAIL_FROM` | optional | Transactional e-mail. When unset, e-mails are *skipped and flagged* (in-app notifications still work). |
+| `ADMIN_NOTIFY_EMAIL` | optional | Receives new-enquiry / new-listing alerts |
+
+## Architecture & security model
+
+* **Authorization is enforced in three layers**, none of which trusts the browser:
+  1. **Postgres RLS** on every table (deny by default) — `supabase/migrations/…_rls.sql`.
+  2. **SECURITY DEFINER workflows** for every privileged change (`request_booking`, `respond_to_booking`,
+     `cancel_booking`, `submit_property`, `review_property`, `admin_update_user`). Clients cannot write bookings,
+     approve listings or change roles directly; guard triggers also block `role`, `is_suspended`, `status`, `is_featured`.
+  3. **Server-side checks** on every protected page and server action (`src/lib/auth.ts`). The proxy
+     (`src/proxy.ts`) only refreshes sessions and does an *optimistic* redirect.
+* **Roles:** `traveller`, `host`, `admin`. Signup can request `traveller` or `host` only; **no application endpoint can
+  create or promote an admin** — see `supabase/scripts/create_first_admin.sql`.
+* **Double-booking:** a Postgres exclusion constraint (`bookings_no_confirmed_overlap`) makes overlapping *confirmed*
+  stays impossible even under concurrent requests; `request_booking` additionally checks dates, capacity, blocks
+  and duplicate requests. A booking is only ever described as confirmed after the host accepts it.
+* **Secrets:** the service-role client is `server-only`; a test fails the build if it is imported from client code.
+* **Private data:** addresses/contacts live in `property_private` (owner + admin only); enquiry photos use a private bucket.
+* **Not yet in place** (recommended before heavy traffic): rate limiting / CAPTCHA on public forms (a honeypot is
+  included — use Vercel WAF or Cloudflare Turnstile), a Content-Security-Policy, and automated cleanup of orphaned
+  enquiry uploads. Listing photos are in a *public* bucket under unguessable UUID paths.
+
+## Testing
+
+See [docs/MANUAL_TESTING.md](docs/MANUAL_TESTING.md) for the traveller / host / admin walkthrough.
+
+Automated (run with `npm test`):
+
+* `tests/db/*` — boots the **real migrations** in an in-process Postgres and impersonates users via JWT + role:
+  signup role assignment, privilege-escalation attempts, listing approval workflow, private-data isolation, booking
+  validation, double-booking prevention, cancellation, reviews-only-after-stay, search & filters, enquiry privacy,
+  notifications, audit log, and an **app ↔ schema contract** test that checks every table, column and RPC parameter the
+  code uses against the migrated schema.
+* `tests/unit/*` — filter parsing/sanitising, validation schemas, error mapping, open-redirect protection, contact
+  helpers, and **structural security tests** (every protected page/action must authorize; no invented contact details;
+  no placeholder testimonials).
+
+**Not automated / blocked:** browser end-to-end flows against a live Supabase project (sign-in, e-mail verification,
+storage upload, e-mail delivery) require your Supabase project and cannot run in CI without credentials. Use the manual checklist.
+
+## Adding genuine properties & handling enquiries
+
+* **Sample data:** `supabase/seed.sql` adds three clearly-labelled *Sample listing* demos — **do not run it in
+  production** (or delete them: `delete from public.properties where is_sample;`). The seed invents no users, bookings or reviews.
+* **Real properties:** the owner signs up as a *host*, adds a property + photos, and submits it; an admin approves it in
+  **Admin → Listings**. Or an admin can ask the owner to apply via *List your property*.
+* **Enquiries:** *Admin → Enquiries* has contact/booking requests, gardening quotes (with signed-URL photos) and partner
+  applications. Triage with status + internal notes. Hosts see enquiries about their own listings.
+* **Payments:** not enabled — bookings are requests settled directly with the host. See `src/lib/payments/index.ts` for what
+  enabling Razorpay requires.
+
+## Project layout
 
 ```
-src/
-  app/                  Route segments (App Router) — one folder per page
-    about/ blog/ contact/ cycling/ experiences/ faq/ gallery/
-    gardening/ landscaping/ nature-stay/ packages/ pricing/
-    privacy/ terms/
-    layout.tsx          Root layout, fonts, metadata, JSON-LD
-    page.tsx            Home page
-    sitemap.ts robots.ts opengraph-image.tsx
-  components/
-    site/               Site-specific components (Navbar, Footer, Reveal,
-                         PageHero, CtaBand, cards, contact form, etc.)
-    ui/                  shadcn/ui primitives
-  lib/
-    content.ts           All page copy, imagery map, packages, pricing, FAQs,
-                          blog posts — the single source of truth for content
-    site.ts               Site config, nav links, contact details
-    fonts.ts               next/font definitions
-    base-path.ts          GitHub Pages basePath/site URL (see Deployment)
-    enquiry-schema.ts   Shared Zod schema for the contact form
-public/
-  brand/logo-mark.png   Official Hasiru Nidhi logo (client-supplied)
-  .nojekyll              Required for GitHub Pages (see Deployment)
-.github/workflows/
-  deploy-pages.yml       Build + deploy to GitHub Pages on push to main
+supabase/migrations/   schema, RLS, reference data + storage buckets (apply in order)
+supabase/seed.sql      SAMPLE data only
+supabase/scripts/      one-off admin bootstrap
+src/app/               routes (public site, /stays, /dashboard, /host, /admin, auth)
+src/lib/               supabase clients, auth, validation (zod), data access, email, formatting
+src/components/        site, forms, app shell, stays, host, admin
+tests/db, tests/unit   Vitest suites
 ```
-
-## Content & Design Notes
-
-- **Copy** is original, written specifically for this brief — not templated
-  or AI-generic. It lives in [`src/lib/content.ts`](src/lib/content.ts) and
-  [`src/lib/site.ts`](src/lib/site.ts); edit there rather than in page files.
-- **Photography** is curated stock imagery from Unsplash (free-to-use
-  licence), used as premium placeholder photography. **Before launch,
-  replace the URLs in `src/lib/content.ts` with real, licensed photography
-  of the actual property.**
-- **Testimonials** in `content.ts` are placeholder copy in the right tone —
-  swap in verified guest quotes before launch.
-- **Contact details, address, and pricing** (`src/lib/site.ts`,
-  `src/lib/content.ts`) are realistic placeholders and must be confirmed
-  against the real business before going live.
-- **Contact form** validates in the browser and logs the enquiry to the
-  console (`src/app/contact/actions.ts`) but is not yet wired to an
-  email/CRM provider — connect a transactional email service (e.g. Resend,
-  Postmark) or a form backend (e.g. Formspree) before launch. It runs
-  entirely client-side because this is a static export with no backend.
-- **Design system**: colour tokens (`forest`, `olive`, `earth`, `sand`,
-  `cream`) and typography scale live in `src/app/globals.css` under the
-  `@theme` block.
-
-## SEO
-
-- Per-page `generateMetadata` / static `metadata` exports with title
-  templates, canonical URLs, and Open Graph/Twitter cards
-- Dynamic OG image via `next/og` (`src/app/opengraph-image.tsx`)
-- `sitemap.ts` and `robots.ts` (App Router file conventions)
-- JSON-LD structured data: `TouristAttraction` (site-wide), `FAQPage`
-  (`/faq`), `BlogPosting` (each journal post)
-
-`siteConfig.url` (`src/lib/site.ts`) currently points at the GitHub Pages URL
-via `src/lib/base-path.ts`. **Once a custom domain is live, update
-`src/lib/base-path.ts` and remove the `basePath`/`assetPrefix` config in
-`next.config.ts`** (see below) rather than editing `siteConfig.url` alone.
-
-## Deployment — GitHub Pages (current)
-
-This repo is statically exported (`output: "export"` in `next.config.ts`)
-and deployed to **GitHub Pages** by
-[`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml)
-on every push to `main`: it installs, lints, typechecks, builds, and
-publishes the `out/` folder via `actions/upload-pages-artifact` +
-`actions/deploy-pages`.
-
-**Live URL:** https://rishabh18795-rgb.github.io/hasiru-nidhi-website-2/
-
-### One-time repo setting (required, cannot be done via git push)
-
-GitHub Pages must be configured to build from **GitHub Actions**, not the
-default "Deploy from a branch":
-
-> Repo → **Settings → Pages → Build and deployment → Source** → select
-> **"GitHub Actions"**.
-
-If this is still set to "Deploy from a branch", the deploy job in the
-workflow will fail even though the build succeeds — this is exactly what
-caused the README to render in place of the site.
-
-### Why the config looks the way it does
-
-Because this is a **project page** (`username.github.io/repo-name/`, no
-custom domain), every internal reference needs the repo name as a prefix:
-
-- `next.config.ts` sets `basePath`/`assetPrefix` to `/hasiru-nidhi-website-2`
-  in production only, plus `trailingSlash: true` (GitHub Pages has no
-  server to redirect `/about` → `/about/`, so routes must be exported as
-  `/about/index.html` and linked with the trailing slash) and
-  `images.unoptimized: true` (no image-optimization server on static
-  hosting).
-- `src/lib/base-path.ts` exports that same prefix for the handful of things
-  Next.js does **not** auto-prefix: `next/image` `src`, `metadata.icons`,
-  and OG/canonical URLs. (`next/link` and `next/router` *are* auto-prefixed.)
-- Server Actions are unsupported by static export, so the contact form
-  (`src/app/contact/actions.ts`) is a plain client-callable function, not
-  a `"use server"` action.
-- `public/.nojekyll` is required — GitHub Pages runs Jekyll by default,
-  which silently deletes any folder starting with `_`, including Next's
-  `_next` asset folder. Its presence in `public/` means static export
-  copies it straight into `out/`.
-
-### Deploying elsewhere later (Vercel, etc.)
-
-Static export is a constraint specific to GitHub Pages. If you move to
-Vercel or another Node-capable host, you get back Server Actions and
-`next/image` optimization by reverting `next.config.ts` to a normal
-config (drop `output`, `basePath`, `assetPrefix`, `trailingSlash`,
-`images.unoptimized`) and restoring `"use server"` in
-`src/app/contact/actions.ts`.
-
-## Not Yet Wired Up (by design)
-
-These are flagged intentionally rather than faked:
-
-- Email/CRM delivery for contact form submissions
-- Real payment/booking backend (the site is enquiry-first — bookings are
-  confirmed manually per the Terms & Conditions page)
-- Analytics (add your provider of choice in `src/app/layout.tsx`)
-- Real property photography and verified guest testimonials

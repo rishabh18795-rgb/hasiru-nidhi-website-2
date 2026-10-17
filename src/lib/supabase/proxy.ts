@@ -4,7 +4,7 @@ import { createServerClient } from "@supabase/ssr";
 import { getSupabaseConfig } from "@/lib/supabase/config";
 
 const PROTECTED_PREFIXES = ["/dashboard", "/host", "/admin"];
-const AUTH_PAGES = ["/sign-in", "/sign-up", "/forgot-password"];
+const AUTH_PAGES = ["/sign-in", "/sign-up"];
 
 /**
  * Refreshes the Supabase session cookie on every matched request and performs an OPTIMISTIC

@@ -6,6 +6,7 @@ import { PageHero } from "@/components/site/page-hero";
 import { SectionHeading } from "@/components/site/section-heading";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/site/reveal";
 import { CtaBand } from "@/components/site/cta-band";
+import { WhatsAppButton } from "@/components/site/whatsapp-button";
 import { images } from "@/lib/content";
 import { basePath } from "@/lib/base-path";
 
@@ -158,6 +159,13 @@ export default function CyclingPage() {
               className="object-cover"
             />
           </Reveal>
+        </div>
+      </section>
+
+      <section className="bg-cream py-14">
+        <div className="container-nidhi flex flex-col items-center gap-4 text-center">
+          <p className="text-sm text-ink/65">Planning a group outing or a cycling day for friends or colleagues?</p>
+          <WhatsAppButton topic="group" label="Ask about group cycling on WhatsApp" />
         </div>
       </section>
 

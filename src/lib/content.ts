@@ -181,34 +181,9 @@ export interface Testimonial {
   role: string;
 }
 
-// Placeholder testimonials for layout and tone reference — replace with
-// verified guest quotes before launch.
-export const testimonials: Testimonial[] = [
-  {
-    quote:
-      "We came for a weekend and left talking about the sunrise cycle for weeks. Nothing about the stay felt staged — it felt like someone's real, well-loved farm.",
-    name: "Ananya R.",
-    role: "Bengaluru",
-  },
-  {
-    quote:
-      "Our offsite usually means a hotel conference room with worse lighting. This time the team gardened for an hour before the first meeting. Everyone was sharper for it.",
-    name: "Karthik M.",
-    role: "Team Lead, product studio",
-  },
-  {
-    quote:
-      "My kids are still talking about the bonfire and the goats. I am still thinking about the food — simple, seasonal, and better than anything from a menu.",
-    name: "Priya D.",
-    role: "Visiting with family",
-  },
-  {
-    quote:
-      "The gardening walkthrough alone was worth the trip. I went home and finally started the kitchen garden I'd been putting off for two years.",
-    name: "Rahul S.",
-    role: "First-time visitor",
-  },
-];
+// Testimonials are intentionally EMPTY. Add real, permission-granted guest quotes here and the
+// "Guest Notes" section on the home page will appear. Never publish invented reviews.
+export const testimonials: Testimonial[] = [];
 
 export interface Package {
   slug: string;
@@ -387,7 +362,7 @@ export const faqs: FaqEntry[] = [
   {
     question: "How does booking and payment work?",
     answer:
-      "Submit a request through our Book Your Experience page or WhatsApp with your preferred dates and group size. We confirm availability within 24 hours and hold your booking with a 30% advance; the balance is settled on arrival.",
+      "Request availability through our Book Your Experience page, or find a stay under Explore Stays and send the host a booking request. A request is not a confirmed booking: it is confirmed only once the host (or our team) accepts it and you are notified. Payment arrangements are confirmed when you book; the website does not take online payments yet.",
   },
   {
     question: "Can Hasiru Nidhi host a group larger than 20 people?",
@@ -474,7 +449,7 @@ export const stats = [
   { value: "45", label: "Minutes from central Bengaluru" },
   { value: "12", label: "Acres of working farmland" },
   { value: "9", label: "Distinct nature experiences" },
-  { value: "4.9", label: "Average guest rating" },
+  { value: "4", label: "Core experiences to choose from" },
 ];
 
 export const futureVentures = [

@@ -102,6 +102,18 @@ describe("search_properties", () => {
     expect(free).toHaveLength(1);
   });
 
+  it("availability filtering is correct for a signed-in user who is NOT the booker (RLS regression)", async () => {
+    // Before the fix, bookings were read with the caller's rights, so another user saw an
+    // already-booked property as available.
+    const other = await createUser(db, "bystander@example.test");
+    const rows = await as<{ slug: string }>(
+      db, other,
+      "select slug from public.search_properties(p_query => 'Availability Test', p_check_in => $1, p_check_out => $2)",
+      [dayOffset(41), dayOffset(42)],
+    );
+    expect(rows).toHaveLength(0);
+  });
+
   it("never returns drafts, pending or suspended listings", async () => {
     await db.query(
       "insert into public.properties (host_id, slug, name, status) values ($1, 'hidden-draft', 'Hidden Draft Place', 'draft')", [host]);
@@ -155,6 +167,19 @@ describe("enquiries persist and stay private", () => {
     await as(db, admin, "update public.contact_enquiries set status = 'in_progress', admin_notes = 'Called back' where id = $1", [id]);
     const changed = await as(db, guest, "update public.contact_enquiries set status = 'resolved' where id = $1 returning id", [id]);
     expect(changed).toHaveLength(0);
+  });
+});
+
+describe("host enquiry inbox", () => {
+  it("a host sees enquiries about their own listing only", async () => {
+    const mine = await insertApprovedProperty(db, host, { slug: "inbox-mine", name: "Inbox Mine" });
+    const theirs = await insertApprovedProperty(db, null, { slug: "inbox-theirs", name: "Inbox Theirs" });
+    await as(db, guest, "insert into public.contact_enquiries (kind, name, email, message, property_id, user_id) values ('property','Guest','g@example.test','About mine',$1,$2)", [mine, guest]);
+    await as(db, guest, "insert into public.contact_enquiries (kind, name, email, message, property_id, user_id) values ('property','Guest','g@example.test','About theirs',$1,$2)", [theirs, guest]);
+    const seen = await as<{ message: string }>(db, host, "select message from public.contact_enquiries where property_id is not null");
+    expect(seen.map((r) => r.message)).toEqual(["About mine"]);
+    const stranger = await createUser(db, "stranger-host@example.test", { account_type: "host" });
+    expect(await as(db, stranger, "select message from public.contact_enquiries where property_id is not null")).toHaveLength(0);
   });
 });
 
