@@ -22,7 +22,16 @@ jobs:
           node-version: "22"
           cache: npm
       - name: Install (lockfile-exact)
+        id: install
         run: npm ci
+        continue-on-error: true
+      - name: Report install failure
+        if: steps.install.outcome == 'failure'
+        run: |
+          echo "node $(node -v) npm $(npm -v)"
+          npm ci --loglevel verbose > npm-ci.log 2>&1 || true
+          grep -E "npm error|ERR!" npm-ci.log | head -40 | while IFS= read -r line; do echo "::error::${line}"; done
+          exit 1
       - name: Lint
         run: npm run lint
       - name: Type check
