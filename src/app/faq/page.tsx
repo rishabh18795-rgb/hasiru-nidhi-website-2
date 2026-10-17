@@ -10,14 +10,14 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { faqs, images } from "@/lib/content";
-import { siteConfig } from "@/lib/site";
+import { ContactEmailLink, ContactPhoneSuffix } from "@/components/site/contact-inline";
 import { basePath } from "@/lib/base-path";
 
 export const metadata: Metadata = {
   title: "FAQ",
   description:
     "Answers to common questions about visiting Hasiru Nidhi — location, bookings, food, pets and more.",
-  alternates: { canonical: `${basePath}/faq/` },
+  alternates: { canonical: `${basePath}/faq` },
 };
 
 export default function FaqPage() {
@@ -69,10 +69,8 @@ export default function FaqPage() {
           <Reveal delay={0.1}>
             <p className="mt-10 text-sm text-ink/55">
               Didn&apos;t find your answer? Write to us at{" "}
-              <a href={`mailto:${siteConfig.contact.email}`} className="underline underline-offset-2">
-                {siteConfig.contact.email}
-              </a>{" "}
-              or call {siteConfig.contact.phoneDisplay}.
+              <ContactEmailLink />{" "}
+             <ContactPhoneSuffix prefix="or call" />.
             </p>
           </Reveal>
         </div>

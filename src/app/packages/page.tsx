@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   title: "Packages",
   description:
     "Day escapes, farmhouse overnights, weekend retreats and corporate offsites at Hasiru Nidhi — nature experience packages near Bengaluru.",
-  alternates: { canonical: `${basePath}/packages/` },
+  alternates: { canonical: `${basePath}/packages` },
 };
 
 function bookingHrefFor(slug: string) {

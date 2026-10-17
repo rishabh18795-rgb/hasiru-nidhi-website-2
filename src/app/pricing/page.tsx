@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   title: "Pricing",
   description:
     "Transparent pricing for Hasiru Nidhi day visits, farmhouse overnights, weekend retreats and corporate offsites near Bengaluru.",
-  alternates: { canonical: `${basePath}/pricing/` },
+  alternates: { canonical: `${basePath}/pricing` },
 };
 
 function bookingHrefFor(tierName: string) {

@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   title: "Cycling",
   description:
     "Guided cycling trails through lush Karnataka countryside at Hasiru Nidhi, near Bengaluru — paced for scenery, not speed.",
-  alternates: { canonical: `${basePath}/cycling/` },
+  alternates: { canonical: `${basePath}/cycling` },
 };
 
 const stats = [

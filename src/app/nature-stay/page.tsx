@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   title: "Nature Stay",
   description:
     "Farmhouse rooms and open-air cottages at Hasiru Nidhi, built into the landscape near Bengaluru — deep verandahs, natural materials, and a full working farm at your doorstep.",
-  alternates: { canonical: `${basePath}/nature-stay/` },
+  alternates: { canonical: `${basePath}/nature-stay` },
 };
 
 const rooms = [

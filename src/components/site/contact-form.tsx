@@ -37,6 +37,7 @@ export function ContactForm() {
       email: "",
       subject: "",
       message: "",
+      website: "",
     },
   });
 
@@ -59,7 +60,7 @@ export function ContactForm() {
           Thank you — we&apos;ve received your message.
         </h3>
         <p className="mt-2 max-w-sm text-sm leading-relaxed text-ink/60">
-          Our team will get back to you within 24 hours.
+          Our team will reply to you soon.
         </p>
         <Button
           variant="outline"
@@ -74,6 +75,12 @@ export function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6" noValidate>
+      <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+        <label>
+          Leave this field empty
+          <input tabIndex={-1} autoComplete="off" {...register("website")} />
+        </label>
+      </div>
       <div className="grid gap-6 sm:grid-cols-2">
         <div className="flex flex-col gap-2">
           <Label htmlFor="name">Full Name</Label>

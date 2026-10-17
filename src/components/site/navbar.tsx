@@ -12,6 +12,7 @@ import { navLinks, siteConfig } from "@/lib/site";
 import { basePath } from "@/lib/base-path";
 import { Button } from "@/components/ui/button";
 import { LinkButton } from "@/components/site/link-button";
+import { AccountMenu } from "@/components/site/account-menu";
 import {
   Sheet,
   SheetContent,
@@ -19,7 +20,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 
-export function Navbar() {
+export function Navbar({ announcement }: { announcement?: string }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -44,6 +45,11 @@ export function Navbar() {
           : "bg-transparent"
       )}
     >
+      {announcement ? (
+        <div className="bg-forest-900 px-4 py-1.5 text-center text-xs text-sand-200" role="status">
+          {announcement}
+        </div>
+      ) : null}
       <nav className="container-nidhi flex h-20 items-center justify-between">
         <Link href="/" className="flex items-center gap-3" aria-label="Hasiru Nidhi home">
           <Image
@@ -116,13 +122,14 @@ export function Navbar() {
           ))}
         </div>
 
-        <div className="hidden lg:block">
+        <div className="hidden items-center gap-2 lg:flex">
+          <AccountMenu solid={solid} />
           <LinkButton
-            href="/book"
-            className="rounded-full bg-forest-800 px-6 text-cream hover:bg-forest-700"
+            href="/list-your-property"
+            className="rounded-full bg-forest-800 px-5 text-cream hover:bg-forest-700"
             size="lg"
           >
-            Book Your Experience
+            List Your Property
           </LinkButton>
         </div>
 
@@ -169,14 +176,27 @@ export function Navbar() {
                 </div>
               ))}
             </div>
-            <div className="mt-auto p-6">
+            <div className="mt-auto flex flex-col gap-3 p-6">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-forest-900/70">Account</span>
+                <AccountMenu solid onNavigate={() => setMobileOpen(false)} />
+              </div>
               <LinkButton
                 href="/book"
+                onClick={() => setMobileOpen(false)}
+                variant="outline"
+                className="w-full rounded-full"
+                size="lg"
+              >
+                Book Your Experience
+              </LinkButton>
+              <LinkButton
+                href="/list-your-property"
                 onClick={() => setMobileOpen(false)}
                 className="w-full rounded-full bg-forest-800 text-cream hover:bg-forest-700"
                 size="lg"
               >
-                Book Your Experience
+                List Your Property
               </LinkButton>
             </div>
           </SheetContent>

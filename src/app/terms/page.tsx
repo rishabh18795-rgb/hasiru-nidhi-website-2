@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 
 import { siteConfig } from "@/lib/site";
+import { ContactEmailLink } from "@/components/site/contact-inline";
 import { basePath } from "@/lib/base-path";
 
 export const metadata: Metadata = {
   title: "Terms & Conditions",
   description: `Terms and conditions for bookings and use of the ${siteConfig.name} website.`,
-  alternates: { canonical: `${basePath}/terms/` },
+  alternates: { canonical: `${basePath}/terms` },
   robots: { index: false, follow: true },
 };
 
@@ -103,9 +104,7 @@ export default function TermsPage() {
             <h2 className="font-display text-xl text-forest-950">Contact</h2>
             <p className="mt-3">
               Questions about these terms can be directed to{" "}
-              <a href={`mailto:${siteConfig.contact.email}`} className="underline underline-offset-2">
-                {siteConfig.contact.email}
-              </a>
+              <ContactEmailLink />
               .
             </p>
           </section>

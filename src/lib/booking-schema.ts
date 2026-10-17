@@ -28,6 +28,8 @@ export const bookingSchema = z.object({
   projectLocation: z.string().optional(),
   projectSize: z.string().optional(),
   message: z.string().max(1000).optional(),
+  // Hidden spam trap — real visitors never see or fill this field.
+  website: z.string().max(0).optional(),
 });
 
 export type BookingInput = z.infer<typeof bookingSchema>;

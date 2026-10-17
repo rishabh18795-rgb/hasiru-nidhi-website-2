@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 
 import { siteConfig } from "@/lib/site";
+import { ContactEmailLink, ContactPhoneSuffix } from "@/components/site/contact-inline";
 import { basePath } from "@/lib/base-path";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description: `How ${siteConfig.legalName} collects, uses and protects your information.`,
-  alternates: { canonical: `${basePath}/privacy/` },
+  alternates: { canonical: `${basePath}/privacy` },
   robots: { index: false, follow: true },
 };
 
@@ -73,9 +74,7 @@ export default function PrivacyPage() {
             <p className="mt-3">
               You may request access to, correction of, or deletion of your
               personal information at any time by writing to{" "}
-              <a href={`mailto:${siteConfig.contact.email}`} className="underline underline-offset-2">
-                {siteConfig.contact.email}
-              </a>
+              <ContactEmailLink />
               .
             </p>
           </section>
@@ -92,10 +91,8 @@ export default function PrivacyPage() {
             <h2 className="font-display text-xl text-forest-950">Contact</h2>
             <p className="mt-3">
               Questions about this policy can be directed to{" "}
-              <a href={`mailto:${siteConfig.contact.email}`} className="underline underline-offset-2">
-                {siteConfig.contact.email}
-              </a>{" "}
-              or {siteConfig.contact.phoneDisplay}.
+              <ContactEmailLink />{" "}
+             <ContactPhoneSuffix prefix="or" />.
             </p>
           </section>
         </div>

@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   title: "Book Your Experience",
   description:
     "Plan your visit to Hasiru Nidhi — tell us what you'd like to experience, when, and who's coming, and we'll help you plan the right visit.",
-  alternates: { canonical: `${basePath}/book/` },
+  alternates: { canonical: `${basePath}/book` },
 };
 
 function FormSkeleton() {

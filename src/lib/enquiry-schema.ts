@@ -17,6 +17,8 @@ export const enquirySchema = z.object({
   email: z.string().email("Please enter a valid email address."),
   subject: z.string().min(1, "Let us know how we can help."),
   message: z.string().min(1, "Please add a short message.").max(1000),
+  // Hidden spam trap — real visitors never see or fill this field.
+  website: z.string().max(0).optional(),
 });
 
 export type EnquiryInput = z.infer<typeof enquirySchema>;

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: "Gallery",
   description:
     "A visual tour of Hasiru Nidhi — farmhouse stays, cycling trails, gardens, bonfire evenings and the working landscape near Bengaluru.",
-  alternates: { canonical: `${basePath}/gallery/` },
+  alternates: { canonical: `${basePath}/gallery` },
 };
 
 const galleryItems = [

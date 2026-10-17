@@ -31,7 +31,9 @@ export function Footer() {
               { icon: InstagramIcon, href: siteConfig.social.instagram, label: "Instagram" },
               { icon: FacebookIcon, href: siteConfig.social.facebook, label: "Facebook" },
               { icon: YoutubeIcon, href: siteConfig.social.youtube, label: "YouTube" },
-            ].map(({ icon: Icon, href, label }) => (
+            ]
+              .filter((item) => item.href)
+              .map(({ icon: Icon, href, label }) => (
               <a
                 key={label}
                 href={href}
@@ -89,17 +91,27 @@ export function Footer() {
                 {siteConfig.contact.address.postalCode}
               </span>
             </li>
-            <li className="flex gap-3">
-              <Phone className="h-4 w-4 shrink-0 text-sand-400" />
-              <a href={`tel:${siteConfig.contact.phone.replace(/\s/g, "")}`} className="hover:text-cream">
-                {siteConfig.contact.phoneDisplay}
-              </a>
-            </li>
+            {siteConfig.contact.phone ? (
+              <li className="flex gap-3">
+                <Phone className="h-4 w-4 shrink-0 text-sand-400" />
+                <a href={`tel:${siteConfig.contact.phone.replace(/\s/g, "")}`} className="hover:text-cream">
+                  {siteConfig.contact.phoneDisplay}
+                </a>
+              </li>
+            ) : null}
+            {siteConfig.contact.email ? (
+              <li className="flex gap-3">
+                <Mail className="h-4 w-4 shrink-0 text-sand-400" />
+                <a href={`mailto:${siteConfig.contact.email}`} className="hover:text-cream">
+                  {siteConfig.contact.email}
+                </a>
+              </li>
+            ) : null}
             <li className="flex gap-3">
               <Mail className="h-4 w-4 shrink-0 text-sand-400" />
-              <a href={`mailto:${siteConfig.contact.email}`} className="hover:text-cream">
-                {siteConfig.contact.email}
-              </a>
+              <Link href="/contact" className="hover:text-cream">
+                Send us a message
+              </Link>
             </li>
           </ul>
         </div>

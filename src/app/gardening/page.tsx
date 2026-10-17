@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   title: "Gardening Services",
   description:
     "Hands-in-the-soil gardening experiences at Hasiru Nidhi, plus a preview of our upcoming plant store and nursery near Bengaluru.",
-  alternates: { canonical: `${basePath}/gardening/` },
+  alternates: { canonical: `${basePath}/gardening` },
 };
 
 const activities = [

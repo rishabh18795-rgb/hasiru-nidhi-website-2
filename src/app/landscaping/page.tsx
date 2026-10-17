@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   title: "Landscaping",
   description:
     "Nature-led landscaping and land design from the team behind Hasiru Nidhi's own grounds — native planting, water-conscious design and land planning near Bengaluru.",
-  alternates: { canonical: `${basePath}/landscaping/` },
+  alternates: { canonical: `${basePath}/landscaping` },
 };
 
 const principles = [

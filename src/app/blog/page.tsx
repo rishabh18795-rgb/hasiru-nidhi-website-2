@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   title: "The Journal",
   description:
     "Notes on gardening, cycling, corporate retreats and slow living from the Hasiru Nidhi team.",
-  alternates: { canonical: `${basePath}/blog/` },
+  alternates: { canonical: `${basePath}/blog` },
 };
 
 export default function BlogIndexPage() {

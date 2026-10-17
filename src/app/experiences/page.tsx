@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   title: "Experiences",
   description:
     "Nine ways to spend a day at Hasiru Nidhi — from cycling and gardening to bonfire evenings and village walks, near Bengaluru.",
-  alternates: { canonical: `${basePath}/experiences/` },
+  alternates: { canonical: `${basePath}/experiences` },
 };
 
 export default function ExperiencesPage() {

@@ -1,28 +1,39 @@
 import path from "node:path";
 import type { NextConfig } from "next";
 
-// Deployed to GitHub Pages at https://rishabh18795-rgb.github.io/hasiru-nidhi-website-2/
-// — a project page with no custom domain, so it must be served from this
-// repo sub-path. Keep this literal in sync with `src/lib/base-path.ts`.
-const REPO_BASE_PATH = "/hasiru-nidhi-website-2";
-const isProd = process.env.NODE_ENV === "production";
+// Full-stack deployment (Vercel). The previous GitHub Pages static export was removed because
+// authentication, server actions and booking transactions need a server runtime.
+const supabaseHost = (() => {
+  try {
+    return new URL(process.env.NEXT_PUBLIC_SUPABASE_URL ?? "").hostname || null;
+  } catch {
+    return null;
+  }
+})();
+
+const securityHeaders = [
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "X-Frame-Options", value: "DENY" },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(self), payment=(self)" },
+  { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
+];
 
 const nextConfig: NextConfig = {
-  output: "export",
-  basePath: isProd ? REPO_BASE_PATH : undefined,
-  assetPrefix: isProd ? REPO_BASE_PATH : undefined,
-  // GitHub Pages needs a real index.html per directory (no server-side
-  // rewrites available), so every route is exported as `/route/index.html`.
-  trailingSlash: true,
   turbopack: {
     root: path.resolve(__dirname),
   },
   images: {
-    // No image optimization server on GitHub Pages (static export only).
-    // All photography is local under /public/images.
-    unoptimized: true,
+    // Property photographs uploaded by hosts live in a public Supabase Storage bucket.
+    remotePatterns: supabaseHost
+      ? [{ protocol: "https", hostname: supabaseHost, pathname: "/storage/v1/object/public/**" }]
+      : [],
   },
   reactStrictMode: true,
+  poweredByHeader: false,
+  async headers() {
+    return [{ source: "/:path*", headers: securityHeaders }];
+  },
 };
 
 export default nextConfig;

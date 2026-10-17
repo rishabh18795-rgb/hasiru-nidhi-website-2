@@ -5,12 +5,12 @@ import { siteConfig } from "@/lib/site";
 import { basePath, siteOrigin } from "@/lib/base-path";
 import { Navbar } from "@/components/site/navbar";
 import { Footer } from "@/components/site/footer";
+import { getPublicSettings } from "@/lib/data/catalog";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  // Origin only (no repo sub-path) — combined with basePath-prefixed,
-  // leading-slash `alternates.canonical` values below, this resolves to
-  // the correct GitHub Pages URL. See src/lib/base-path.ts.
+  // Pages declare their own relative `alternates.canonical`; metadataBase resolves them
+  // against NEXT_PUBLIC_SITE_URL (see src/lib/base-path.ts).
   metadataBase: new URL(siteOrigin),
   title: {
     default: `${siteConfig.name} — ${siteConfig.tagline}`,
@@ -20,9 +20,6 @@ export const metadata: Metadata = {
   keywords: [...siteConfig.keywords],
   authors: [{ name: siteConfig.legalName }],
   creator: siteConfig.legalName,
-  alternates: {
-    canonical: `${basePath}/`,
-  },
   openGraph: {
     type: "website",
     locale: siteConfig.locale,
@@ -54,6 +51,12 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
+const socialLinks = [
+  siteConfig.social.instagram,
+  siteConfig.social.facebook,
+  siteConfig.social.youtube,
+].filter(Boolean);
+
 const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
@@ -64,8 +67,8 @@ const jsonLd = {
       alternateName: siteConfig.name,
       description: siteConfig.description,
       url: siteConfig.url,
-      telephone: siteConfig.contact.phone,
-      email: siteConfig.contact.email,
+      ...(siteConfig.contact.phone ? { telephone: siteConfig.contact.phone } : {}),
+      ...(siteConfig.contact.email ? { email: siteConfig.contact.email } : {}),
       image: `${siteConfig.url}/opengraph-image`,
       address: {
         "@type": "PostalAddress",
@@ -80,11 +83,7 @@ const jsonLd = {
         latitude: siteConfig.contact.coordinates.lat,
         longitude: siteConfig.contact.coordinates.lng,
       },
-      sameAs: [
-        siteConfig.social.instagram,
-        siteConfig.social.facebook,
-        siteConfig.social.youtube,
-      ],
+      sameAs: socialLinks,
     },
     {
       "@type": "Organization",
@@ -93,22 +92,19 @@ const jsonLd = {
       alternateName: siteConfig.name,
       url: siteConfig.url,
       logo: `${siteConfig.url}/brand/logo-mark.png`,
-      email: siteConfig.contact.email,
-      telephone: siteConfig.contact.phone,
-      sameAs: [
-        siteConfig.social.instagram,
-        siteConfig.social.facebook,
-        siteConfig.social.youtube,
-      ],
+      ...(siteConfig.contact.email ? { email: siteConfig.contact.email } : {}),
+      ...(siteConfig.contact.phone ? { telephone: siteConfig.contact.phone } : {}),
+      sameAs: socialLinks,
     },
   ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { announcement } = await getPublicSettings();
   return (
     <html
       lang="en"
@@ -119,7 +115,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <Navbar />
+        <Navbar announcement={announcement || undefined} />
         <main className="flex-1">{children}</main>
         <Footer />
       </body>

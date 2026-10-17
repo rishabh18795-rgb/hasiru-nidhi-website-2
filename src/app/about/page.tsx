@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   title: "About Us",
   description:
     "The story behind Hasiru Nidhi — a working farm and nature experience retreat built around a simple idea: cultivate the land, and the memories follow.",
-  alternates: { canonical: `${basePath}/about/` },
+  alternates: { canonical: `${basePath}/about` },
 };
 
 const ventureIcons = { Sprout, TreePine, Leaf };

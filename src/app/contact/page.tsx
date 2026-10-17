@@ -7,20 +7,24 @@ import { Reveal } from "@/components/site/reveal";
 import { ContactForm } from "@/components/site/contact-form";
 import { images } from "@/lib/content";
 import { siteConfig } from "@/lib/site";
+import { getPublicSettings } from "@/lib/data/catalog";
+import { telHref, whatsappLink, whatsappMessage } from "@/lib/contact";
 import { basePath } from "@/lib/base-path";
 
 export const metadata: Metadata = {
   title: "Contact",
   description:
     "Questions, partnerships, corporate visits or general enquiries — get in touch with the Hasiru Nidhi team near Bengaluru.",
-  alternates: { canonical: `${basePath}/contact/` },
+  alternates: { canonical: `${basePath}/contact` },
 };
 
 const mapQuery = encodeURIComponent(
   `${siteConfig.contact.address.line1}, ${siteConfig.contact.address.line2}, ${siteConfig.contact.address.city}, ${siteConfig.contact.address.state}`
 );
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const settings = await getPublicSettings();
+  const whatsapp = whatsappLink(settings.whatsapp_number, whatsappMessage("general"));
   return (
     <>
       <PageHero
@@ -37,50 +41,56 @@ export default function ContactPage() {
             <Reveal>
               <h2 className="font-display text-2xl text-forest-950">Reach Us Directly</h2>
               <p className="mt-3 text-sm leading-relaxed text-ink/60">
-                Prefer to talk it through? Call or message us on WhatsApp and
-                we&apos;ll help you plan on the spot.
+                Prefer to talk it through? Reach us on any of the channels below
+                and we&apos;ll help you plan.
               </p>
             </Reveal>
 
             <div className="mt-8 flex flex-col gap-5">
-              <Reveal delay={0.05}>
-                <a
-                  href={`tel:${siteConfig.contact.phone.replace(/\s/g, "")}`}
-                  className="flex items-start gap-4 rounded-2xl bg-forest-50 p-5 transition-colors hover:bg-forest-100"
-                >
-                  <Phone className="mt-0.5 h-5 w-5 text-forest-700" />
-                  <div>
-                    <p className="text-sm font-medium text-forest-950">Call Us</p>
-                    <p className="text-sm text-ink/60">{siteConfig.contact.phoneDisplay}</p>
-                  </div>
-                </a>
-              </Reveal>
-              <Reveal delay={0.1}>
-                <a
-                  href={siteConfig.contact.whatsapp}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="flex items-start gap-4 rounded-2xl bg-forest-50 p-5 transition-colors hover:bg-forest-100"
-                >
-                  <MessageCircle className="mt-0.5 h-5 w-5 text-forest-700" />
-                  <div>
-                    <p className="text-sm font-medium text-forest-950">WhatsApp</p>
-                    <p className="text-sm text-ink/60">Fastest way to reach us</p>
-                  </div>
-                </a>
-              </Reveal>
-              <Reveal delay={0.15}>
-                <a
-                  href={`mailto:${siteConfig.contact.email}`}
-                  className="flex items-start gap-4 rounded-2xl bg-forest-50 p-5 transition-colors hover:bg-forest-100"
-                >
-                  <Mail className="mt-0.5 h-5 w-5 text-forest-700" />
-                  <div>
-                    <p className="text-sm font-medium text-forest-950">Email</p>
-                    <p className="text-sm text-ink/60">{siteConfig.contact.email}</p>
-                  </div>
-                </a>
-              </Reveal>
+              {settings.support_phone ? (
+                <Reveal delay={0.05}>
+                  <a
+                    href={telHref(settings.support_phone) ?? "#"}
+                    className="flex items-start gap-4 rounded-2xl bg-forest-50 p-5 transition-colors hover:bg-forest-100"
+                  >
+                    <Phone className="mt-0.5 h-5 w-5 text-forest-700" />
+                    <div>
+                      <p className="text-sm font-medium text-forest-950">Call Us</p>
+                      <p className="text-sm text-ink/60">{settings.support_phone}</p>
+                    </div>
+                  </a>
+                </Reveal>
+              ) : null}
+              {whatsapp ? (
+                <Reveal delay={0.1}>
+                  <a
+                    href={whatsapp}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="flex items-start gap-4 rounded-2xl bg-forest-50 p-5 transition-colors hover:bg-forest-100"
+                  >
+                    <MessageCircle className="mt-0.5 h-5 w-5 text-forest-700" />
+                    <div>
+                      <p className="text-sm font-medium text-forest-950">WhatsApp</p>
+                      <p className="text-sm text-ink/60">Message us for a quick answer</p>
+                    </div>
+                  </a>
+                </Reveal>
+              ) : null}
+              {settings.support_email ? (
+                <Reveal delay={0.15}>
+                  <a
+                    href={`mailto:${settings.support_email}`}
+                    className="flex items-start gap-4 rounded-2xl bg-forest-50 p-5 transition-colors hover:bg-forest-100"
+                  >
+                    <Mail className="mt-0.5 h-5 w-5 text-forest-700" />
+                    <div>
+                      <p className="text-sm font-medium text-forest-950">Email</p>
+                      <p className="text-sm text-ink/60">{settings.support_email}</p>
+                    </div>
+                  </a>
+                </Reveal>
+              ) : null}
               <Reveal delay={0.2}>
                 <div className="flex items-start gap-4 rounded-2xl bg-forest-50 p-5">
                   <MapPin className="mt-0.5 h-5 w-5 text-forest-700" />

@@ -1,13 +1,16 @@
 import { siteUrl } from "@/lib/base-path";
 
+function configured(name: string): string {
+  return (process.env[name] ?? "").trim();
+}
+
 export const siteConfig = {
   name: "Hasiru Nidhi",
   legalName: "Hasiru Nidhi Horizons Private Limited",
   tagline: "Cultivating Nature, Creating Memories",
   description:
     "A nature experience retreat in the hills off Kanakapura Road, Bengaluru — cycling trails, working gardens, farmhouse stays, and slow, unhurried days spent outdoors.",
-  // Deployed on GitHub Pages (no custom domain yet). Switch this to the
-  // real domain (and drop the basePath machinery) once one is set up.
+  // Set NEXT_PUBLIC_SITE_URL to the production domain once it is connected.
   url: siteUrl,
   locale: "en_IN",
   keywords: [
@@ -21,10 +24,13 @@ export const siteConfig = {
     "sustainable tourism India",
   ],
   contact: {
-    phone: "+91 98450 12345",
-    phoneDisplay: "+91 98450 12345",
-    email: "stay@hasirunidhi.com",
-    whatsapp: "https://wa.me/919845012345",
+    // Contact channels come from environment configuration. They are intentionally EMPTY by
+    // default: this project never invents a business phone number or e-mail address.
+    phone: configured("NEXT_PUBLIC_CONTACT_PHONE"),
+    phoneDisplay: configured("NEXT_PUBLIC_CONTACT_PHONE"),
+    email: configured("NEXT_PUBLIC_CONTACT_EMAIL"),
+    // Digits only, with country code (e.g. 9198XXXXXXXX). Admins can also set it in Admin > Settings.
+    whatsappNumber: configured("NEXT_PUBLIC_WHATSAPP_NUMBER").replace(/\D/g, ""),
     address: {
       line1: "Hasiru Nidhi Nature Grounds",
       line2: "Off Kanakapura Road, Harohalli",
@@ -37,10 +43,11 @@ export const siteConfig = {
     coordinates: { lat: 12.6167, lng: 77.4333 },
   },
   social: {
-    instagram: "https://instagram.com/hasirunidhi",
-    facebook: "https://facebook.com/hasirunidhi",
-    youtube: "https://youtube.com/@hasirunidhi",
-    pinterest: "https://pinterest.com/hasirunidhi",
+    // Only configured profiles are shown or emitted in structured data.
+    instagram: configured("NEXT_PUBLIC_INSTAGRAM_URL"),
+    facebook: configured("NEXT_PUBLIC_FACEBOOK_URL"),
+    youtube: configured("NEXT_PUBLIC_YOUTUBE_URL"),
+    pinterest: "",
   },
   hours: {
     dayVisit: "9:00 AM – 6:00 PM, all days",
@@ -51,29 +58,47 @@ export const siteConfig = {
 
 export const navLinks = [
   { label: "Home", href: "/" },
+  { label: "Explore Stays", href: "/stays" },
   {
     label: "Experiences",
     href: "/experiences",
     children: [
       { label: "All Experiences", href: "/experiences" },
       { label: "Nature Stay", href: "/nature-stay" },
-      { label: "Cycling", href: "/cycling" },
-      { label: "Gardening Services", href: "/gardening" },
-      { label: "Landscaping", href: "/landscaping" },
+      { label: "Cycling & Outdoors", href: "/cycling" },
+      { label: "Gardening & Landscaping", href: "/gardening-landscaping" },
+      { label: "Gardening Experiences", href: "/gardening" },
+      { label: "Landscaping & Grounds", href: "/landscaping" },
     ],
   },
-  { label: "About", href: "/about" },
-  { label: "Gallery", href: "/gallery" },
-  { label: "Packages", href: "/packages" },
-  { label: "Pricing", href: "/pricing" },
-  { label: "Journal", href: "/blog" },
-  { label: "Contact", href: "/contact" },
+  {
+    label: "Plan",
+    href: "/packages",
+    children: [
+      { label: "Packages", href: "/packages" },
+      { label: "Pricing", href: "/pricing" },
+      { label: "Book Your Experience", href: "/book" },
+      { label: "FAQ", href: "/faq" },
+    ],
+  },
+  {
+    label: "About",
+    href: "/about",
+    children: [
+      { label: "About Hasiru Nidhi", href: "/about" },
+      { label: "Gallery", href: "/gallery" },
+      { label: "Journal", href: "/blog" },
+      { label: "Contact", href: "/contact" },
+    ],
+  },
 ] as const;
 
 export const footerLinks = {
   explore: [
-    { label: "About Hasiru Nidhi", href: "/about" },
+    { label: "Explore Stays", href: "/stays" },
     { label: "Experiences", href: "/experiences" },
+    { label: "Cycling & Outdoors", href: "/cycling" },
+    { label: "Gardening & Landscaping", href: "/gardening-landscaping" },
     { label: "Gallery", href: "/gallery" },
     { label: "The Journal", href: "/blog" },
   ],
@@ -81,11 +106,15 @@ export const footerLinks = {
     { label: "Book Your Experience", href: "/book" },
     { label: "Packages", href: "/packages" },
     { label: "Pricing", href: "/pricing" },
+    { label: "List Your Property", href: "/list-your-property" },
+    { label: "Become a Host", href: "/become-a-host" },
+    { label: "About Hasiru Nidhi", href: "/about" },
     { label: "FAQ", href: "/faq" },
     { label: "Contact", href: "/contact" },
   ],
   legal: [
     { label: "Privacy Policy", href: "/privacy" },
     { label: "Terms & Conditions", href: "/terms" },
+    { label: "Cancellation & Refunds", href: "/cancellation-policy" },
   ],
 } as const;

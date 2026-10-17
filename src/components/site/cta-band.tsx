@@ -20,8 +20,8 @@ export function CtaBand({
   description = "Tell us your dates and group size — we'll help you choose the right experience and hold your spot.",
   primaryLabel = "Book Your Experience",
   primaryHref = "/book",
-  secondaryLabel = "Call " + siteConfig.contact.phoneDisplay,
-  secondaryHref = `tel:${siteConfig.contact.phone.replace(/\s/g, "")}`,
+  secondaryLabel = siteConfig.contact.phone ? "Call " + siteConfig.contact.phoneDisplay : "Send us a message",
+  secondaryHref = siteConfig.contact.phone ? `tel:${siteConfig.contact.phone.replace(/\s/g, "")}` : "/contact",
 }: CtaBandProps) {
   return (
     <section className="relative overflow-hidden bg-forest-950 py-28">

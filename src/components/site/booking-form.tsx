@@ -58,6 +58,7 @@ export function BookingForm() {
       projectLocation: "",
       projectSize: "",
       message: "",
+      website: "",
     },
   });
 
@@ -117,6 +118,12 @@ export function BookingForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6" noValidate>
+      <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+        <label>
+          Leave this field empty
+          <input tabIndex={-1} autoComplete="off" {...register("website")} />
+        </label>
+      </div>
       <div>
         <p className="text-eyebrow mb-4">Personal Details</p>
         <div className="grid gap-6 sm:grid-cols-2">
