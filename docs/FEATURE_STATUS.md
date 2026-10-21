@@ -23,7 +23,12 @@ Legend: ✅ implemented and covered by automated tests · 🟢 implemented, veri
 | Online payments | ❌ | intentionally not enabled (needs merchant account); see `src/lib/payments/index.ts` |
 | Reviews | ✅ | only the guest of a finished confirmed stay, once |
 | Live E2E (browser) tests against Supabase | ⏳ | blocked on a Supabase project; manual checklist provided |
-| Rate limiting / CAPTCHA, CSP | ❌ | recommended hardening, see README |
+| Rate limiting (forms, uploads, bookings, reports) | ✅ | Postgres counters; needs the service-role key to be active (fails open otherwise) |
+| Content-Security-Policy + security headers | 🟢 | verified in a real browser; scripts keep `'unsafe-inline'` (see README) |
+| CAPTCHA on public forms | ❌ | honeypot only; add Turnstile / Vercel WAF if spam appears |
+| Admin: audit log, review moderation, experiences/catalogue, pending queue | ✅ | `/admin/audit-logs`, `/admin/reviews`, `/admin/catalog`, `/admin/properties?status=pending_review` |
+| Portal aliases `/host/login`, `/host/register`, `/admin/dashboard`, `/admin/experiences`, `/admin/properties/pending` | 🟢 | redirects (verified by browser tests) |
+| Browser smoke tests (desktop + mobile, production build) | ✅ | Playwright, `npm run test:e2e` — covers the no-backend state; live-database flows remain ⏳ |
 
 ## Content that is placeholder and needs the owner's confirmation
 * Contact address and coordinates on the Contact page/footer, package and pricing figures, FAQ/journal copy, and

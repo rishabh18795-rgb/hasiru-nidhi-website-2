@@ -29,8 +29,9 @@ Use throw-away e-mail addresses you control.
 3. **Suspend** a live listing → disappears from `/stays`; **Reinstate**.
 4. **Users**: change a user to host, verify a host, suspend a user (they get *Account suspended* and can't request/host). Confirm admins are not editable.
 5. **Enquiries**: contact/booking requests, gardening quotes (photo links open), partner applications → triage with status + notes.
-6. **Reports**, **Catalogue** (add/deactivate a facility), **Settings** (WhatsApp number → buttons appear on stay/contact/service pages).
-7. **Bookings**: filter and cancel.
+6. **Reviews**: hide a review, then restore it. **Audit log**: confirm the listing decision, user change and review actions above appear with who/when.
+7. **Reports**, **Catalogue** (add/deactivate a facility), **Settings** (WhatsApp number → buttons appear on stay/contact/service pages).
+8. **Bookings**: filter and cancel.
 
 ## D. Public forms (signed out)
 * `/contact`, `/book`, `/gardening-landscaping` (with photos), `/list-your-property` → submissions appear in Admin → Enquiries. Empty/invalid submissions show field errors.

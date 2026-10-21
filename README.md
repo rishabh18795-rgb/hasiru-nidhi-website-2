@@ -57,7 +57,7 @@ CI (`.github/workflows/ci.yml`) runs all four on every push and pull request.
 
 Full step-by-step instructions are in **[docs/SETUP.md](docs/SETUP.md)**:
 
-1. Create a Supabase project and run the three migrations in `supabase/migrations/` (in order).
+1. Create a Supabase project and run the four migrations in `supabase/migrations/` (in order).
 2. Configure Auth URLs and (recommended) custom SMTP.
 3. Create the first administrator with `supabase/scripts/create_first_admin.sql`.
 4. Import the GitHub repo into Vercel and set the environment variables.
@@ -93,9 +93,18 @@ Full step-by-step instructions are in **[docs/SETUP.md](docs/SETUP.md)**:
   and duplicate requests. A booking is only ever described as confirmed after the host accepts it.
 * **Secrets:** the service-role client is `server-only`; a test fails the build if it is imported from client code.
 * **Private data:** addresses/contacts live in `property_private` (owner + admin only); enquiry photos use a private bucket.
-* **Not yet in place** (recommended before heavy traffic): rate limiting / CAPTCHA on public forms (a honeypot is
-  included — use Vercel WAF or Cloudflare Turnstile), a Content-Security-Policy, and automated cleanup of orphaned
-  enquiry uploads. Listing photos are in a *public* bucket under unguessable UUID paths.
+* **Rate limiting:** public forms, photo-upload tickets, booking requests and listing reports are limited per client (or per
+  signed-in user) by `rate_limit_hit()` — counters live in Postgres so the limit holds across serverless instances, and
+  only the server (service-role key) may call it. It **fails open** (and logs) if `SUPABASE_SERVICE_ROLE_KEY` is not set.
+  Sign-in / sign-up / password reset are additionally throttled by Supabase Auth itself.
+* **Content-Security-Policy** and the other security headers are set in `next.config.ts`. Scripts still allow `'unsafe-inline'`
+  (Next.js bootstrap scripts; a nonce would force every page to render dynamically) — everything else is locked to this site,
+  Supabase and the Google Maps embed.
+* **Audit trail:** listing decisions, account changes and review moderation go through audited RPCs; catalogue, settings,
+  featuring and enquiry/report triage are recorded by a database trigger (column names only, never values). Admin → *Audit log*.
+* **Not yet in place** (recommended before heavy traffic): CAPTCHA on public forms (a honeypot is included — Vercel WAF or
+  Cloudflare Turnstile would add one), and automated cleanup of orphaned enquiry uploads. Listing photos are in a *public*
+  bucket under unguessable UUID paths.
 
 ## Testing
 
@@ -111,6 +120,10 @@ Automated (run with `npm test`):
 * `tests/unit/*` — filter parsing/sanitising, validation schemas, error mapping, open-redirect protection, contact
   helpers, and **structural security tests** (every protected page/action must authorize; no invented contact details;
   no placeholder testimonials).
+
+* `tests/e2e/*` (`npm run test:e2e`, Playwright, desktop + mobile) — runs against the **production build with no backend
+  configured**: every public page renders without horizontal overflow, protected areas redirect, open redirects are
+  refused, honest "not connected" states, security headers, robots/sitemap. CI runs it after the build.
 
 **Not automated / blocked:** browser end-to-end flows against a live Supabase project (sign-in, e-mail verification,
 storage upload, e-mail delivery) require your Supabase project and cannot run in CI without credentials. Use the manual checklist.

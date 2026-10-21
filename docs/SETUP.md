@@ -13,6 +13,7 @@ Run these files **in order** (Supabase dashboard → **SQL Editor → New query 
 1. `supabase/migrations/20261017000100_core_schema.sql`
 2. `supabase/migrations/20261017000200_rls.sql`
 3. `supabase/migrations/20261017000300_reference_data_and_storage.sql` (catalogue vocabulary + the `property-images` and `enquiry-photos` buckets)
+4. `supabase/migrations/20261021000100_rate_limits_audit_review_moderation.sql` (form rate limiting, review moderation, admin audit trail)
 
 Verify: **Table editor** shows tables with the 🔒 RLS badge; **Storage** shows the two buckets
 (`property-images` public, `enquiry-photos` private).
