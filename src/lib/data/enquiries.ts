@@ -6,6 +6,7 @@ import { adminNotifyEmail, sendEmail } from "@/lib/email";
 import { getSession } from "@/lib/auth";
 import { getPublicSettings } from "@/lib/data/catalog";
 import { whatsappLink } from "@/lib/contact";
+import { RATE_LIMITED_MESSAGE, withinRateLimit } from "@/lib/rate-limit";
 
 export const BACKEND_NOT_CONFIGURED =
   "Our online forms are being connected and can't accept submissions yet. Please check back shortly.";
@@ -42,6 +43,7 @@ export async function recordEnquiry(
   try {
     const supabase = await createServerSupabase();
     const session = await getSession();
+    if (!(await withinRateLimit("enquiry", session?.user.id))) return { ok: false, error: RATE_LIMITED_MESSAGE };
     const { error } = await supabase.from(table).insert({ ...row, user_id: session?.user.id ?? null });
     if (error) {
       console.error(`recordEnquiry(${table}) failed`, error.message);

@@ -5,6 +5,7 @@ import { randomUUID } from "node:crypto";
 import { formValues, zodFieldErrors, type FormState } from "@/lib/action";
 import { ENQUIRY_PHOTO_LIMITS, gardeningEnquirySchema } from "@/lib/validation/enquiries";
 import { recordEnquiry } from "@/lib/data/enquiries";
+import { RATE_LIMITED_MESSAGE, withinRateLimit } from "@/lib/rate-limit";
 import { createAdminSupabase, isServiceRoleConfigured } from "@/lib/supabase/admin";
 
 const EXT: Record<string, string> = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp" };
@@ -28,6 +29,7 @@ export async function createEnquiryUploadTickets(
     if (!EXT[f.type]) return { ok: false, message: "Photos must be JPEG, PNG or WebP." };
     if (f.size > ENQUIRY_PHOTO_LIMITS.maxBytes) return { ok: false, message: "Each photo must be under 5 MB." };
   }
+  if (!(await withinRateLimit("upload"))) return { ok: false, message: RATE_LIMITED_MESSAGE };
   const admin = createAdminSupabase();
   const folder = randomUUID();
   const tickets: UploadTicket[] = [];

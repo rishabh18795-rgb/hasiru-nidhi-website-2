@@ -11,6 +11,7 @@ import { bookingEmails, emailUser } from "@/lib/notifications";
 import { formatDate } from "@/lib/format";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { adminNotifyEmail, sendEmail } from "@/lib/email";
+import { RATE_LIMITED_MESSAGE, withinRateLimit } from "@/lib/rate-limit";
 
 const NOT_CONFIGURED: FormState = { ok: false, message: "Bookings aren't available yet: the booking service hasn't been connected to this deployment." };
 
@@ -24,6 +25,7 @@ export async function requestStay(_prev: FormState, formData: FormData): Promise
   const session = await getSession();
   if (!session) return { ok: false, message: "Please sign in to send a booking request." };
   if (session.profile.is_suspended) return { ok: false, message: friendlyDbError({ message: "account_suspended" }) };
+  if (!(await withinRateLimit("bookingRequest", session.user.id))) return { ok: false, message: RATE_LIMITED_MESSAGE };
 
   const values = formValues(formData);
   const parsed = stayRequestSchema.safeParse(values);
@@ -75,6 +77,7 @@ export async function reportListing(_prev: FormState, formData: FormData): Promi
   const parsed = reportSchema.safeParse(values);
   if (!parsed.success) return { ok: false, fieldErrors: zodFieldErrors(parsed.error), values };
   const session = await getSession();
+  if (!(await withinRateLimit("report", session?.user.id))) return { ok: false, message: RATE_LIMITED_MESSAGE, values };
   const supabase = session?.supabase ?? (await (await import("@/lib/supabase/server")).createServerSupabase());
   const { error } = await supabase.from("reports").insert({ ...parsed.data, reporter_id: session?.user.id ?? null });
   if (error) return { ok: false, message: "We couldn't submit your report. The listing may no longer be available.", values };
