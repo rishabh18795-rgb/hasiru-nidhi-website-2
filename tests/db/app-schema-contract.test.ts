@@ -163,9 +163,10 @@ describe("app ↔ schema contract", () => {
   });
 
   it("the Postgres error codes the UI translates are really raised by the database", () => {
-    const sql = fs.readFileSync(path.resolve(__dirname, "../../supabase/migrations/20261017000100_core_schema.sql"), "utf8");
+    const dir = path.resolve(__dirname, "../../supabase/migrations");
+    const sql = fs.readdirSync(dir).filter((f) => f.endsWith(".sql")).map((f) => fs.readFileSync(path.join(dir, f), "utf8")).join("\n");
     const actionSrc = fs.readFileSync(path.join(SRC, "lib/action.ts"), "utf8");
-    for (const code of ["dates_unavailable", "duplicate_request", "invalid_dates", "invalid_guests", "property_unavailable", "own_property", "invalid_status", "reason_required", "blocks_confirmed_booking", "stay_already_started", "account_suspended", "not_authenticated", "incomplete_listing"]) {
+    for (const code of ["dates_unavailable", "duplicate_request", "invalid_dates", "invalid_guests", "property_unavailable", "own_property", "invalid_status", "reason_required", "blocks_confirmed_booking", "stay_already_started", "account_suspended", "not_authenticated", "incomplete_listing", "invalid_stay_length", "too_many_photos"]) {
       expect(sql, `${code} raised by SQL`).toContain(code);
       expect(actionSrc, `${code} translated by UI`).toContain(code);
     }

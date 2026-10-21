@@ -19,8 +19,8 @@ async function makeDraft(slug: string, owner = host): Promise<string> {
   const cat = await categoryId(db);
   const rows = await as<{ id: string }>(
     db, owner,
-    `insert into public.properties (host_id, slug, name, category_id, description, city, state, terms_accepted_at)
-     values ($1, $2, 'Draft Cottage', $3, $4, 'Bengaluru', 'Karnataka', now()) returning id`,
+    `insert into public.properties (host_id, slug, name, category_id, description, city, state, terms_accepted_at, photo_rights_confirmed_at)
+     values ($1, $2, 'Draft Cottage', $3, $4, 'Bengaluru', 'Karnataka', now(), now()) returning id`,
     [owner, slug, cat, "A lovely cottage with enough description text to satisfy the review rules."],
   );
   return rows[0].id;

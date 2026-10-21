@@ -11,7 +11,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:db": "vitest run tests/db",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "db:bundle": "node scripts/bundle-sql.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",

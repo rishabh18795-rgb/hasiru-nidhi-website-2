@@ -67,6 +67,24 @@ export interface Property {
   cancellation_policy: CancellationPolicy;
   status: PropertyStatus;
   rejection_reason: string | null;
+  review_kind: "rejected" | "changes_requested" | null;
+  country: string;
+  bedrooms: number | null;
+  beds: number | null;
+  bathrooms: number | null;
+  accommodation_arrangement: "entire_property" | "private_rooms" | "shared_space" | null;
+  location_precision: "exact" | "approximate";
+  weekend_price_inr: number | null;
+  included_guests: number | null;
+  extra_guest_fee_inr: number | null;
+  cleaning_fee_inr: number | null;
+  tax_percent: number;
+  min_nights: number;
+  max_nights: number;
+  currency: string;
+  photo_rights_confirmed_at: string | null;
+  wizard_step: string | null;
+  reviewed_at: string | null;
   is_featured: boolean;
   is_sample: boolean;
   terms_accepted_at: string | null;
@@ -84,6 +102,8 @@ export interface PropertyPrivate {
   contact_phone: string | null;
   current_platforms: string | null;
   partnership_model: string | null;
+  exact_latitude: number | null;
+  exact_longitude: number | null;
 }
 
 export interface PropertyImage {
@@ -130,6 +150,7 @@ export interface Booking {
   guest_email: string | null;
   guest_phone: string | null;
   indicative_total_inr: number | null;
+  price_breakdown: import("@/lib/pricing").Quote | null;
   created_at: string;
   cancelled_at: string | null;
   cancellation_note: string | null;
