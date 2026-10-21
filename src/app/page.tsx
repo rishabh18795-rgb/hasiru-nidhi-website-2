@@ -51,13 +51,16 @@ export default async function HomePage() {
             <h1 className="mt-6 max-w-4xl font-display text-6xl font-medium leading-[1.02] tracking-tight text-cream sm:text-7xl lg:text-[5.5rem]">
               Escape the City.
               <br />
-              Experience Nature.
-              <br />
-              <span className="italic text-sand-300">Create Memories.</span>
+              Embrace Nature.
             </h1>
           </Reveal>
+          <Reveal delay={0.14}>
+            <p className="mt-5 font-display text-2xl italic text-sand-300 sm:text-3xl">
+              Cultivating Nature, Creating Memories.
+            </p>
+          </Reveal>
           <Reveal delay={0.18}>
-            <p className="mt-8 max-w-lg text-lg leading-relaxed text-cream/75">
+            <p className="mt-6 max-w-lg text-lg leading-relaxed text-cream/75">
               An hour from Bengaluru, Hasiru Nidhi trades traffic for tree
               cover — working gardens, quiet cycling trails, farmhouse stays
               and evenings by the fire, built around one idea: that nature is

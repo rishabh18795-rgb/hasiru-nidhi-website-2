@@ -20,9 +20,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     { href: "/admin/users", label: "Users", icon: "users" },
     { href: "/admin/bookings", label: "Bookings", icon: "bookings" },
     { href: "/admin/enquiries", label: "Enquiries", icon: "enquiries" },
+    { href: "/admin/reviews", label: "Reviews", icon: "reviews" },
     { href: "/admin/reports", label: "Reports", icon: "reports" },
     { href: "/admin/catalog", label: "Catalogue", icon: "catalog" },
     { href: "/admin/settings", label: "Settings", icon: "settings" },
+    { href: "/admin/audit-logs", label: "Audit log", icon: "audit" },
   ] as const;
   return <DashboardShell area="Administration" items={[...items]}>{children}</DashboardShell>;
 }

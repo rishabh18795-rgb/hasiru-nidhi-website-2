@@ -177,3 +177,13 @@ export async function adminCancelBooking(_prev: FormState, formData: FormData): 
   revalidatePath("/admin/bookings");
   return { ok: true, message: "Booking cancelled." };
 }
+
+/* ---------------------------------------------------------------- reviews */
+/** Hide or restore a review. Goes through moderate_review(), which re-checks the admin role and writes the audit entry. */
+export async function moderateReview(reviewId: string, hidden: boolean): Promise<void> {
+  const session = await adminSession();
+  if (!session || !z.uuid().safeParse(reviewId).success) return;
+  await session.supabase.rpc("moderate_review", { p_review: reviewId, p_hidden: hidden, p_reason: null });
+  revalidatePath("/admin/reviews");
+  revalidatePath("/stays", "layout");
+}

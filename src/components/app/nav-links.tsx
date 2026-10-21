@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Bell, Building2, CalendarCheck, CalendarDays, ClipboardList, Heart, Inbox, LayoutDashboard,
-  Settings, ShieldAlert, Tags, UserRound, Users, type LucideIcon,
+  ScrollText, Settings, ShieldAlert, Star, Tags, UserRound, Users, type LucideIcon,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 const ICONS: Record<string, LucideIcon> = {
   overview: LayoutDashboard, bookings: CalendarCheck, saved: Heart, profile: UserRound, notifications: Bell,
   properties: Building2, calendar: CalendarDays, enquiries: Inbox, settings: Settings, users: Users,
-  catalog: Tags, reports: ShieldAlert, queue: ClipboardList,
+  catalog: Tags, reports: ShieldAlert, queue: ClipboardList, reviews: Star, audit: ScrollText,
 };
 
 export interface NavItem {
