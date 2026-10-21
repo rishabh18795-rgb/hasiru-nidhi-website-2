@@ -7,18 +7,26 @@ Nothing here requires code changes. Secrets go only into Vercel / your local `.e
 2. **Project Settings → API**: copy the *Project URL* and the *anon/publishable* key. Copy the *service_role* key too (keep it secret).
 
 ## 2. Apply the database migrations
-Run these files **in order** (Supabase dashboard → **SQL Editor → New query → paste → Run**), or with the CLI
-(`supabase link --project-ref <ref> && supabase db push`):
+**Easiest (one paste):** Supabase dashboard → **SQL Editor → New query**, paste the whole of
+[`supabase/setup-all.sql`](../supabase/setup-all.sql) and press **Run**. It contains every migration in order and is only for a **new, empty** project
+(running it twice fails; that is intentional so nothing is silently overwritten).
+
+*Or, file by file, in order* (also the way to upgrade an existing database — run only the files you haven't applied):
 
 1. `supabase/migrations/20261017000100_core_schema.sql`
 2. `supabase/migrations/20261017000200_rls.sql`
 3. `supabase/migrations/20261017000300_reference_data_and_storage.sql` (catalogue vocabulary + the `property-images` and `enquiry-photos` buckets)
 4. `supabase/migrations/20261021000100_rate_limits_audit_review_moderation.sql` (form rate limiting, review moderation, admin audit trail)
+5. `supabase/migrations/20261021000200_listing_wizard_pricing.sql` (listing-wizard fields, structured pricing, stay-length rules, "become a host", photo limits and ordering)
 
 Verify: **Table editor** shows tables with the 🔒 RLS badge; **Storage** shows the two buckets
 (`property-images` public, `enquiry-photos` private).
 
 *(Optional, demo only)* paste `supabase/seed.sql` to add three labelled **sample** listings. Skip this in production.
+
+> **Fastest path via Vercel:** in your Vercel project → **Storage → Create / Connect → Supabase** can create the project and fill in
+> `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` and `SUPABASE_SERVICE_ROLE_KEY` for you (those are exactly the names this app reads).
+> You still need to run the SQL above in that new project and set the Auth URLs in step 3, then **redeploy**.
 
 ## 3. Configure Authentication
 **Authentication → URL Configuration**

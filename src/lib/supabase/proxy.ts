@@ -15,7 +15,16 @@ const AUTH_PAGES = ["/sign-in", "/sign-up"];
 export async function updateSession(request: NextRequest) {
   const { url, anonKey, configured } = getSupabaseConfig();
   let response = NextResponse.next({ request });
-  if (!configured) return response;
+  const path = request.nextUrl.pathname;
+  const isProtected = PROTECTED_PREFIXES.some((p) => path === p || path.startsWith(`${p}/`));
+  const toSignIn = () => {
+    const redirect = request.nextUrl.clone();
+    redirect.pathname = "/sign-in";
+    redirect.search = `?next=${encodeURIComponent(path + request.nextUrl.search)}`;
+    return NextResponse.redirect(redirect);
+  };
+  // Without a configured backend nobody can be signed in, so protected areas always lead to sign-in (destination kept).
+  if (!configured) return isProtected ? toSignIn() : response;
 
   const supabase = createServerClient(url, anonKey, {
     cookies: {
@@ -33,18 +42,15 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const path = request.nextUrl.pathname;
-  const isProtected = PROTECTED_PREFIXES.some((p) => path === p || path.startsWith(`${p}/`));
-  if (!user && isProtected) {
-    const redirect = request.nextUrl.clone();
-    redirect.pathname = "/sign-in";
-    redirect.search = `?next=${encodeURIComponent(path + request.nextUrl.search)}`;
-    return NextResponse.redirect(redirect);
-  }
+  if (!user && isProtected) return toSignIn();
   if (user && AUTH_PAGES.includes(path)) {
+    // Already signed in: go where they were heading (same-site paths only), else their dashboard.
+    const wanted = request.nextUrl.searchParams.get("next");
+    const safe = wanted && wanted.startsWith("/") && !wanted.startsWith("//") && !wanted.includes("\\") ? wanted : "/dashboard";
     const redirect = request.nextUrl.clone();
-    redirect.pathname = "/dashboard";
-    redirect.search = "";
+    const [pathname, search = ""] = safe.split("?");
+    redirect.pathname = pathname;
+    redirect.search = search ? `?${search}` : "";
     return NextResponse.redirect(redirect);
   }
   return response;

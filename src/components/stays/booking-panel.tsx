@@ -9,13 +9,15 @@ import { Field, TextArea, TextInput } from "@/components/forms/fields";
 import { FormMessage } from "@/components/forms/form-message";
 import { SubmitButton } from "@/components/forms/submit-button";
 import { formatINR, nightsBetween, PRICE_UNIT_LABEL } from "@/lib/format";
+import { quoteLines, quoteStay, stayLengthProblem, type PricingRules } from "@/lib/pricing";
 
 interface Props {
   propertyId: string;
   slug: string;
   maxGuests: number;
-  price: number | null;
-  priceUnit: string;
+  pricing: PricingRules;
+  minNights: number;
+  maxNights: number;
   minDate: string;
   initialCheckIn?: string;
   initialCheckOut?: string;
@@ -25,7 +27,7 @@ interface Props {
 
 const initial: FormState = {};
 
-export function BookingPanel({ propertyId, slug, maxGuests, price, priceUnit, minDate, initialCheckIn = "", initialCheckOut = "", initialGuests, viewer }: Props) {
+export function BookingPanel({ propertyId, slug, maxGuests, pricing, minNights, maxNights, minDate, initialCheckIn = "", initialCheckOut = "", initialGuests, viewer }: Props) {
   const [state, action] = useActionState(requestStay, initial);
   const [checkIn, setCheckIn] = useState(initialCheckIn);
   const [checkOut, setCheckOut] = useState(initialCheckOut);
@@ -33,13 +35,15 @@ export function BookingPanel({ propertyId, slug, maxGuests, price, priceUnit, mi
   const [children, setChildren] = useState(0);
   const e = state?.fieldErrors ?? {};
 
-  const estimate = useMemo(() => {
-    if (price === null || !checkIn || !checkOut || checkOut <= checkIn) return null;
-    const nights = nightsBetween(checkIn, checkOut);
-    const guests = adults + children;
-    const total = priceUnit === "per_night" ? price * nights : priceUnit === "per_person_night" ? price * nights * guests : price * guests;
-    return { nights, total };
-  }, [price, priceUnit, checkIn, checkOut, adults, children]);
+  const price = pricing.price_inr;
+  const priceUnit = pricing.price_unit;
+  // Same maths the database uses to price the stored booking (see lib/pricing.ts); the server re-checks everything.
+  const quote = useMemo(() => {
+    if (!checkIn || !checkOut || checkOut <= checkIn) return null;
+    return quoteStay(pricing, checkIn, checkOut, adults + children);
+  }, [pricing, checkIn, checkOut, adults, children]);
+  const nights = checkIn && checkOut && checkOut > checkIn ? nightsBetween(checkIn, checkOut) : 0;
+  const lengthProblem = nights ? stayLengthProblem(nights, { min_nights: minNights, max_nights: maxNights }) : null;
 
   return (
     <div id="booking" className="rounded-3xl border border-forest-900/10 bg-white p-6 shadow-lg shadow-forest-950/5 lg:sticky lg:top-28">
@@ -87,13 +91,17 @@ export function BookingPanel({ propertyId, slug, maxGuests, price, priceUnit, mi
           <Field label="Message to the host (optional)" htmlFor="message" error={e.message}>
             <TextArea id="message" name="message" rows={3} maxLength={2000} placeholder="Occasion, arrival time, dietary needs…" defaultValue={state?.values?.message} />
           </Field>
-          {estimate ? (
-            <div className="rounded-xl bg-sand-50 px-4 py-3 text-sm text-earth-800">
-              <p className="flex justify-between"><span>{estimate.nights} night{estimate.nights === 1 ? "" : "s"}</span><strong>{formatINR(estimate.total)}</strong></p>
-              <p className="mt-1 text-xs text-earth-600">Indicative only, based on the host&apos;s listed price. The host confirms the final amount.</p>
+          {lengthProblem ? <p role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800">{lengthProblem}</p> : null}
+          {quote && !lengthProblem ? (
+            <div className="rounded-xl bg-sand-50 px-4 py-3 text-sm text-earth-800" aria-live="polite">
+              <dl className="space-y-1">
+                {quoteLines(quote).map((l) => <div key={l.label} className="flex justify-between gap-3"><dt>{l.label}</dt><dd>{formatINR(l.amount)}</dd></div>)}
+              </dl>
+              <p className="mt-2 flex justify-between border-t border-sand-300 pt-2 font-semibold"><span>Estimated total</span><strong>{formatINR(quote.total)}</strong></p>
+              <p className="mt-1 text-xs text-earth-600">Based on the host&apos;s listed prices. The host confirms the final amount; nothing is charged online.</p>
             </div>
           ) : null}
-          <SubmitButton pendingLabel="Sending request…">Request to book</SubmitButton>
+          <SubmitButton pendingLabel="Sending request…" disabled={Boolean(lengthProblem)}>Request to book</SubmitButton>
           <p className="text-center text-xs text-ink/55">You won&apos;t be charged. The host reviews your request first.</p>
         </form>
       )}

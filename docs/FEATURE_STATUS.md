@@ -28,6 +28,12 @@ Legend: ✅ implemented and covered by automated tests · 🟢 implemented, veri
 | CAPTCHA on public forms | ❌ | honeypot only; add Turnstile / Vercel WAF if spam appears |
 | Admin: audit log, review moderation, experiences/catalogue, pending queue | ✅ | `/admin/audit-logs`, `/admin/reviews`, `/admin/catalog`, `/admin/properties?status=pending_review` |
 | Portal aliases `/host/login`, `/host/register`, `/admin/dashboard`, `/admin/experiences`, `/admin/properties/pending` | 🟢 | redirects (verified by browser tests) |
+| Host listing wizard (8 steps, draft saved per step, preview, success page with reference) | 🟢⏳ | validation unit-tested; live save needs Supabase |
+| Photo upload (drag-drop, previews, progress, retry, reorder, cover, delete) | 🟢⏳ | validation/error states browser-checked; storage upload needs Supabase |
+| Structured pricing (weekend, extra guests, cleaning, tax, min/max stay) + guest price preview | ✅ | SQL and TypeScript maths proven identical on 300 random cases |
+| Host entry points (4 CTAs, destination preserved, traveller → host upgrade) | ✅ | browser tests + database tests |
+| Per-room pricing / room inventory | ❌ | each confirmed booking reserves the whole property (documented in the wizard) |
+| Online payments | ❌ | not enabled; requests are never charged |
 | Browser smoke tests (desktop + mobile, production build) | ✅ | Playwright, `npm run test:e2e` — covers the no-backend state; live-database flows remain ⏳ |
 
 ## Content that is placeholder and needs the owner's confirmation

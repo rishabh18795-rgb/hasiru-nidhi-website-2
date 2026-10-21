@@ -52,7 +52,11 @@ export async function requireUser(nextPath?: string): Promise<Session> {
  */
 export async function requireRole(roles: AppRole[], nextPath?: string): Promise<Session> {
   const session = await requireUser(nextPath);
-  if (!roles.includes(session.profile.role)) redirect("/dashboard?denied=1");
+  if (!roles.includes(session.profile.role)) {
+    // A traveller reaching a host page wants to host: offer the one-click upgrade instead of a dead end.
+    if (roles.includes("host") && session.profile.role === "traveller") redirect("/list-your-property?become=host");
+    redirect("/dashboard?denied=1");
+  }
   return session;
 }
 

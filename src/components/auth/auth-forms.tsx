@@ -33,13 +33,14 @@ export function SignInForm({ next }: { next?: string }) {
   );
 }
 
-export function SignUpForm({ defaultType }: { defaultType: "traveller" | "host" }) {
+export function SignUpForm({ defaultType, next }: { defaultType: "traveller" | "host"; next?: string }) {
   const [state, action] = useActionState(signUp, initial);
   const e = state?.fieldErrors ?? {};
   const v = state?.values ?? {};
   if (state?.ok) return <FormMessage state={state} />;
   return (
     <form action={action} className="flex flex-col gap-5" noValidate>
+      {next ? <input type="hidden" name="next" value={next} /> : null}
       <FormMessage state={state} />
       <Field label="I want to" htmlFor="account_type" error={e.account_type} required>
         <NativeSelect id="account_type" name="account_type" defaultValue={v.account_type ?? defaultType}>

@@ -13,7 +13,8 @@ import { getSession } from "@/lib/auth";
 import { getPublicSettings } from "@/lib/data/catalog";
 import { getSimilarStays, getStayBySlug } from "@/lib/data/stays";
 import { whatsappLink, whatsappMessage } from "@/lib/contact";
-import { formatDate, formatINR, PRICE_UNIT_LABEL } from "@/lib/format";
+import { formatDate, formatINR } from "@/lib/format";
+import { ARRANGEMENTS } from "@/lib/wizard/schemas";
 import { FALLBACK_PROPERTY_IMAGE, propertyImageUrl } from "@/lib/images";
 import { todayIST } from "@/lib/stays/filters";
 import { cancellationPolicies } from "@/lib/validation/property";
@@ -58,6 +59,8 @@ export default async function StayPage({ params, searchParams }: { params: Param
     ? stay.images.map((i) => ({ src: propertyImageUrl(i.path, i.source) ?? FALLBACK_PROPERTY_IMAGE, alt: i.alt || `${p.name} photo` }))
     : [{ src: FALLBACK_PROPERTY_IMAGE, alt: `${p.name} (illustrative image)` }];
   const location = [p.city, p.region && p.region !== p.city ? p.region : null, p.state].filter(Boolean).join(", ");
+  const arrangement = ARRANGEMENTS.find((a) => a.value === p.accommodation_arrangement)?.label.split(" — ")[0];
+  const hasPin = p.latitude !== null && p.longitude !== null;
   const policy = cancellationPolicies.find((c) => c.value === p.cancellation_policy);
   const wa = whatsappLink(settings.whatsapp_number, whatsappMessage("property", p.name));
   const grouped = stay.amenities.reduce<Record<string, typeof stay.amenities>>((acc, a) => {
@@ -121,7 +124,8 @@ export default async function StayPage({ params, searchParams }: { params: Param
               <h2 id="about" className="font-display text-2xl text-forest-950">About this stay</h2>
               <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-sm text-ink/75">
                 <li className="flex items-center gap-2"><Users className="h-4 w-4 text-forest-600" aria-hidden="true" /> Up to {p.max_guests} guests</li>
-                <li className="flex items-center gap-2"><BedDouble className="h-4 w-4 text-forest-600" aria-hidden="true" /> {p.rooms_count} room{p.rooms_count === 1 ? "" : "s"}</li>
+                <li className="flex items-center gap-2"><BedDouble className="h-4 w-4 text-forest-600" aria-hidden="true" /> {p.rooms_count} room{p.rooms_count === 1 ? "" : "s"}{p.bedrooms !== null ? ` · ${p.bedrooms} bedroom${p.bedrooms === 1 ? "" : "s"}` : ""}{p.beds !== null ? ` · ${p.beds} bed${p.beds === 1 ? "" : "s"}` : ""}{p.bathrooms !== null ? ` · ${p.bathrooms} bathroom${p.bathrooms === 1 ? "" : "s"}` : ""}</li>
+                {arrangement ? <li className="flex items-center gap-2"><Check className="h-4 w-4 text-forest-600" aria-hidden="true" /> {arrangement}</li> : null}
                 <li className="flex items-center gap-2"><Clock className="h-4 w-4 text-forest-600" aria-hidden="true" /> Check-in {p.check_in_time.slice(0, 5)} · Check-out {p.check_out_time.slice(0, 5)}</li>
               </ul>
               <p className="mt-5 whitespace-pre-line text-base leading-relaxed text-ink/80">{p.description}</p>
@@ -181,6 +185,21 @@ export default async function StayPage({ params, searchParams }: { params: Param
               </section>
             ) : null}
 
+            {p.price_inr !== null ? (
+              <section aria-labelledby="prices">
+                <h2 id="prices" className="font-display text-2xl text-forest-950">Prices</h2>
+                <dl className="mt-4 space-y-2 text-sm text-ink/80">
+                  <div className="flex justify-between gap-4"><dt>{p.price_unit === "per_person_night" ? "Per guest, per night" : "Per night"}</dt><dd>{formatINR(p.price_inr)}</dd></div>
+                  {p.weekend_price_inr !== null ? <div className="flex justify-between gap-4"><dt>Weekend nights (Fri &amp; Sat)</dt><dd>{formatINR(p.weekend_price_inr)}</dd></div> : null}
+                  {p.price_unit === "per_night" && p.included_guests !== null && p.extra_guest_fee_inr !== null ? <div className="flex justify-between gap-4"><dt>Each guest beyond {p.included_guests}, per night</dt><dd>{formatINR(p.extra_guest_fee_inr)}</dd></div> : null}
+                  {p.cleaning_fee_inr ? <div className="flex justify-between gap-4"><dt>Cleaning fee (once)</dt><dd>{formatINR(p.cleaning_fee_inr)}</dd></div> : null}
+                  {p.tax_percent ? <div className="flex justify-between gap-4"><dt>Taxes</dt><dd>{p.tax_percent}%</dd></div> : null}
+                  <div className="flex justify-between gap-4"><dt>Stay length</dt><dd>{p.min_nights}–{p.max_nights} night{p.max_nights === 1 ? "" : "s"}</dd></div>
+                </dl>
+                <p className="mt-3 text-xs text-ink/55">Enter your dates in the booking panel to see the total for your stay.</p>
+              </section>
+            ) : null}
+
             <section aria-labelledby="availability">
               <h2 id="availability" className="font-display text-2xl text-forest-950">Availability</h2>
               <div className="mt-4"><AvailabilityCalendar ranges={stay.unavailable} /></div>
@@ -198,8 +217,13 @@ export default async function StayPage({ params, searchParams }: { params: Param
                   <dd className="mt-1 whitespace-pre-line text-ink/75">{p.house_rules || "The host hasn't listed specific house rules."}</dd>
                 </div>
                 <div>
-                  <dt className="font-medium text-forest-950">Approximate location</dt>
-                  <dd className="mt-1 text-ink/75">{location || "Karnataka"}. The exact address is shared by the host after a booking is confirmed.</dd>
+                  <dt className="font-medium text-forest-950">{p.location_precision === "exact" ? "Location" : "Approximate location"}</dt>
+                  <dd className="mt-1 text-ink/75">{[location || "Karnataka", p.country].filter(Boolean).join(", ")}. The exact address is shared by the host after a booking is confirmed.</dd>
+                  {hasPin ? (
+                    <div className="mt-3 overflow-hidden rounded-xl ring-1 ring-forest-900/10">
+                      <iframe title={`Map of the area around ${p.name}`} src={`https://www.google.com/maps?q=${encodeURIComponent(`${p.latitude},${p.longitude}`)}&z=${p.location_precision === "exact" ? 15 : 12}&output=embed`} className="h-56 w-full border-0" loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
+                    </div>
+                  ) : null}
                 </div>
               </dl>
             </section>
@@ -248,15 +272,18 @@ export default async function StayPage({ params, searchParams }: { params: Param
               propertyId={p.id}
               slug={p.slug}
               maxGuests={p.max_guests}
-              price={p.price_inr}
-              priceUnit={p.price_unit}
+              pricing={{
+                price_inr: p.price_inr, price_unit: p.price_unit, weekend_price_inr: p.weekend_price_inr, included_guests: p.included_guests,
+                extra_guest_fee_inr: p.extra_guest_fee_inr, cleaning_fee_inr: p.cleaning_fee_inr, tax_percent: p.tax_percent, currency: p.currency,
+              }}
+              minNights={p.min_nights}
+              maxNights={p.max_nights}
               minDate={todayIST()}
               initialCheckIn={firstParam(sp.checkin)}
               initialCheckOut={firstParam(sp.checkout)}
               initialGuests={Number(firstParam(sp.guests)) || undefined}
               viewer={viewer}
             />
-            <p className="mt-3 px-2 text-xs text-ink/55">Price per unit: {p.price_inr !== null ? `${formatINR(p.price_inr)} ${PRICE_UNIT_LABEL[p.price_unit]}` : "set by the host on request"}.</p>
           </aside>
         </div>
 

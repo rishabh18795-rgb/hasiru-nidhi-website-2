@@ -1,5 +1,9 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+
+import { getSession } from "@/lib/auth";
 import { formValues, zodFieldErrors, type FormState } from "@/lib/action";
 import { partnerApplicationSchema } from "@/lib/validation/enquiries";
 import { recordEnquiry } from "@/lib/data/enquiries";
@@ -25,4 +29,14 @@ export async function submitPartnerApplication(_prev: FormState, formData: FormD
   return result.ok
     ? { ok: true, message: "Application received. Our partnerships team will contact you to discuss next steps. Creating a host account lets you add photographs and track your listing's status." }
     : { ok: false, message: result.error, values };
+}
+
+/** Turns a signed-in traveller account into a host account (never an admin) and starts the listing wizard. */
+export async function becomeHost(): Promise<void> {
+  const session = await getSession();
+  if (!session) redirect("/sign-in?next=%2Flist-your-property");
+  const { error } = await session.supabase.rpc("become_host");
+  if (error) redirect("/list-your-property?error=become_host");
+  revalidatePath("/", "layout");
+  redirect("/host/properties/new");
 }

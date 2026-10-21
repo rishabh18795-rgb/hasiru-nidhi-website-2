@@ -21,10 +21,10 @@ export default async function AdminProperties({ searchParams }: { searchParams: 
   const sp = await searchParams;
   const status = TABS.find((t) => t.value === sp.status)?.value ?? "pending_review";
   const { supabase } = await requireRole(["admin"], "/admin/properties");
-  let q = supabase.from("properties").select("id, name, status, city, state, is_sample, is_featured, submitted_at, updated_at, host_id").order("updated_at", { ascending: false }).limit(200);
+  let q = supabase.from("properties").select("id, name, status, city, state, is_sample, is_featured, submitted_at, updated_at, host_id, reviewed_at, review_kind").order("updated_at", { ascending: false }).limit(200);
   if (status !== "all") q = q.eq("status", status);
   const { data } = await q;
-  const list = (data ?? []) as Pick<Property, "id" | "name" | "status" | "city" | "state" | "is_sample" | "is_featured" | "submitted_at" | "updated_at">[];
+  const list = (data ?? []) as Pick<Property, "id" | "name" | "status" | "city" | "state" | "is_sample" | "is_featured" | "submitted_at" | "updated_at" | "reviewed_at" | "review_kind">[];
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-medium tracking-tight text-forest-950">Listings</h1>
@@ -44,6 +44,8 @@ export default async function AdminProperties({ searchParams }: { searchParams: 
                     <Link href={`/admin/properties/${p.id}`} className="font-medium text-forest-950 hover:underline">{p.name}</Link>
                     <StatusBadge status={p.status} />
                     {p.is_sample ? <SampleBadge /> : null}
+                    {p.status === "pending_review" && p.reviewed_at ? <span className="rounded-full bg-sand-100 px-2 py-0.5 text-xs text-earth-700">Resubmission</span> : null}
+                    {p.status === "rejected" && p.review_kind === "changes_requested" ? <span className="rounded-full bg-sand-100 px-2 py-0.5 text-xs text-earth-700">Changes requested</span> : null}
                     {p.is_featured ? <span className="rounded-full bg-sand-100 px-2 py-0.5 text-xs text-earth-700">Featured</span> : null}
                   </div>
                   <p className="mt-1 text-xs text-ink/55">{[p.city, p.state].filter(Boolean).join(", ")} · {p.submitted_at ? `submitted ${formatDate(p.submitted_at)}` : `updated ${formatDate(p.updated_at)}`}</p>

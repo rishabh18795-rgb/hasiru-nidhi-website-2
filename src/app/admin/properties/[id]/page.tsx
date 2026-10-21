@@ -41,6 +41,7 @@ export default async function AdminPropertyReview({ params }: { params: Promise<
           <h1 className="text-3xl font-medium tracking-tight text-forest-950">{p.name}</h1>
           <StatusBadge status={p.status} />
           {p.is_sample ? <SampleBadge /> : null}
+          {p.status === "pending_review" && p.reviewed_at ? <span className="rounded-full bg-sand-100 px-2.5 py-0.5 text-xs font-medium text-earth-700">Resubmission — last reviewed {formatDateTime(p.reviewed_at)}</span> : null}
         </div>
         {p.rejection_reason ? <p className="mt-2 text-sm text-red-700">Last note: {p.rejection_reason}</p> : null}
       </div>
@@ -51,9 +52,16 @@ export default async function AdminPropertyReview({ params }: { params: Promise<
             <CardTitle>Public details</CardTitle>
             <DefinitionList items={[
               { label: "Category", value: (cat.data as { name: string } | null)?.name },
-              { label: "Location", value: [p.city, p.region, p.state, p.postal_code].filter(Boolean).join(", ") },
+              { label: "Location", value: [p.city, p.region, p.state, p.postal_code, p.country].filter(Boolean).join(", ") },
+              { label: "Map pin shown publicly", value: p.latitude !== null ? `${p.latitude}, ${p.longitude} (${p.location_precision === "exact" ? "exact" : "approximate"})` : "None" },
               { label: "Rooms / guests", value: `${p.rooms_count} rooms · up to ${p.max_guests} guests` },
+              { label: "Bedrooms / beds / baths", value: [p.bedrooms, p.beds, p.bathrooms].every((x) => x === null) ? "—" : `${p.bedrooms ?? "?"} / ${p.beds ?? "?"} / ${p.bathrooms ?? "?"}` },
+              { label: "Arrangement", value: p.accommodation_arrangement?.replace(/_/g, " ") },
               { label: "Price", value: p.price_inr !== null ? `${formatINR(p.price_inr)} ${PRICE_UNIT_LABEL[p.price_unit]}` : "Price on request" },
+              { label: "Weekend price", value: p.weekend_price_inr !== null ? formatINR(p.weekend_price_inr) : "—" },
+              { label: "Extra guests", value: p.included_guests !== null && p.extra_guest_fee_inr !== null ? `${formatINR(p.extra_guest_fee_inr)} per guest above ${p.included_guests}` : "—" },
+              { label: "Cleaning fee / tax", value: `${p.cleaning_fee_inr ? formatINR(p.cleaning_fee_inr) : "none"} / ${p.tax_percent}%` },
+              { label: "Stay length", value: `${p.min_nights}–${p.max_nights} nights` },
               { label: "Check-in / out", value: `${p.check_in_time.slice(0, 5)} / ${p.check_out_time.slice(0, 5)}` },
               { label: "Cancellation policy", value: p.cancellation_policy },
               { label: "Facilities", value: names(am.data, "amenities") },
@@ -76,7 +84,9 @@ export default async function AdminPropertyReview({ params }: { params: Promise<
               { label: "Contact email", value: pr.contact_email },
               { label: "Listed elsewhere", value: pr.current_platforms },
               { label: "Partnership model", value: pr.partnership_model },
+              { label: "Exact coordinates", value: pr.exact_latitude !== null && pr.exact_latitude !== undefined ? `${pr.exact_latitude}, ${pr.exact_longitude}` : "—" },
               { label: "Host terms accepted", value: p.terms_accepted_at ? formatDateTime(p.terms_accepted_at) : "No" },
+              { label: "Photo rights confirmed", value: p.photo_rights_confirmed_at ? formatDateTime(p.photo_rights_confirmed_at) : "No" },
               { label: "Submitted", value: p.submitted_at ? formatDateTime(p.submitted_at) : "Not yet" },
             ]} />
           </Card>

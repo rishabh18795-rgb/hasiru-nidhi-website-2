@@ -76,6 +76,7 @@ export async function markAllNotificationsRead(): Promise<void> {
   if (!session) return;
   await session.supabase.from("notifications").update({ is_read: true }).eq("user_id", session.user.id).eq("is_read", false);
   revalidatePath("/dashboard/notifications");
+  revalidatePath("/host/notifications");
 }
 
 export async function removeSaved(propertyId: string): Promise<void> {

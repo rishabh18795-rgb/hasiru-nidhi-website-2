@@ -13,7 +13,7 @@ const initial: FormState = {};
 export function ReviewListingForm({ propertyId, status }: { propertyId: string; status: string }) {
   const [state, action] = useActionState(reviewListing, initial);
   const options: { value: string; label: string }[] =
-    status === "pending_review" ? [{ value: "approve", label: "Approve & publish" }, { value: "reject", label: "Reject (reason required)" }]
+    status === "pending_review" ? [{ value: "approve", label: "Approve & publish" }, { value: "request_changes", label: "Request corrections (reason required)" }, { value: "reject", label: "Reject (reason required)" }]
     : status === "rejected" ? [{ value: "approve", label: "Approve & publish" }]
     : status === "approved" ? [{ value: "suspend", label: "Suspend (reason required)" }]
     : status === "suspended" ? [{ value: "reinstate", label: "Reinstate" }]
@@ -28,7 +28,7 @@ export function ReviewListingForm({ propertyId, status }: { propertyId: string; 
           {options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
         </NativeSelect>
       </Field>
-      <Field label="Reason / note to the host" htmlFor="reason" hint="Required for rejection and suspension. The host sees this.">
+      <Field label="Reason / note to the host" htmlFor="reason" hint="Required for corrections, rejection and suspension. The host sees this, and can edit and resubmit.">
         <TextArea id="reason" name="reason" rows={3} maxLength={1000} />
       </Field>
       <SubmitButton pendingLabel="Saving…" className="self-start">Apply decision</SubmitButton>

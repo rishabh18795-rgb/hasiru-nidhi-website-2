@@ -5,6 +5,7 @@ import { CtaBand } from "@/components/site/cta-band";
 import { PageHero } from "@/components/site/page-hero";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/site/reveal";
 import { SectionHeading } from "@/components/site/section-heading";
+import { HostCta } from "@/components/site/host-cta";
 import { images } from "@/lib/content";
 
 export const metadata: Metadata = {
@@ -29,8 +30,8 @@ export default function BecomeAHostPage() {
         description="Create a host account, add your property and photographs, and submit it for review. Once approved, travellers can find it and send you booking requests."
         image={images.cabinMisty}
         crumb="Become a Host"
-        primaryCta={{ label: "Create a host account", href: "/sign-up?type=host" }}
-        secondaryCta={{ label: "I already have an account", href: "/sign-in?next=/host" }}
+        primaryCta={{ label: "Start Listing Your Property", href: "/host/properties/new" }}
+        secondaryCta={{ label: "Create Host Account", href: "/sign-up?type=host&next=%2Fhost%2Fproperties%2Fnew" }}
       />
       <section className="bg-cream py-24">
         <div className="container-nidhi">
@@ -48,12 +49,15 @@ export default function BecomeAHostPage() {
           </StaggerGroup>
         </div>
       </section>
+      <section className="bg-cream pb-6 pt-4">
+        <div className="container-nidhi"><HostCta /></div>
+      </section>
       <section className="bg-sand-50 py-20">
         <div className="container-nidhi max-w-3xl">
           <Reveal>
             <h2 className="font-display text-3xl text-forest-950">What the host portal gives you</h2>
             <ul className="mt-6 space-y-3 text-base leading-relaxed text-ink/75">
-              <li>• A listing editor with photos, rooms, facilities, experiences, house rules and cancellation policy.</li>
+              <li>• A step-by-step listing wizard: type, location, details, photographs, facilities, pricing, availability, policies — saved as a draft after every step.</li>
               <li>• An availability calendar and automatic protection against double bookings.</li>
               <li>• A booking-request inbox: accept, decline or cancel, with the guest notified each time.</li>
               <li>• A status tracker: draft, pending review, live, or rejected with the reviewer&apos;s reasons.</li>
@@ -61,7 +65,7 @@ export default function BecomeAHostPage() {
           </Reveal>
         </div>
       </section>
-      <CtaBand title="Ready to list your property?" description="Apply in a few minutes. You can save a draft and come back later." primaryLabel="List Your Property" primaryHref="/list-your-property" secondaryLabel="Create a host account" secondaryHref="/sign-up?type=host" />
+      <CtaBand title="Ready to list your property?" description="Apply in a few minutes. You can save a draft and come back later." primaryLabel="Start Listing Your Property" primaryHref="/host/properties/new" secondaryLabel="Create a host account" secondaryHref="/sign-up?type=host&next=%2Fhost%2Fproperties%2Fnew" />
     </>
   );
 }

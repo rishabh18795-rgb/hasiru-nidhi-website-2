@@ -14,18 +14,22 @@ Use throw-away e-mail addresses you control.
 8. **Profile**: change name/phone; e-mail is read-only.
 9. Visit `/host` and `/admin` as traveller → redirected to dashboard; nothing leaks.
 
-## B. Host
-1. **Create account** → *Host*; open **Host portal**; empty states show.
-2. **Add a property** → save draft → add ≥1 photo (try a 6 MB file and a PDF: both rejected) → add a room type.
-3. Click **Submit for review** with items missing → friendly list of what is missing. Complete them → submit → status *Pending review*; listing is **not** visible at `/stays` while pending.
-4. After admin approval it appears in `/stays`. Edit the **name** → status returns to *Pending review* (re-review); edit the **price** → stays live.
-5. **Availability**: block dates → the stay page calendar shows them struck out; try blocking over a confirmed booking → refused.
-6. **Booking requests**: *Accept* one request → confirmed, guest notified. Accept an **overlapping** second request → refused (“dates no longer available”); *Decline* it. Cancel a confirmed booking.
-7. **Enquiries** shows messages sent via “Contact host”. Visit `/admin` as host → redirected.
+## B. Host (listing wizard)
+1. On `/list-your-property` signed out: the four buttons work — **Start Listing Your Property** (→ sign-in, then back into the wizard), **Create Host Account**, **Host Login**, **Manage My Properties**.
+2. **Create host account** → verification e-mail → link lands you in **/host/properties/new** (Step 1). A traveller account signed in on `/list-your-property` sees a one-click **Start Listing** that converts it to a host account.
+3. **Step 1 Type** (name + type) → creates the draft. **Step 2 Location**: PIN must be 6 digits for India; lat/long both-or-neither; choose *approximate* vs *exact* pin. **Step 3 Details**: description ≥ 50 characters; beds/baths/arrangement; add a room type.
+4. **Step 4 Photographs**: drag several JPEG/PNG/WebP files (progress bars show); a 6 MB file and a PDF are refused with a clear message; reload the page — the photos are still there; reorder with arrows or drag; **Cover** moves a photo first; **Delete**; to test a failure, switch off Wi-Fi mid-upload and use **Retry**.
+5. **Step 5 Facilities**: nothing is pre-ticked. **Step 6 Pricing**: change price/weekend/extra-guest/cleaning/tax — the **price preview** updates; min stay > max stay and half-set extra-guest pricing are refused.
+6. **Step 7 Availability**: block dates; try blocking over a confirmed stay → refused. **Step 8 Policies**: tick both declarations; the **preview** shows photos, facilities, location, pricing and policies with Edit links.
+7. Use **Save draft** on any step, close the tab, reopen **My properties → Continue** and confirm everything you entered is restored.
+8. **Submit for review** is only offered when the checklist is complete; the **success page** with a reference (HN-XXXXXXXX) appears only after the database accepts it. The listing is **not** visible at `/stays` while pending.
+9. After the admin *requests changes*, the dashboard shows “Changes requested” with the note; edit and **Resubmit**. After approval it appears in `/stays`. Edit the **name** → back to *Pending review*; edit the **price** → stays live.
+10. **Bookings** tabs (Requests / Confirmed / Cancelled / Past): *Accept* one request → confirmed, guest notified. Accept an **overlapping** second request → refused; *Decline* it. Cancel a confirmed booking. A stay shorter/longer than your min/max nights is refused on the stay page and by the server.
+11. **Notifications**, **Enquiries**, **Settings** pages work; visit `/admin` as host → redirected.
 
 ## C. Admin
 1. Sign in as admin → **Overview** (counts, setup status).
-2. **Listings → Pending review** → open → inspect private owner details and photos → **Reject** (reason required) → host sees the reason and can resubmit → **Approve**.
+2. **Listings → Pending review** (also `/admin/properties/pending`) → open → inspect all fields, private owner details and photos → **Request corrections** or **Reject** (reason required) → host sees the reason and can resubmit (shown as *Resubmission*) → **Approve**.
 3. **Suspend** a live listing → disappears from `/stays`; **Reinstate**.
 4. **Users**: change a user to host, verify a host, suspend a user (they get *Account suspended* and can't request/host). Confirm admins are not editable.
 5. **Enquiries**: contact/booking requests, gardening quotes (photo links open), partner applications → triage with status + notes.

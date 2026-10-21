@@ -53,6 +53,8 @@ export async function signUp(_prev: FormState, formData: FormData): Promise<Form
   if (!parsed.success) return { ok: false, fieldErrors: zodFieldErrors(parsed.error), values: echo };
 
   const v = parsed.data;
+  // Where to land after verifying the e-mail: the page they were heading to, else the right home for their account type.
+  const landing = safeNextPath(values.next, v.account_type === "host" ? "/host/properties/new" : "/dashboard");
   const supabase = await createServerSupabase();
   const { data, error } = await supabase.auth.signUp({
     email: v.email,
@@ -60,14 +62,14 @@ export async function signUp(_prev: FormState, formData: FormData): Promise<Form
     options: {
       // account_type is limited to traveller|host by the schema AND by the database trigger.
       data: { full_name: v.full_name, phone: v.phone ?? "", account_type: v.account_type },
-      emailRedirectTo: `${await origin()}/auth/callback?next=${encodeURIComponent(v.account_type === "host" ? "/host" : "/dashboard")}`,
+      emailRedirectTo: `${await origin()}/auth/callback?next=${encodeURIComponent(landing)}`,
     },
   });
   if (error) {
     return { ok: false, message: error.message.toLowerCase().includes("already") ? "An account with this email already exists. Try signing in." : "We couldn't create your account. Please try again.", values: echo };
   }
   // With e-mail confirmation on, there is no session yet; otherwise the user is already signed in.
-  if (data.session) redirect(v.account_type === "host" ? "/host" : "/dashboard");
+  if (data.session) redirect(landing);
   return {
     ok: true,
     message: "Account created. We've sent a verification link to your email — open it to activate your account, then sign in.",

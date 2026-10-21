@@ -72,6 +72,41 @@ test.describe("protected areas", () => {
   });
 });
 
+test.describe("host entry points", () => {
+  test("/list-your-property has four working host calls to action", async ({ page }) => {
+    await page.goto("/list-your-property");
+    const cta = page.locator("#get-started");
+    await expect(cta.getByRole("link", { name: "Start Listing Your Property" })).toHaveAttribute("href", "/host/properties/new");
+    await expect(cta.getByRole("link", { name: "Create Host Account" })).toHaveAttribute("href", /\/sign-up\?type=host&next=%2Fhost%2Fproperties%2Fnew/);
+    await expect(cta.getByRole("link", { name: "Host Login" })).toHaveAttribute("href", /\/sign-in\?next=%2Fhost/);
+    await expect(cta.getByRole("link", { name: "Manage My Properties" })).toHaveAttribute("href", "/host/properties");
+  });
+
+  test("Start Listing sends a signed-out visitor to host sign-in and remembers the destination", async ({ page }) => {
+    await page.goto("/list-your-property");
+    await page.locator("#get-started").getByRole("link", { name: "Start Listing Your Property" }).click();
+    await expect(page).toHaveURL(/\/sign-in\?next=(%2F|\/)host(%2F|\/)properties(%2F|\/)new/);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Host sign in");
+  });
+
+  test("the host sign-up page keeps the destination and speaks to hosts", async ({ page }) => {
+    await page.goto("/sign-up?type=host&next=%2Fhost%2Fproperties%2Fnew");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Create your host account");
+  });
+
+  test("every listing-wizard and host page is protected", async ({ page }) => {
+    for (const path of ["/host/properties/new", "/host/properties", "/host/notifications", "/host/properties/11111111-1111-1111-1111-111111111111/wizard/pricing", "/host/properties/11111111-1111-1111-1111-111111111111/submitted"]) {
+      await page.goto(path);
+      await expect(page, path).toHaveURL(/\/sign-in\?next=/);
+    }
+  });
+
+  test("/become-a-host offers the same entry points", async ({ page }) => {
+    await page.goto("/become-a-host");
+    await expect(page.locator("#get-started").getByRole("link", { name: "Create Host Account" })).toBeVisible();
+  });
+});
+
 test.describe("security and SEO", () => {
   test("every response carries the security headers", async ({ request }) => {
     const res = await request.get("/");

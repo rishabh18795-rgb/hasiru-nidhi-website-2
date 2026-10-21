@@ -22,7 +22,7 @@ async function adminSession() {
 /* ---------------------------------------------------------------- listing review */
 const reviewSchema = z.object({
   property_id: z.uuid(),
-  decision: z.enum(["approve", "reject", "suspend", "reinstate"]),
+  decision: z.enum(["approve", "reject", "request_changes", "suspend", "reinstate"]),
   reason: z.string().trim().max(1000).optional(),
 });
 
@@ -37,7 +37,7 @@ export async function reviewListing(_prev: FormState, formData: FormData): Promi
   const { error } = await session.supabase.rpc("review_property", { p_property: property_id, p_decision: decision, p_reason: reason ?? null });
   if (error) return { ok: false, message: friendlyDbError(error) };
 
-  const label = { approve: "approved", reject: "rejected", suspend: "suspended", reinstate: "reinstated" }[decision];
+  const label = { approve: "approved", reject: "rejected", request_changes: "returned to you for changes", suspend: "suspended", reinstate: "reinstated" }[decision];
   if (p?.host_id) {
     const mail = listingEmails.decisionHost({ name: p.name, decision: label, reason });
     await emailUser(p.host_id, mail.subject, mail.body);

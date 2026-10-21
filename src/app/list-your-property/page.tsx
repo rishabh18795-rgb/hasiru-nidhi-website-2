@@ -7,6 +7,7 @@ import { PartnerApplicationForm } from "@/components/site/partner-form";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/site/reveal";
 import { SectionHeading } from "@/components/site/section-heading";
 import { WhatsAppButton } from "@/components/site/whatsapp-button";
+import { HostCta } from "@/components/site/host-cta";
 import { images } from "@/lib/content";
 
 export const metadata: Metadata = {
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
 };
 
 const steps = [
-  { icon: MessageSquare, title: "Apply", copy: "Send the short form below, or create a host account to start your listing directly." },
+  { icon: MessageSquare, title: "Create an account", copy: "Create a free host account and verify your email. Prefer to talk first? Use the enquiry form below." },
   { icon: Camera, title: "Add your property", copy: "Describe it truthfully and upload your own photographs. Save as a draft any time." },
   { icon: ClipboardCheck, title: "We review it", copy: "Every listing is checked by our team before it is published. Nothing goes live automatically." },
   { icon: Eye, title: "Go live", copy: "Approved listings appear in search and on their own page." },
@@ -25,7 +26,8 @@ const steps = [
 
 const accepted = ["Farm stays", "Village homestays", "Cottages", "Eco-retreats", "Family getaways & villas", "Cycling-friendly stays"];
 
-export default function ListYourPropertyPage() {
+export default async function ListYourPropertyPage({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
+  const sp = await searchParams;
   return (
     <>
       <PageHero
@@ -34,9 +36,18 @@ export default function ListYourPropertyPage() {
         description="Reach travellers looking for quiet, nature-led stays in Karnataka. You stay in control of your property, calendar and house rules."
         image={images.farmhouseCottage}
         crumb="List Your Property"
-        primaryCta={{ label: "Apply now", href: "#apply" }}
-        secondaryCta={{ label: "Create a host account", href: "/sign-up?type=host" }}
+        primaryCta={{ label: "Start Listing Your Property", href: "/host/properties/new" }}
+        secondaryCta={{ label: "Create Host Account", href: "/sign-up?type=host&next=%2Fhost%2Fproperties%2Fnew" }}
       />
+
+      <section className="bg-cream pb-4 pt-14">
+        <div className="container-nidhi">
+          {sp.error === "become_host" ? <p role="alert" className="mb-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800">We couldn&apos;t switch your account to a host account. Please try again or contact support.</p> : null}
+          <h2 className="font-display text-2xl text-forest-950">Ready to list?</h2>
+          <p className="mt-1 max-w-2xl text-sm text-ink/65">Create a host account, add your property step by step with your own photographs and prices, and submit it for review. You can save a draft and return any time.</p>
+          <HostCta becomeNotice={sp.become === "host"} className="mt-5" />
+        </div>
+      </section>
 
       <section className="bg-cream py-24">
         <div className="container-nidhi">
@@ -80,7 +91,7 @@ export default function ListYourPropertyPage() {
 
       <section id="apply" className="scroll-mt-24 bg-cream py-24">
         <div className="container-nidhi max-w-3xl">
-          <SectionHeading eyebrow="Apply" title="Tell us about your property." description="This creates a partnership application our team will follow up on. Photographs are added in your host account once you have one." />
+          <SectionHeading eyebrow="Prefer to talk first?" title="Tell us about your property." description="This sends a partnership enquiry our team will follow up on. To publish a listing with photographs and prices, create a host account above." />
           <Reveal className="mt-10 rounded-[2rem] bg-white p-8 ring-1 ring-forest-900/8 sm:p-10"><PartnerApplicationForm /></Reveal>
         </div>
       </section>
