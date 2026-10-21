@@ -36,6 +36,8 @@ const FRIENDLY: Array<[RegExp, string]> = [
   [/blocks_confirmed_booking/, "Those dates overlap a confirmed booking and cannot be blocked."],
   [/incomplete_listing: ?(.*)/, "Your listing is not complete yet."],
   [/forbidden|permission denied|row-level security|42501/, "You do not have permission to do that."],
+  [/too_many_photos/, "A listing can have at most 20 photographs."],
+  [/violates check constraint/, "One of the values is outside the allowed range. Please check the highlighted fields."],
   [/not_found/, "We could not find that record."],
 ];
 
@@ -58,6 +60,8 @@ export function friendlyDbError(error: { message?: string; code?: string } | nul
     const missing = incomplete[1].split(",").map((k) => LABELS[k] ?? k);
     return `Before submitting, please add: ${missing.join("; ")}.`;
   }
+  const stay = raw.match(/invalid_stay_length:(\d+)-(\d+)/);
+  if (stay) return `This property accepts stays of ${stay[1]} to ${stay[2]} nights. Please adjust your dates.`;
   for (const [pattern, message] of FRIENDLY) {
     if (pattern.test(raw) || (error?.code && pattern.test(error.code))) return message;
   }

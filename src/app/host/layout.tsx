@@ -14,12 +14,16 @@ export const metadata: Metadata = {
 export default async function HostLayout({ children }: { children: React.ReactNode }) {
   const { supabase } = await requireRole(["host"], "/host");
   // Pending request count for the nav badge (RLS limits this to the host's own listings).
-  const { count } = await supabase.from("bookings").select("id", { count: "exact", head: true }).eq("status", "requested");
+  const [{ count }, { count: unread }] = await Promise.all([
+    supabase.from("bookings").select("id", { count: "exact", head: true }).eq("status", "requested"),
+    supabase.from("notifications").select("id", { count: "exact", head: true }).eq("is_read", false),
+  ]);
   const items = [
     { href: "/host", label: "Overview", icon: "overview", exact: true },
     { href: "/host/properties", label: "My properties", icon: "properties" },
-    { href: "/host/bookings", label: "Booking requests", icon: "bookings", badge: count ?? 0 },
+    { href: "/host/bookings", label: "Bookings", icon: "bookings", badge: count ?? 0 },
     { href: "/host/enquiries", label: "Enquiries", icon: "enquiries" },
+    { href: "/host/notifications", label: "Notifications", icon: "notifications", badge: unread ?? 0 },
     { href: "/host/settings", label: "Settings", icon: "settings" },
     { href: "/dashboard", label: "My trips", icon: "saved" },
   ] as const;

@@ -6,14 +6,18 @@ import { redirect } from "next/navigation";
 
 import { AuthorizationError, assertRole } from "@/lib/auth";
 import { formValues, friendlyDbError, zodFieldErrors, type FormState } from "@/lib/action";
-import { propertyFormSchema, roomTypeSchema, slugify } from "@/lib/validation/property";
+import { roomTypeSchema, slugify } from "@/lib/validation/property";
+import { collectStepValues, crossChecks, parseStep, publicCoordinate } from "@/lib/wizard/schemas";
+import { isStepKey, nextStep, wizardPath } from "@/lib/wizard/steps";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Property } from "@/lib/db/types";
 import { availabilityBlockSchema, bookingResponseSchema, cancelSchema } from "@/lib/validation/booking";
 import { adminNotifyEmail, sendEmail } from "@/lib/email";
 import { bookingEmails, emailUser, listingEmails } from "@/lib/notifications";
 import { formatDate } from "@/lib/format";
 
 const DENIED: FormState = { ok: false, message: "You don't have permission to do that." };
-const MAX_IMAGES = 12;
+const MAX_IMAGES = 20;
 
 async function hostSession() {
   try {
@@ -24,68 +28,194 @@ async function hostSession() {
   }
 }
 
-function parseProperty(formData: FormData) {
-  const values = formValues(formData);
-  const parsed = propertyFormSchema.safeParse({
-    ...values,
-    amenity_ids: formData.getAll("amenity_ids").map(String),
-    experience_ids: formData.getAll("experience_ids").map(String),
-  });
-  return { values, parsed };
-}
+/* -------------------------------------------------------------------- listing wizard */
+const EDITABLE_STATUSES = ["draft", "rejected", "approved"];
+const NOT_EDITABLE: Record<string, string> = {
+  pending_review: "This listing is awaiting review, so it can't be edited until the review is finished.",
+  suspended: "This listing has been suspended by an administrator and can't be edited. Please contact support.",
+};
 
-/** Create (no id) or update (id) a listing. RLS + guard triggers decide what the host may actually change. */
-export async function saveProperty(_prev: FormState, formData: FormData): Promise<FormState> {
+/**
+ * Saves ONE step of the listing wizard and moves on.
+ *  intent=continue → strict validation, then redirect to the next step.
+ *  intent=save     → lenient validation (blank = not filled in yet), stays on the step.
+ * Ownership, status rules and what a host may change are enforced by Row Level Security and the guard triggers;
+ * the checks here only give friendly messages.
+ */
+export async function saveWizardStep(_prev: FormState, formData: FormData): Promise<FormState> {
   const session = await hostSession();
   if (!session) return DENIED;
-  const { values, parsed } = parseProperty(formData);
-  if (!parsed.success) return { ok: false, message: "Please fix the highlighted fields.", fieldErrors: zodFieldErrors(parsed.error), values };
-  const v = parsed.data;
-  const id = values.id || "";
+  const raw = collectStepValues(formData);
+  if (!isStepKey(raw.step)) return { ok: false, message: "Unknown step." };
+  const step = raw.step;
+  const strict = raw.intent !== "save";
+  const values = Object.fromEntries(Object.entries(raw).filter(([, v]) => typeof v === "string")) as Record<string, string>;
   const { supabase, user } = session;
+  const propertyId = typeof raw.property_id === "string" ? raw.property_id : "";
 
-  const row = {
-    name: v.name, category_id: v.category_id, summary: v.summary || null, description: v.description,
-    city: v.city, state: v.state, region: v.region || null, postal_code: v.postal_code || null,
-    rooms_count: v.rooms_count, max_guests: v.max_guests, price_inr: v.price_inr ?? null, price_unit: v.price_unit,
-    check_in_time: v.check_in_time, check_out_time: v.check_out_time, house_rules: v.house_rules || null,
-    cancellation_policy: v.cancellation_policy,
-  };
-
-  let propertyId = id;
-  if (!id) {
-    const slug = `${slugify(v.name)}-${randomUUID().slice(0, 6)}`;
-    const { data, error } = await supabase
-      .from("properties")
-      .insert({ ...row, host_id: user.id, slug, status: "draft", terms_accepted_at: v.accept_terms ? new Date().toISOString() : null })
-      .select("id")
-      .single();
-    if (error || !data) return { ok: false, message: friendlyDbError(error), values };
-    propertyId = data.id as string;
-  } else {
-    const { data: existing } = await supabase.from("properties").select("terms_accepted_at").eq("id", id).maybeSingle();
-    if (!existing) return DENIED;
-    const terms = v.accept_terms && !existing.terms_accepted_at ? { terms_accepted_at: new Date().toISOString() } : {};
-    const { error } = await supabase.from("properties").update({ ...row, ...terms }).eq("id", id);
-    if (error) return { ok: false, message: friendlyDbError(error), values };
+  let existing: Property | null = null;
+  if (propertyId) {
+    if (!/^[0-9a-f-]{36}$/.test(propertyId)) return DENIED;
+    const { data } = await supabase.from("properties").select("*").eq("id", propertyId).eq("host_id", user.id).maybeSingle();
+    if (!data) return DENIED;
+    existing = data as Property;
+    if (!EDITABLE_STATUSES.includes(existing.status)) return { ok: false, message: NOT_EDITABLE[existing.status] ?? DENIED.message, values };
+  } else if (step !== "type") {
+    return DENIED;
   }
 
-  const { error: privErr } = await supabase.from("property_private").upsert({
-    property_id: propertyId, address_line: v.address_line || null, contact_name: v.contact_name || null,
-    contact_email: v.contact_email ?? null, contact_phone: v.contact_phone ?? null,
-    current_platforms: v.current_platforms || null, partnership_model: v.partnership_model || null,
-  });
-  if (privErr) return { ok: false, message: friendlyDbError(privErr), values };
+  const parsed = parseStep(step, raw, strict);
+  if (!parsed.ok) return { ok: false, message: "Please fix the highlighted fields.", fieldErrors: parsed.errors, values };
+  const d = parsed.data as Record<string, unknown>;
 
-  // Replace link rows. RLS only allows this for the property's owner.
-  await supabase.from("property_amenities").delete().eq("property_id", propertyId);
-  if (v.amenity_ids.length) await supabase.from("property_amenities").insert(v.amenity_ids.map((amenity_id) => ({ property_id: propertyId, amenity_id })));
-  await supabase.from("property_experiences").delete().eq("property_id", propertyId);
-  if (v.experience_ids.length) await supabase.from("property_experiences").insert(v.experience_ids.map((experience_id) => ({ property_id: propertyId, experience_id })));
+  const cross = crossChecks(step, { country: existing?.country, price_unit: existing?.price_unit, ...d }, strict, { max_guests: existing?.max_guests });
+  if (!existing && step === "type") {
+    if (!d.name) cross.name = ["Property name is required"];
+    if (!d.category_id) cross.category_id = ["Choose a property type"];
+  }
+  if (Object.keys(cross).length) return { ok: false, message: "Please fix the highlighted fields.", fieldErrors: cross, values };
+
+  const now = new Date().toISOString();
+  let id = existing?.id ?? "";
+  let dbError: { message?: string; code?: string } | null = null;
+
+  switch (step) {
+    case "type": {
+      if (!existing) {
+        const slug = `${slugify(String(d.name))}-${randomUUID().slice(0, 6)}`;
+        const { data, error } = await supabase
+          .from("properties")
+          .insert({ host_id: user.id, slug, status: "draft", name: d.name, category_id: d.category_id, wizard_step: "type" })
+          .select("id")
+          .single();
+        dbError = error;
+        id = (data?.id as string | undefined) ?? "";
+      } else {
+        ({ error: dbError } = await supabase.from("properties").update({ name: d.name, category_id: d.category_id, wizard_step: "type" }).eq("id", id));
+      }
+      break;
+    }
+    case "location": {
+      const precision = d.location_precision as "approximate" | "exact" | undefined;
+      ({ error: dbError } = await supabase.from("properties").update({
+        ...(d.country ? { country: d.country } : {}),
+        ...(precision ? { location_precision: precision } : {}),
+        state: d.state ?? null,
+        city: d.city ?? null,
+        region: d.region ?? null,
+        postal_code: d.postal_code ?? null,
+        latitude: publicCoordinate(d.latitude as number | undefined, precision ?? existing?.location_precision),
+        longitude: publicCoordinate(d.longitude as number | undefined, precision ?? existing?.location_precision),
+        wizard_step: "location",
+      }).eq("id", id));
+      if (!dbError) {
+        ({ error: dbError } = await supabase.from("property_private").upsert({
+          property_id: id,
+          address_line: d.address_line ?? null,
+          exact_latitude: d.latitude ?? null,
+          exact_longitude: d.longitude ?? null,
+        }));
+      }
+      break;
+    }
+    case "details": {
+      ({ error: dbError } = await supabase.from("properties").update({
+        summary: d.summary ?? null,
+        description: d.description ?? "",
+        ...(d.rooms_count !== undefined ? { rooms_count: d.rooms_count } : {}),
+        ...(d.max_guests !== undefined ? { max_guests: d.max_guests } : {}),
+        bedrooms: d.bedrooms ?? null,
+        beds: d.beds ?? null,
+        bathrooms: d.bathrooms ?? null,
+        accommodation_arrangement: d.accommodation_arrangement ?? null,
+        ...(d.check_in_time ? { check_in_time: d.check_in_time } : {}),
+        ...(d.check_out_time ? { check_out_time: d.check_out_time } : {}),
+        house_rules: d.house_rules ?? null,
+        wizard_step: "details",
+      }).eq("id", id));
+      break;
+    }
+    case "amenities": {
+      dbError = await syncLinks(supabase, "property_amenities", "amenity_id", id, (d.amenity_ids as number[]) ?? []);
+      if (!dbError) dbError = await syncLinks(supabase, "property_experiences", "experience_id", id, (d.experience_ids as number[]) ?? []);
+      if (!dbError) ({ error: dbError } = await supabase.from("properties").update({ wizard_step: "amenities" }).eq("id", id));
+      break;
+    }
+    case "pricing": {
+      const perGuest = d.price_unit === "per_person_night";
+      ({ error: dbError } = await supabase.from("properties").update({
+        ...(d.price_unit ? { price_unit: d.price_unit } : {}),
+        price_inr: d.price_inr ?? null,
+        weekend_price_inr: d.weekend_price_inr ?? null,
+        included_guests: perGuest ? null : (d.included_guests ?? null),
+        extra_guest_fee_inr: perGuest ? null : (d.extra_guest_fee_inr ?? null),
+        cleaning_fee_inr: d.cleaning_fee_inr ?? null,
+        tax_percent: d.tax_percent ?? existing?.tax_percent ?? 0,
+        min_nights: d.min_nights ?? existing?.min_nights ?? 1,
+        max_nights: d.max_nights ?? existing?.max_nights ?? 30,
+        wizard_step: "pricing",
+      }).eq("id", id));
+      break;
+    }
+    case "review": {
+      ({ error: dbError } = await supabase.from("properties").update({
+        ...(d.cancellation_policy ? { cancellation_policy: d.cancellation_policy } : {}),
+        terms_accepted_at: d.accept_terms ? (existing?.terms_accepted_at ?? now) : null,
+        photo_rights_confirmed_at: d.accept_photo_rights ? (existing?.photo_rights_confirmed_at ?? now) : null,
+        wizard_step: "review",
+      }).eq("id", id));
+      if (!dbError) {
+        ({ error: dbError } = await supabase.from("property_private").upsert({
+          property_id: id,
+          contact_name: d.contact_name ?? null,
+          contact_phone: d.contact_phone ?? null,
+          contact_email: d.contact_email ?? null,
+          current_platforms: d.current_platforms ?? null,
+          partnership_model: d.partnership_model ?? null,
+        }));
+      }
+      break;
+    }
+    default: {
+      ({ error: dbError } = await supabase.from("properties").update({ wizard_step: step }).eq("id", id));
+    }
+  }
+
+  if (dbError || !id) return { ok: false, message: friendlyDbError(dbError), values };
 
   revalidatePath("/host/properties");
-  if (!id) redirect(`/host/properties/${propertyId}?created=1`);
-  return { ok: true, message: "Changes saved.", values };
+  revalidatePath(`/host/properties/${id}`);
+  if (strict) {
+    const next = nextStep(step);
+    redirect(next ? wizardPath(id, next) : `/host/properties/${id}`);
+  }
+  if (!existing) redirect(`${wizardPath(id, step)}?saved=1`);
+  return { ok: true, message: "Draft saved.", values };
+}
+
+/** Makes the stored link rows equal `wanted` without ever deleting everything first. */
+async function syncLinks(
+  supabase: SupabaseClient,
+  table: "property_amenities" | "property_experiences",
+  column: "amenity_id" | "experience_id",
+  propertyId: string,
+  wanted: number[],
+): Promise<{ message?: string; code?: string } | null> {
+  const { data, error } = await supabase.from(table).select(column).eq("property_id", propertyId);
+  if (error) return error;
+  const have = new Set((data ?? []).map((r) => (r as unknown as Record<string, number>)[column]));
+  const want = new Set(wanted);
+  const toAdd = [...want].filter((x) => !have.has(x));
+  const toRemove = [...have].filter((x) => !want.has(x));
+  if (toAdd.length) {
+    const { error: e } = await supabase.from(table).insert(toAdd.map((x) => ({ property_id: propertyId, [column]: x })));
+    if (e) return e;
+  }
+  if (toRemove.length) {
+    const { error: e } = await supabase.from(table).delete().eq("property_id", propertyId).in(column, toRemove);
+    if (e) return e;
+  }
+  return null;
 }
 
 export async function submitForReview(_prev: FormState, formData: FormData): Promise<FormState> {
@@ -102,7 +232,8 @@ export async function submitForReview(_prev: FormState, formData: FormData): Pro
   }
   revalidatePath("/host/properties");
   revalidatePath(`/host/properties/${id}`);
-  return { ok: true, message: "Submitted for review. Your listing stays private until an administrator approves it." };
+  // Only reached when the database accepted the submission (submit_property raised nothing).
+  redirect(`/host/properties/${id}/submitted`);
 }
 
 export async function deleteDraft(_prev: FormState, formData: FormData): Promise<FormState> {
@@ -147,14 +278,24 @@ export async function deletePropertyImage(imageId: string, propertyId: string): 
   revalidatePath(`/host/properties/${propertyId}`);
 }
 
-export async function makeCoverImage(imageId: string, propertyId: string): Promise<void> {
+export async function reorderPropertyImages(propertyId: string, orderedIds: string[]): Promise<FormState> {
   const session = await hostSession();
-  if (!session) return;
-  const { data: imgs } = await session.supabase.from("property_images").select("id, sort_order").eq("property_id", propertyId).order("sort_order");
-  if (!imgs) return;
-  const ordered = [imageId, ...imgs.map((i) => i.id as string).filter((i) => i !== imageId)];
-  for (let i = 0; i < ordered.length; i++) await session.supabase.from("property_images").update({ sort_order: i }).eq("id", ordered[i]);
+  if (!session) return DENIED;
+  const uuid = /^[0-9a-f-]{36}$/;
+  if (!uuid.test(propertyId) || orderedIds.length > MAX_IMAGES || !orderedIds.every((i) => uuid.test(i))) return { ok: false, message: "Invalid request." };
+  const { error } = await session.supabase.rpc("reorder_property_images", { p_property: propertyId, p_order: orderedIds });
+  if (error) return { ok: false, message: friendlyDbError(error) };
   revalidatePath(`/host/properties/${propertyId}`);
+  return { ok: true };
+}
+
+export async function makeCoverImage(imageId: string, propertyId: string): Promise<FormState> {
+  const session = await hostSession();
+  if (!session) return DENIED;
+  const { data: imgs } = await session.supabase.from("property_images").select("id").eq("property_id", propertyId).order("sort_order").order("created_at");
+  const ids = (imgs ?? []).map((i) => i.id as string);
+  if (!ids.includes(imageId)) return { ok: false, message: "Photo not found." };
+  return reorderPropertyImages(propertyId, [imageId, ...ids.filter((i) => i !== imageId)]);
 }
 
 /* -------------------------------------------------------------------- rooms */

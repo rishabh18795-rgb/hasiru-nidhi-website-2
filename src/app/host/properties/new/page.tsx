@@ -1,22 +1,24 @@
 import type { Metadata } from "next";
 
-import { PropertyForm } from "@/components/host/property-form";
+import { BackendNotice } from "@/components/site/backend-notice";
+import { TypeStep } from "@/components/host/wizard/step-forms";
+import { WizardProgress } from "@/components/host/wizard/wizard-progress";
 import { requireRole } from "@/lib/auth";
 import { getCatalog } from "@/lib/data/catalog";
-import { BackendNotice } from "@/components/site/backend-notice";
 
 export const metadata: Metadata = { title: "Add a property" };
 
 export default async function NewProperty() {
-  const session = await requireRole(["host"], "/host/properties/new");
+  await requireRole(["host"], "/host/properties/new");
   const catalog = await getCatalog();
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-medium tracking-tight text-forest-950">Add a property</h1>
-        <p className="mt-1 text-sm text-ink/60">Step 1 of 3 — details. Next you&apos;ll add photographs, then submit for review. Your profile: {session.profile.full_name || session.user.email}.</p>
+        <h1 className="text-3xl font-medium tracking-tight text-forest-950">List your property</h1>
+        <p className="mt-1 max-w-2xl text-sm text-ink/60">Eight short steps. Your progress is saved as a draft after every step, so you can leave and come back. Nothing is public until our team approves the listing.</p>
       </div>
-      {catalog.categories.length === 0 ? <BackendNotice feature="Adding a property" /> : <PropertyForm initial={{}} catalog={catalog} />}
+      <WizardProgress current="type" />
+      {catalog.categories.length === 0 ? <BackendNotice feature="Adding a property" /> : <TypeStep initial={{}} catalog={catalog} />}
     </div>
   );
 }
