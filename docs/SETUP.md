@@ -24,6 +24,9 @@ Verify: **Table editor** shows tables with the 🔒 RLS badge; **Storage** shows
 
 *(Optional, demo only)* paste `supabase/seed.sql` to add three labelled **sample** listings. Skip this in production.
 
+> **Vercel integration (what it creates):** `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` and `SUPABASE_SERVICE_ROLE_KEY` are read by this app; the `POSTGRES_*`, `SUPABASE_JWT_SECRET`, `SUPABASE_SECRET_KEY` and unprefixed `SUPABASE_*` variables are server-only and unused (never prefix a secret with `NEXT_PUBLIC_`).
+> Build-time settings (image hosts, Content-Security-Policy) read the URL, so **redeploy after the variables appear**.
+>
 > **Fastest path via Vercel:** in your Vercel project → **Storage → Create / Connect → Supabase** can create the project and fill in
 > `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` and `SUPABASE_SERVICE_ROLE_KEY` for you (those are exactly the names this app reads).
 > You still need to run the SQL above in that new project and set the Auth URLs in step 3, then **redeploy**.
@@ -39,11 +42,12 @@ provider (e.g. Resend, SES) so verification and password-reset e-mails are relia
 Optional: customise the e-mail templates under **Authentication → Emails**.
 
 ## 4. Create the first administrator
-1. Sign up on the website normally with the admin's e-mail and confirm the e-mail link.
-2. Edit the e-mail in `supabase/scripts/create_first_admin.sql` and run it in the SQL editor.
-3. Sign in again — the account menu now shows **Admin**.
+1. Sign up on the website with an e-mail address **you control** and click the verification link. (No password is ever put in Git, logs or chat; use *Forgot password* if you lose it.)
+2. In `supabase/scripts/create_first_admin.sql` replace `REPLACE_WITH_YOUR_EMAIL@example.com` and run the script in the SQL editor. It refuses to run unless that
+   account exists **and its e-mail is verified**, promotes only that account, and writes an audit-log entry.
+3. Sign out and in again — the account menu now shows **Admin**. The administrator sign-in page is `/admin/login`.
 
-There is deliberately no in-app way to create or promote an admin.
+There is deliberately no in-app way to create or promote an admin (tested: `tests/db/first-admin.test.ts`).
 
 ## 5. Deploy on Vercel
 1. https://vercel.com → **Add New → Project → Import** `rishabh18795-rgb/hasiru-nidhi-website-2` (Framework: Next.js, defaults are fine).

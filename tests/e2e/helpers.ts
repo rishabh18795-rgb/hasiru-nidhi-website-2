@@ -8,17 +8,22 @@ import type { Page, Response } from "@playwright/test";
 export async function visit(page: Page, path: string): Promise<Response | null> {
   const pending = new Map<string, string>();
   const onRequest = (r: { url(): string; resourceType(): string }) => pending.set(r.url(), r.resourceType());
+  const answered = new Map<string, number>();
   const onDone = (r: { url(): string }) => pending.delete(r.url());
+  const onResponse = (r: { url(): string; status(): number }) => answered.set(r.url(), r.status());
   page.on("request", onRequest);
   page.on("requestfinished", onDone);
   page.on("requestfailed", onDone);
+  page.on("response", onResponse);
   const res = await page.goto(path, { waitUntil: "domcontentloaded" });
   await page.waitForLoadState("load", { timeout: 15_000 }).catch(() => {
-    const stalled = [...pending].map(([u, t]) => `${t}:${u.slice(0, 120)}`).join(" | ");
+    // "answered HTTP n" = headers arrived but the body never finished; "no response" = the server never answered.
+    const stalled = [...pending].map(([u, t]) => `${t}:${u.slice(0, 120)} (${answered.has(u) ? `answered HTTP ${answered.get(u)}, body unfinished` : "no response"})`).join(" | ");
     console.log(`::warning title=load event still pending::${path} -> ${stalled || "no outstanding requests"}`);
   });
   page.off("request", onRequest);
   page.off("requestfinished", onDone);
   page.off("requestfailed", onDone);
+  page.off("response", onResponse);
   return res;
 }

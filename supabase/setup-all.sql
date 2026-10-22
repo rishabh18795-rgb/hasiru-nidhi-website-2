@@ -17,7 +17,9 @@
 --    contexts (the SQL editor, the service role, SECURITY DEFINER bodies) are exempt
 --    from the guard triggers.
 
-create extension if not exists btree_gist;
+-- Installed in the "extensions" schema (Supabase's convention) so its operator helper functions are not exposed as API functions.
+create schema if not exists extensions;
+create extension if not exists btree_gist with schema extensions;
 
 -- ---------------------------------------------------------------- enums
 create type public.app_role as enum ('traveller', 'host', 'admin');

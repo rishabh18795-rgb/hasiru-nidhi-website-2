@@ -23,7 +23,8 @@ export async function createDb(opts: { seed?: boolean } = {}): Promise<Db> {
     create table auth.users (
       id uuid primary key default gen_random_uuid(),
       email text,
-      raw_user_meta_data jsonb not null default '{}'::jsonb
+      raw_user_meta_data jsonb not null default '{}'::jsonb,
+      email_confirmed_at timestamptz
     );
     create function auth.uid() returns uuid language sql stable as $$
       select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid
@@ -33,6 +34,9 @@ export async function createDb(opts: { seed?: boolean } = {}): Promise<Db> {
     -- Supabase grants all table privileges to the API roles by default; RLS is the gate.
     alter default privileges in schema public grant all on tables to anon, authenticated, service_role;
     alter default privileges in schema public grant all on sequences to anon, authenticated, service_role;
+    -- Supabase ALSO grants EXECUTE on every new function to anon/authenticated/service_role (not just PUBLIC).
+    -- Mirroring that here means a function missing an explicit REVOKE shows up as a failing test.
+    alter default privileges in schema public grant all on functions to anon, authenticated, service_role;
   `);
 
   const dir = path.join(ROOT, "supabase/migrations");
