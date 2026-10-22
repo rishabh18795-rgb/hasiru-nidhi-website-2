@@ -21,19 +21,20 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
   const next = sp.next ? safeNextPath(sp.next, "") : "";
   const notice = sp.error ? NOTICES[sp.error] : null;
   const hostArea = next.startsWith("/host");
+  const adminArea = next.startsWith("/admin");
   const signUpHref = `/sign-up?${hostArea ? "type=host&" : ""}${next ? `next=${encodeURIComponent(next)}` : ""}`.replace(/[?&]$/, "");
   return (
-    <AppPage narrow title={hostArea ? "Host sign in" : "Welcome back"} description={hostArea ? "Sign in to manage your properties, calendar and booking requests." : "Sign in to manage your trips, listings and bookings."}>
+    <AppPage narrow title={adminArea ? "Administrator sign in" : hostArea ? "Host sign in" : "Welcome back"} description={adminArea ? "For Hasiru Nidhi administrators. Access is decided on the server from your account\u2019s role, not from this page." : hostArea ? "Sign in to manage your properties, calendar and booking requests." : "Sign in to manage your trips, listings and bookings."}>
       {isSupabaseConfigured() ? (
         <Card>
           {notice ? <p role="alert" className="mb-5 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800">{notice}</p> : null}
           <SignInForm next={next || undefined} />
-          <p className="mt-6 text-center text-sm text-ink/65">
+          {adminArea ? null : <p className="mt-6 text-center text-sm text-ink/65">
             {hostArea ? "New host?" : "New to Hasiru Nidhi?"}{" "}
             <Link href={signUpHref} className="font-medium text-forest-800 underline underline-offset-2">
               {hostArea ? "Create a host account" : "Create an account"}
             </Link>
-          </p>
+          </p>}
         </Card>
       ) : (
         <BackendNotice feature="Signing in" />

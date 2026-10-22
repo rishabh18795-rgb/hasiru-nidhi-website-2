@@ -22,9 +22,10 @@ export default async function HostLayout({ children }: { children: React.ReactNo
     { href: "/host", label: "Overview", icon: "overview", exact: true },
     { href: "/host/properties", label: "My properties", icon: "properties" },
     { href: "/host/bookings", label: "Bookings", icon: "bookings", badge: count ?? 0 },
+    { href: "/host/calendar", label: "Calendar", icon: "calendar" },
     { href: "/host/enquiries", label: "Enquiries", icon: "enquiries" },
     { href: "/host/notifications", label: "Notifications", icon: "notifications", badge: unread ?? 0 },
-    { href: "/host/settings", label: "Settings", icon: "settings" },
+    { href: "/host/settings", label: "Profile", icon: "settings" },
     { href: "/dashboard", label: "My trips", icon: "saved" },
   ] as const;
   return <DashboardShell area="Host portal" items={[...items]}>{children}</DashboardShell>;

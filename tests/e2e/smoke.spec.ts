@@ -107,6 +107,27 @@ test.describe("host entry points", () => {
   });
 });
 
+test.describe("portal login and calendar routes", () => {
+  test("/host/login, /host/register, /host/profile, /host/calendar and /admin/login all lead somewhere real", async ({ page }) => {
+    await page.goto("/host/login");
+    await expect(page).toHaveURL(/\/sign-in\?next=(%2F|\/)host/);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Host sign in");
+    await page.goto("/host/register");
+    await expect(page).toHaveURL(/\/sign-up\?type=host/);
+    await page.goto("/host/calendar");
+    await expect(page).toHaveURL(/\/sign-in\?next=(%2F|\/)host(%2F|\/)calendar/);
+    await page.goto("/host/profile");
+    await expect(page).toHaveURL(/\/sign-in\?next=(%2F|\/)host(%2F|\/)settings/);
+  });
+
+  test("the administrator login page is separate and never offers account creation", async ({ page }) => {
+    await page.goto("/admin/login");
+    await expect(page).toHaveURL(/\/sign-in\?next=(%2F|\/)admin/);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Administrator sign in");
+    await expect(page.getByRole("link", { name: /create (a|an)/i })).toHaveCount(0);
+  });
+});
+
 test.describe("security and SEO", () => {
   test("every response carries the security headers", async ({ request }) => {
     const res = await request.get("/");
