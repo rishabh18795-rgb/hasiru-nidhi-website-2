@@ -172,6 +172,9 @@ export interface SearchResult {
   rooms_count: number;
   is_featured: boolean;
   is_sample: boolean;
+  bedrooms: number | null;
+  bathrooms: number | null;
+  amenity_names: string[];
   cover_path: string | null;
   cover_source: "storage" | "static" | null;
   cover_alt: string | null;

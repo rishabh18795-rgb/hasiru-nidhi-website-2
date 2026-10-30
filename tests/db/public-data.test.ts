@@ -21,7 +21,7 @@ const search = (args: Record<string, unknown> = {}) => {
 };
 
 describe("seed data", () => {
-  it("loads six clearly-flagged sample listings and nothing else", async () => {
+  it("loads six clearly-flagged demonstration listings and nothing else", async () => {
     const rows = await as<{ is_sample: boolean }>(db, null, "select is_sample from public.properties");
     expect(rows).toHaveLength(6);
     expect(rows.every((r) => r.is_sample)).toBe(true);
@@ -45,44 +45,44 @@ describe("search_properties", () => {
     const rows = await search();
     expect(rows).toHaveLength(6);
     expect(Number(rows[0].total_count)).toBe(6);
-    expect(rows[0].slug).toBe("sample-farmhouse-room"); // featured sorts first
+    expect(rows[0].slug).toBe("demo-green-valley-farm-stay"); // featured sorts first
   });
 
   it("matches by text across name, city and region", async () => {
-    expect((await search({ p_query: "ramanagara" })).map((r) => r.slug)).toEqual(["sample-cycling-eco-retreat"]);
-    expect((await search({ p_query: "cottage" })).map((r) => r.slug)).toEqual(["sample-garden-cottage"]);
+    expect((await search({ p_query: "ramanagara" })).map((r) => r.slug)).toEqual(["demo-green-valley-farm-stay"]);
+    expect((await search({ p_query: "cottage" })).map((r) => r.slug)).toEqual(["demo-countryside-garden-cottage"]);
     expect(await search({ p_query: "nowhere-at-all" })).toHaveLength(0);
   });
 
   it("filters by category slug", async () => {
-    expect((await search({ p_category: "cottage" })).map((r) => r.slug)).toEqual(["sample-garden-cottage"]);
+    expect((await search({ p_category: "cottage" })).map((r) => r.slug)).toEqual(["demo-countryside-garden-cottage"]);
   });
 
   it("filters by guest capacity", async () => {
-    expect((await search({ p_guests: 10 })).map((r) => r.slug)).toEqual(["sample-cycling-eco-retreat"]);
+    expect((await search({ p_guests: 10 })).map((r) => r.slug)).toEqual(["demo-weekend-cycling-retreat"]);
   });
 
   it("budget filters only match listings that have a price", async () => {
     const cheap = (await search({ p_max_price: 5000 })).map((r) => r.slug);
-    expect(cheap.sort()).toEqual(["sample-farmhouse-room", "sample-village-homestay"]);
+    expect(cheap.sort()).toEqual(["demo-green-valley-farm-stay", "demo-organic-farm-experience"]);
     const none = await search({ p_min_price: 100000 });
     expect(none).toHaveLength(0);
   });
 
   it("amenity filter requires ALL selected amenities", async () => {
-    expect((await search({ p_amenities: ["bonfire", "bicycles"] })).map((r) => r.slug)).toEqual(["sample-garden-cottage"]);
+    expect((await search({ p_amenities: ["bonfire", "garden"] })).map((r) => r.slug)).toEqual(["demo-countryside-garden-cottage"]);
     expect(await search({ p_amenities: ["bonfire", "swimming-pool"] })).toHaveLength(0);
   });
 
   it("experience filter matches ANY selected experience", async () => {
     const slugs = (await search({ p_experiences: ["stargazing", "village-walk"] })).map((r) => r.slug).sort();
-    expect(slugs).toEqual(["sample-cycling-eco-retreat", "sample-garden-cottage"]);
+    expect(slugs).toEqual(["demo-countryside-garden-cottage", "demo-forest-edge-eco-retreat", "demo-riverside-nature-escape", "demo-weekend-cycling-retreat"]);
   });
 
   it("sorts by price, with unpriced listings last", async () => {
     expect((await search({ p_sort: "price_asc" })).map((r) => r.slug)).toEqual([
-      "sample-village-homestay", "sample-farmhouse-room", "sample-garden-cottage", "sample-lakeside-nature-retreat", "sample-hilltop-villa", "sample-cycling-eco-retreat"]);
-    expect((await search({ p_sort: "price_desc" })).map((r) => r.slug)[0]).toBe("sample-hilltop-villa");
+      "demo-organic-farm-experience", "demo-green-valley-farm-stay", "demo-countryside-garden-cottage", "demo-riverside-nature-escape", "demo-forest-edge-eco-retreat", "demo-weekend-cycling-retreat"]);
+    expect((await search({ p_sort: "price_desc" })).map((r) => r.slug)[0]).toBe("demo-weekend-cycling-retreat");
   });
 
   it("paginates and reports the full total", async () => {
@@ -185,7 +185,7 @@ describe("host enquiry inbox", () => {
 
 describe("reports", () => {
   it("can be filed only against live listings and read only by admins", async () => {
-    const [{ id }] = await as<{ id: string }>(db, null, "select id from public.properties where slug = 'sample-garden-cottage'");
+    const [{ id }] = await as<{ id: string }>(db, null, "select id from public.properties where slug = 'demo-countryside-garden-cottage'");
     await as(db, guest, "insert into public.reports (property_id, reporter_id, reason, details) values ($1,$2,'Inaccurate photos','Does not match')", [id, guest]);
     expect(await as(db, guest, "select id from public.reports")).toHaveLength(0);
     expect(await as(db, admin, "select id from public.reports")).toHaveLength(1);
@@ -215,7 +215,7 @@ describe("notifications", () => {
 
 describe("saved properties", () => {
   it("lets users save live listings for themselves only", async () => {
-    const [{ id }] = await as<{ id: string }>(db, null, "select id from public.properties where slug = 'sample-garden-cottage'");
+    const [{ id }] = await as<{ id: string }>(db, null, "select id from public.properties where slug = 'demo-countryside-garden-cottage'");
     await as(db, guest, "insert into public.saved_properties (user_id, property_id) values ($1,$2)", [guest, id]);
     expect(await as(db, guest, "select property_id from public.saved_properties")).toHaveLength(1);
     expect(await as(db, host, "select property_id from public.saved_properties")).toHaveLength(0);
