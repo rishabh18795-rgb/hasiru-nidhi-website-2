@@ -87,7 +87,7 @@ export default async function HomePage() {
               </LinkButton>
             </div>
           </Reveal>
-          <Reveal delay={0.38} className="mt-10 w-full max-w-4xl">
+          <Reveal delay={0.38} className="mt-10 w-full max-w-5xl">
             <StaySearchBar tone="dark" />
           </Reveal>
         </div>

@@ -1,6 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
 
 const PORT = 3100;
+/** Second server: same build, but "configured" with a dummy, unreachable Supabase so the real sign-in/sign-up forms render (no network is ever used). */
+export const FORMS_PORT = 3101;
 
 /**
  * Browser smoke tests against the PRODUCTION build, started with NO Supabase variables — i.e. the exact
@@ -25,15 +27,24 @@ export default defineConfig({
     { name: "desktop", use: { ...devices["Desktop Chrome"], channel: process.env.CI ? undefined : "chrome" } },
     { name: "mobile", use: { ...devices["Pixel 7"], channel: process.env.CI ? undefined : "chrome" } },
   ],
-  webServer: {
-    command: `npx next start -p ${PORT}`,
-    url: `http://localhost:${PORT}`,
-    reuseExistingServer: !process.env.CI,
-    timeout: 60_000,
-    env: {
-      NEXT_PUBLIC_SUPABASE_URL: "",
-      NEXT_PUBLIC_SUPABASE_ANON_KEY: "",
-      SUPABASE_SERVICE_ROLE_KEY: "",
+  webServer: [
+    {
+      command: `npx next start -p ${PORT}`,
+      url: `http://localhost:${PORT}`,
+      reuseExistingServer: !process.env.CI,
+      timeout: 60_000,
+      env: { NEXT_PUBLIC_SUPABASE_URL: "", NEXT_PUBLIC_SUPABASE_ANON_KEY: "", SUPABASE_SERVICE_ROLE_KEY: "" },
     },
-  },
+    {
+      command: `npx next start -p ${FORMS_PORT}`,
+      url: `http://localhost:${FORMS_PORT}`,
+      reuseExistingServer: !process.env.CI,
+      timeout: 60_000,
+      env: {
+        NEXT_PUBLIC_SUPABASE_URL: "http://127.0.0.1:9",
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: "dummy-anon-key-for-ui-tests",
+        SUPABASE_SERVICE_ROLE_KEY: "dummy-service-key-for-ui-tests",
+      },
+    },
+  ],
 });

@@ -3,6 +3,15 @@
 Needs a configured Supabase project (see SETUP.md). Use three browsers/profiles (or private windows): traveller, host, admin.
 Use throw-away e-mail addresses you control.
 
+## A0. Sign-up, Google and password controls (both account types)
+1. `/sign-up` (customer) has **no** role selector; `/sign-up?type=host` (reached from *List Your Property*) says **Create your host account**, has **no** traveller option, and shows the supporting text about verification and approval.
+2. Both pages: full name, email, optional phone, password, confirm password, terms checkbox, **Continue with Google**, **Create account**. Every password field has an **eye** button: hidden by default; clicking shows it without clearing the text; the label flips Show/Hide; keyboard (Tab, Enter) works; check it on a phone-width window.
+3. Register a host with email → verification mail → link → you land on **/host/properties/new**. In Supabase *Table editor → profiles* the new row has role `host`; a customer sign-up has role `traveller`.
+4. **Google** (after enabling the provider): from the host page choose an account → you land in the listing wizard with role `host`. From the customer page → dashboard with role `traveller`. Cancel at Google's screen → back on sign-in with *Google sign-in was cancelled*. Sign in with Google using an email that already has a password account → one account, no duplicate profile.
+5. An **existing traveller** pressing *Continue with Google* on the host page is sent to *List your property* with the switch-to-host prompt (never silently upgraded).
+6. Homepage **search bar**: labels *Location / Check-in / Check-out / Guests*, placeholders in words, button *Search Stays*. Try check-in only, check-out before check-in, 0 guests → clear messages and no navigation; a valid search opens `/stays` with the filters in the URL.
+7. With `seed.sql` applied, `/stays` shows six listings, each with a *Sample listing* badge. Open the villa: weekend/extra-guest/cleaning/tax breakdown and a 2-night minimum; request a 1-night stay → refused.
+
 ## A. Traveller
 1. **Create account** → *Traveller*; weak password is rejected; verification e-mail arrives; link signs you in.
 2. **Sign out / sign in**; wrong password shows a generic error; **Forgot password** e-mail → set new password → signed in.

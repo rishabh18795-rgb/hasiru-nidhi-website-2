@@ -57,7 +57,7 @@ CI (`.github/workflows/ci.yml`) runs all four on every push and pull request.
 
 Full step-by-step instructions are in **[docs/SETUP.md](docs/SETUP.md)**:
 
-1. Create a Supabase project and run the five migrations (or paste `supabase/setup-all.sql` once) in `supabase/migrations/` (in order).
+1. Create a Supabase project and run the six migrations (or paste `supabase/setup-all.sql` once) in `supabase/migrations/` (in order).
 2. Configure Auth URLs and (recommended) custom SMTP.
 3. Create the first administrator with `supabase/scripts/create_first_admin.sql`.
 4. Import the GitHub repo into Vercel and set the environment variables.

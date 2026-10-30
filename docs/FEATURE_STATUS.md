@@ -34,6 +34,11 @@ Legend: ✅ implemented and covered by automated tests · 🟢 implemented, veri
 | Host entry points (4 CTAs, destination preserved, traveller → host upgrade) | ✅ | browser tests + database tests |
 | Per-room pricing / room inventory | ❌ | each confirmed booking reserves the whole property (documented in the wizard) |
 | Online payments | ❌ | not enabled; requests are never charged |
+| Host-only sign-up (no traveller option), role decided by the server | ✅ | database ignores sign-up metadata; tested |
+| Google sign-in (customer + host sign-up/sign-in) | 🟢⏳ | code, cancel/failure paths and cookie security browser-tested; needs the Google provider enabled in Supabase + Google Cloud |
+| Show/hide password on every password field | ✅ | browser-tested incl. keyboard and phone width |
+| Labelled, validated homepage search | ✅ | unit + browser tests |
+| Six labelled sample listings for testing (`supabase/seed.sql`) | ✅ | flagged `is_sample`, noindex, removable with one script |
 | Browser smoke tests (desktop + mobile, production build) | ✅ | Playwright, `npm run test:e2e` — covers the no-backend state; live-database flows remain ⏳ |
 
 ## Content that is placeholder and needs the owner's confirmation
