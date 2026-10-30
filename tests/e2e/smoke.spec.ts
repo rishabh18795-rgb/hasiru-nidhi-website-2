@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 import { visit } from "./helpers";
 
-const PUBLIC_PAGES = ["/", "/stays", "/experiences", "/cycling", "/gardening-landscaping", "/about", "/gallery", "/list-your-property", "/become-a-host", "/contact", "/sign-in", "/sign-up", "/forgot-password", "/privacy", "/terms", "/cancellation-policy"];
+const PUBLIC_PAGES = ["/", "/stays", "/demo/stays", "/demo/stays/demo-green-valley-farm-stay", "/experiences", "/cycling", "/gardening-landscaping", "/about", "/gallery", "/list-your-property", "/become-a-host", "/contact", "/sign-in", "/sign-up", "/forgot-password", "/privacy", "/terms", "/cancellation-policy"];
 
 test.describe("public site", () => {
   test("home page carries the brand headline, tagline and a working stay search", async ({ page }) => {

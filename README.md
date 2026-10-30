@@ -57,7 +57,7 @@ CI (`.github/workflows/ci.yml`) runs all four on every push and pull request.
 
 Full step-by-step instructions are in **[docs/SETUP.md](docs/SETUP.md)**:
 
-1. Create a Supabase project and run the six migrations (or paste `supabase/setup-all.sql` once) in `supabase/migrations/` (in order).
+1. Create a Supabase project and run the seven migrations (or paste `supabase/setup-all.sql` once) in `supabase/migrations/` (in order).
 2. Configure Auth URLs and (recommended) custom SMTP.
 3. Create the first administrator with `supabase/scripts/create_first_admin.sql`.
 4. Import the GitHub repo into Vercel and set the environment variables.
@@ -130,8 +130,7 @@ storage upload, e-mail delivery) require your Supabase project and cannot run in
 
 ## Adding genuine properties & handling enquiries
 
-* **Sample data:** `supabase/seed.sql` adds three clearly-labelled *Sample listing* demos — **do not run it in
-  production** (or delete them: `delete from public.properties where is_sample;`). The seed invents no users, bookings or reviews.
+* **Demonstration data:** six clearly-labelled fictional listings. `supabase/demo-properties.json` is the single source for `supabase/seed.sql` (a test database) and for the built-in **demo mode** at `/demo/stays` (no database, nothing saved). Remove them with `supabase/scripts/remove_sample_data.sql`; never presented as real inventory.
 * **Real properties:** the owner signs up as a *host*, adds a property + photos, and submits it; an admin approves it in
   **Admin → Listings**. Or an admin can ask the owner to apply via *List your property*.
 * **Enquiries:** *Admin → Enquiries* has contact/booking requests, gardening quotes (with signed-URL photos) and partner

@@ -10,7 +10,23 @@ Use throw-away e-mail addresses you control.
 4. **Google** (after enabling the provider): from the host page choose an account → you land in the listing wizard with role `host`. From the customer page → dashboard with role `traveller`. Cancel at Google's screen → back on sign-in with *Google sign-in was cancelled*. Sign in with Google using an email that already has a password account → one account, no duplicate profile.
 5. An **existing traveller** pressing *Continue with Google* on the host page is sent to *List your property* with the switch-to-host prompt (never silently upgraded).
 6. Homepage **search bar**: labels *Location / Check-in / Check-out / Guests*, placeholders in words, button *Search Stays*. Try check-in only, check-out before check-in, 0 guests → clear messages and no navigation; a valid search opens `/stays` with the filters in the URL.
-7. With `seed.sql` applied, `/stays` shows six listings, each with a *Sample listing* badge. Open the villa: weekend/extra-guest/cleaning/tax breakdown and a 2-night minimum; request a 1-night stay → refused.
+7. With `seed.sql` applied, `/stays` shows the six demonstration listings, each with a **DEMO LISTING — SAMPLE DATA** badge. Open *Weekend Cycling Retreat*: weekend rate, extra-guest charge and a 2-night minimum in the price breakdown; request a 1-night stay → refused.
+
+## A1. Demo mode and the complete booking flow (no real property needed)
+
+**Demo mode (works right now, no database):** open `/demo/stays`. Six fictional listings built into the site, with a *DEMO MODE* banner on every page. Try the search bar, filters, View Details, the price calculation and the validation messages. The "Request to book (demo)" button says *nothing was saved*; it never claims success. It is separate from the live marketplace and never replaces a failed live request.
+
+**Real end-to-end flow (needs the database: `setup-all.sql`, then `seed.sql`):**
+1. Create **two or three throw-away accounts with e-mails you control**: one host (via *Create host account*) and two customers. Verify all e-mails.
+2. In the Supabase SQL editor run `supabase/scripts/assign_demo_listings_to_host.sql` with the **host's** e-mail. The demo listings now belong to your test host (otherwise their requests go to the admin inbox).
+3. Signed out, open `/stays` → *Book Now* on a card, choose dates and guests in the panel, press **Sign in to request**. After signing in as **customer 1** you must land back on the same property with the same dates and guest count.
+4. Press **Request to book** → the success message appears only after saving; it says *not confirmed yet*. **Dashboard → My bookings** shows it as *Awaiting host*.
+5. As **customer 2**, request overlapping dates on the same property → also saved (pending requests may overlap).
+6. As the **host**: **Host → Bookings → Requests** shows both. Accept customer 1's → it moves to *Confirmed*. Try to accept customer 2's → refused (*dates no longer available*). Decline it instead.
+7. Each customer's dashboard shows the new status (*Confirmed* / *Declined*). Customer 1 can cancel → *Cancelled*; the dates become bookable again.
+8. Boundaries: customer 1 cannot open `/host` (redirected), cannot see customer 2's booking; a different host sees none of these bookings.
+9. Remove everything afterwards: `supabase/scripts/remove_sample_data.sql`.
+10. Optional parallel check against the live database: `node scripts/concurrency-check.mjs` (see the header of that file for the environment variables; use test accounts only).
 
 ## A. Traveller
 1. **Create account** → *Traveller*; weak password is rejected; verification e-mail arrives; link signs you in.

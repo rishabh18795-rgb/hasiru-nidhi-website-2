@@ -19,11 +19,14 @@ Nothing here requires code changes. Secrets go only into Vercel / your local `.e
 4. `supabase/migrations/20261021000100_rate_limits_audit_review_moderation.sql` (form rate limiting, review moderation, admin audit trail)
 5. `supabase/migrations/20261021000200_listing_wizard_pricing.sql` (listing-wizard fields, structured pricing, stay-length rules, "become a host", photo limits and ordering)
 6. `supabase/migrations/20261030000100_server_decided_signup_role.sql` (the account role is decided by the server, never by sign-up metadata)
+7. `supabase/migrations/20261031000100_stay_card_details.sql` (Explore Stays cards show bedrooms, bathrooms and amenities)
 
 Verify: **Table editor** shows tables with the 🔒 RLS badge; **Storage** shows the two buckets
 (`property-images` public, `enquiry-photos` private).
 
-*(Optional, for testing)* paste `supabase/seed.sql` **after** the migrations to add six labelled **sample** listings (farm stay, cottage, eco-retreat, village homestay, villa, lakeside retreat). Every one is flagged `is_sample`, named "Sample …", shown with a *Sample listing* badge, kept out of Google and the sitemap, and has no host, reviews or bookings. Remove them all later with `supabase/scripts/remove_sample_data.sql`.
+*(Optional, for testing)* paste `supabase/seed.sql` **after** the migrations to add the six labelled **demonstration** listings (Green Valley Farm Stay, Countryside Garden Cottage, Forest Edge Eco Retreat, Riverside Nature Escape, Organic Farm Experience, Weekend Cycling Retreat). It is generated from `supabase/demo-properties.json` (`npm run db:seed`) and is safe to run twice. Every one is flagged `is_sample`, shown with a **DEMO LISTING — SAMPLE DATA** badge and a demonstration notice, kept out of Google and the sitemap, and has no host, reviews or bookings. Remove them all later with `supabase/scripts/remove_sample_data.sql`. To test the host side of the booking flow, assign them to **your own** test host account with `supabase/scripts/assign_demo_listings_to_host.sql` (never to a made-up owner).
+
+*Demo mode:* separately from the database, `/demo/stays` shows the same six listings built into the site, clearly labelled, with nothing saved. Use it to try the interface before any database exists.
 
 > **Vercel integration (what it creates):** `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` and `SUPABASE_SERVICE_ROLE_KEY` are read by this app; the `POSTGRES_*`, `SUPABASE_JWT_SECRET`, `SUPABASE_SECRET_KEY` and unprefixed `SUPABASE_*` variables are server-only and unused (never prefix a secret with `NEXT_PUBLIC_`).
 > Build-time settings (image hosts, Content-Security-Policy) read the URL, so **redeploy after the variables appear**.
