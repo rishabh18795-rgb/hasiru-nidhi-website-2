@@ -21,9 +21,9 @@ const search = (args: Record<string, unknown> = {}) => {
 };
 
 describe("seed data", () => {
-  it("loads three clearly-flagged sample listings and nothing else", async () => {
+  it("loads six clearly-flagged sample listings and nothing else", async () => {
     const rows = await as<{ is_sample: boolean }>(db, null, "select is_sample from public.properties");
-    expect(rows).toHaveLength(3);
+    expect(rows).toHaveLength(6);
     expect(rows.every((r) => r.is_sample)).toBe(true);
   });
 
@@ -43,8 +43,8 @@ describe("seed data", () => {
 describe("search_properties", () => {
   it("returns approved listings, newest/featured first, with a total count", async () => {
     const rows = await search();
-    expect(rows).toHaveLength(3);
-    expect(Number(rows[0].total_count)).toBe(3);
+    expect(rows).toHaveLength(6);
+    expect(Number(rows[0].total_count)).toBe(6);
     expect(rows[0].slug).toBe("sample-farmhouse-room"); // featured sorts first
   });
 
@@ -64,7 +64,7 @@ describe("search_properties", () => {
 
   it("budget filters only match listings that have a price", async () => {
     const cheap = (await search({ p_max_price: 5000 })).map((r) => r.slug);
-    expect(cheap).toEqual(["sample-farmhouse-room"]);
+    expect(cheap.sort()).toEqual(["sample-farmhouse-room", "sample-village-homestay"]);
     const none = await search({ p_min_price: 100000 });
     expect(none).toHaveLength(0);
   });
@@ -81,14 +81,14 @@ describe("search_properties", () => {
 
   it("sorts by price, with unpriced listings last", async () => {
     expect((await search({ p_sort: "price_asc" })).map((r) => r.slug)).toEqual([
-      "sample-farmhouse-room", "sample-garden-cottage", "sample-cycling-eco-retreat"]);
-    expect((await search({ p_sort: "price_desc" })).map((r) => r.slug)[0]).toBe("sample-garden-cottage");
+      "sample-village-homestay", "sample-farmhouse-room", "sample-garden-cottage", "sample-lakeside-nature-retreat", "sample-hilltop-villa", "sample-cycling-eco-retreat"]);
+    expect((await search({ p_sort: "price_desc" })).map((r) => r.slug)[0]).toBe("sample-hilltop-villa");
   });
 
   it("paginates and reports the full total", async () => {
-    const page = await search({ p_limit: 2, p_offset: 2 });
-    expect(page).toHaveLength(1);
-    expect(Number(page[0].total_count)).toBe(3);
+    const page = await search({ p_limit: 4, p_offset: 4 });
+    expect(page).toHaveLength(2);
+    expect(Number(page[0].total_count)).toBe(6);
   });
 
   it("excludes listings that are not available for the chosen dates", async () => {

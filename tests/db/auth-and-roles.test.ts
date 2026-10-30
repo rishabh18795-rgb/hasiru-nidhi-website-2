@@ -152,3 +152,22 @@ describe("listing creation permissions", () => {
     )).toMatch(/forbidden_property_change/);
   });
 });
+
+describe("sign-up role is decided by the server, never by metadata", () => {
+  it("ignores account_type in user metadata (host or admin) and always starts as a traveller", async () => {
+    const db2 = await createDb();
+    for (const meta of [{ account_type: "host" }, { account_type: "admin" }, { role: "admin", account_type: "host" }]) {
+      const id = (await db2.query<{ id: string }>("insert into auth.users (email, raw_user_meta_data) values ($1, $2::jsonb) returning id", [`${Math.random()}@example.test`, JSON.stringify(meta)])).rows[0].id;
+      expect((await db2.query<{ role: string }>("select role from public.profiles where id=$1", [id])).rows[0].role).toBe("traveller");
+    }
+  });
+
+  it("reads the display name from Google-style metadata and never creates a second profile for the same user", async () => {
+    const db2 = await createDb();
+    const id = (await db2.query<{ id: string }>("insert into auth.users (email, raw_user_meta_data) values ('g@example.test', '{\"name\":\"Asha Rao\"}'::jsonb) returning id")).rows[0].id;
+    expect((await db2.query<{ full_name: string }>("select full_name from public.profiles where id=$1", [id])).rows[0].full_name).toBe("Asha Rao");
+    // Linking another identity updates auth.users, it does not insert; and even a repeated insert attempt cannot duplicate the profile.
+    await db2.query("insert into public.profiles (id, email, role) values ($1, 'g@example.test', 'traveller') on conflict (id) do nothing", [id]);
+    expect((await db2.query("select 1 from public.profiles where id=$1", [id])).rows).toHaveLength(1);
+  });
+});

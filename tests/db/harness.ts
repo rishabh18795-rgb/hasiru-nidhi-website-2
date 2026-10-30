@@ -93,7 +93,10 @@ export async function createUser(
     "insert into auth.users (email, raw_user_meta_data) values ($1, $2::jsonb) returning id",
     [email, JSON.stringify(meta)],
   );
-  return res.rows[0].id;
+  const id = res.rows[0].id;
+  // Mirrors the server: the host sign-up action (service role) is what makes a host. Metadata alone never does.
+  if (meta.account_type === "host") await db.query("update public.profiles set role = 'host' where id = $1", [id]);
+  return id;
 }
 
 /** Admins can only be created by the database owner — exactly like production. */

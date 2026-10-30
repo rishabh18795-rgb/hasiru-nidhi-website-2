@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 
 import { getSupabaseConfig } from "@/lib/supabase/config";
+import { fetchWithTimeout } from "@/lib/supabase/fetch";
 
 const PROTECTED_PREFIXES = ["/dashboard", "/host", "/admin"];
 const AUTH_PAGES = ["/sign-in", "/sign-up"];
@@ -27,6 +28,8 @@ export async function updateSession(request: NextRequest) {
   if (!configured) return isProtected ? toSignIn() : response;
 
   const supabase = createServerClient(url, anonKey, {
+    global: { fetch: fetchWithTimeout(3000) },
+    db: { retry: false },
     cookies: {
       getAll: () => request.cookies.getAll(),
       setAll: (toSet) => {

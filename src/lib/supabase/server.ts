@@ -3,6 +3,7 @@ import { createServerClient } from "@supabase/ssr";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 import { getSupabaseConfig } from "@/lib/supabase/config";
+import { fetchWithTimeout } from "@/lib/supabase/fetch";
 
 /** Per-request client that acts as the signed-in user (RLS applies). Use in Server Components/Actions. */
 export async function createServerSupabase(): Promise<SupabaseClient> {
@@ -10,6 +11,9 @@ export async function createServerSupabase(): Promise<SupabaseClient> {
   if (!configured) throw new Error("Supabase is not configured");
   const cookieStore = await cookies();
   return createServerClient(url, anonKey, {
+    global: { fetch: fetchWithTimeout() },
+    // No automatic retries: the library would retry a failing read for ~7 s, freezing every page during an outage.
+    db: { retry: false },
     cookies: {
       getAll: () => cookieStore.getAll(),
       setAll: (toSet) => {
@@ -33,9 +37,10 @@ export function createPublicSupabase(revalidateSeconds = 60): SupabaseClient {
   if (!configured) throw new Error("Supabase is not configured");
   return createClient(url, anonKey, {
     auth: { persistSession: false, autoRefreshToken: false },
+    db: { retry: false },
     global: {
       fetch: (input, init) =>
-        fetch(input, { ...init, next: { revalidate: revalidateSeconds } } as RequestInit),
+        fetchWithTimeout()(input, { ...init, next: { revalidate: revalidateSeconds } } as RequestInit),
     },
   });
 }
