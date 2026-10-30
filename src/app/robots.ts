@@ -9,6 +9,7 @@ export default function robots(): MetadataRoute.Robots {
       // Private areas and auth screens must never be indexed.
       disallow: [
         "/dashboard",
+        "/demo",
         "/host",
         "/admin",
         "/sign-in",

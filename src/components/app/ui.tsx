@@ -72,10 +72,14 @@ export function StatusBadge({ status }: { status: string }) {
   );
 }
 
-export function SampleBadge() {
+/** Shown on every demonstration listing, everywhere it appears. */
+export function SampleBadge({ className }: { className?: string }) {
   return (
-    <span className="inline-flex items-center rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-semibold text-amber-800" title="Demonstration data, not a real property">
-      Sample listing
+    <span
+      className={cn("inline-flex items-center rounded-full bg-amber-100 px-2.5 py-1 text-[11px] font-bold uppercase leading-none tracking-wide text-amber-900 ring-1 ring-amber-300", className)}
+      title="Fictional demonstration data, not a real or verified property"
+    >
+      Demo listing — sample data
     </span>
   );
 }

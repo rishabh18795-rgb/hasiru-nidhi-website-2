@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { SlidersHorizontal } from "lucide-react";
 
 import { BackendNotice } from "@/components/site/backend-notice";
+import { DemoModeLink } from "@/components/stays/demo-mode";
 import { StayCard } from "@/components/stays/stay-card";
 import { StaySearchBar } from "@/components/stays/search-bar";
 import { StayFiltersForm } from "@/components/stays/filters-form";
@@ -24,7 +25,7 @@ export default async function StaysPage({ searchParams }: { searchParams: Promis
   const filterCount = activeFilterCount(filters);
   const totalPages = Math.max(1, Math.ceil(outcome.total / PAGE_SIZE));
   const hasAnyFilter = Boolean(filters.q) || filterCount > 0;
-  const dateQuery = filters.checkin && filters.checkout ? `?checkin=${filters.checkin}&checkout=${filters.checkout}${filters.guests ? `&guests=${filters.guests}` : ""}` : "";
+  const retryHref = `/stays${stayFiltersToQuery(filters)}`;
 
   return (
     <section className="bg-cream pb-24 pt-32">
@@ -39,7 +40,10 @@ export default async function StaysPage({ searchParams }: { searchParams: Promis
         </div>
 
         {!outcome.configured ? (
-          <div className="mt-12"><BackendNotice feature="Stay search" /></div>
+          <div className="mt-12 space-y-5">
+            <BackendNotice feature="Stay search" />
+            <DemoModeLink />
+          </div>
         ) : (
           <div className="mt-10 grid gap-8 lg:grid-cols-[17rem_1fr]">
             {/* ---------------- filters: collapsible on mobile, always open on desktop */}
@@ -66,8 +70,12 @@ export default async function StaysPage({ searchParams }: { searchParams: Promis
                 {outcome.error ? "" : `${outcome.total} ${outcome.total === 1 ? "stay" : "stays"}${filters.q ? ` for “${filters.q}”` : ""}`}
               </p>
               {outcome.error ? (
-                <div role="alert" className="mt-4 rounded-2xl border border-red-200 bg-red-50 p-6 text-sm text-red-800">
-                  We couldn&apos;t load stays right now. Please refresh in a moment.
+                <div role="alert" className="mt-4 space-y-4 rounded-2xl border border-red-200 bg-red-50 p-6 text-sm text-red-800">
+                  <p>We couldn&apos;t load stays right now. This usually means the database isn&apos;t reachable or hasn&apos;t been set up yet. Nothing is shown in its place.</p>
+                  <div className="flex flex-wrap gap-3">
+                    <a href={retryHref} className="inline-flex h-10 items-center rounded-full bg-red-800 px-5 font-medium text-white hover:bg-red-900">Retry</a>
+                    <Link href="/demo/stays" className="inline-flex h-10 items-center rounded-full border border-red-300 bg-white px-5 font-medium text-red-900 hover:bg-red-50">Preview the demo listings (demo mode)</Link>
+                  </div>
                 </div>
               ) : outcome.results.length === 0 ? (
                 <div className="mt-4 rounded-2xl border border-dashed border-forest-900/20 bg-white/60 px-6 py-14 text-center">
@@ -84,7 +92,7 @@ export default async function StaysPage({ searchParams }: { searchParams: Promis
               ) : (
                 <>
                   <div className="mt-4 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-                    {outcome.results.map((s) => <StayCard key={s.id} stay={s} query={dateQuery} />)}
+                    {outcome.results.map((s) => <StayCard key={s.id} stay={s} selection={{ checkin: filters.checkin, checkout: filters.checkout, guests: filters.guests }} />)}
                   </div>
                   {totalPages > 1 ? (
                     <nav aria-label="Pagination" className="mt-10 flex items-center justify-center gap-3">
@@ -101,7 +109,7 @@ export default async function StaysPage({ searchParams }: { searchParams: Promis
               )}
               {outcome.results.some((r) => r.is_sample) ? (
                 <p className="mt-8 rounded-xl bg-amber-50 px-4 py-3 text-xs text-amber-900">
-                  Listings marked <strong>Sample listing</strong> are demonstration data, not real properties. They will be replaced as owners list genuine stays.
+                  Listings marked <strong>DEMO LISTING — SAMPLE DATA</strong> are fictional demonstration data, not real or verified properties. Their prices, photographs and availability are illustrative.
                 </p>
               ) : null}
             </div>

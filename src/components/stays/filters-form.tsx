@@ -11,15 +11,17 @@ export function StayFiltersForm({
   catalog,
   idPrefix,
   hasAnyFilter,
+  action = "/stays",
 }: {
   filters: StayFilters;
   catalog: Catalog;
   idPrefix: string;
   hasAnyFilter: boolean;
+  action?: string;
 }) {
   const id = (name: string) => `${idPrefix}-${name}`;
   return (
-    <form action="/stays" method="get" className="flex flex-col gap-5 p-5">
+    <form action={action} method="get" className="flex flex-col gap-5 p-5">
       {filters.q ? <input type="hidden" name="q" value={filters.q} /> : null}
       {filters.checkin ? <input type="hidden" name="checkin" value={filters.checkin} /> : null}
       {filters.checkout ? <input type="hidden" name="checkout" value={filters.checkout} /> : null}
@@ -80,7 +82,7 @@ export function StayFiltersForm({
       <div className="flex gap-3">
         <button type="submit" className="inline-flex h-10 flex-1 items-center justify-center rounded-full bg-forest-800 px-5 text-sm font-medium text-cream hover:bg-forest-700">Apply filters</button>
         {hasAnyFilter ? (
-          <Link href="/stays" className="inline-flex h-10 items-center gap-1 rounded-full border border-forest-900/20 px-4 text-sm text-forest-900 hover:bg-forest-50">
+          <Link href={action} className="inline-flex h-10 items-center gap-1 rounded-full border border-forest-900/20 px-4 text-sm text-forest-900 hover:bg-forest-50">
             <X className="h-3.5 w-3.5" aria-hidden="true" /> Clear
           </Link>
         ) : null}

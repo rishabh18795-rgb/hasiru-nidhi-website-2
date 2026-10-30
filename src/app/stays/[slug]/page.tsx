@@ -6,6 +6,7 @@ import { BedDouble, Check, Clock, Heart, MapPin, MessageCircle, ShieldCheck, Sta
 import { SampleBadge } from "@/components/app/ui";
 import { AvailabilityCalendar } from "@/components/stays/availability-calendar";
 import { BookingPanel } from "@/components/stays/booking-panel";
+import { DemoNotice } from "@/components/stays/demo-notice";
 import { StayCard } from "@/components/stays/stay-card";
 import { ContactHostForm, ReportForm } from "@/components/stays/stay-forms";
 import { StayGallery } from "@/components/stays/stay-gallery";
@@ -116,6 +117,7 @@ export default async function StayPage({ params, searchParams }: { params: Param
           ) : null}
         </div>
 
+        {p.is_sample ? <div className="mt-6"><DemoNotice /></div> : null}
         <div className="mt-6"><StayGallery images={images} name={p.name} /></div>
 
         <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_24rem]">

@@ -14,6 +14,8 @@ interface Props {
   /** Extra filter values preserved when the bar is used inside /stays. */
   hidden?: Record<string, string | undefined>;
   tone?: "light" | "dark";
+  /** Where the form submits (live Explore Stays by default; the demo pages pass /demo/stays). */
+  action?: string;
 }
 
 export interface SearchProblems { dates?: string; guests?: string }
@@ -60,7 +62,7 @@ function DateField({ id, name, label, value, onChange, min, placeholder, inputCl
  * Search form → GET /stays. Every field has a visible label; it submits the real filters in the URL (so it works with a
  * stale cache or without JavaScript) and refuses impossible input with a clear message before leaving the page.
  */
-export function StaySearchBar({ q = "", checkin = "", checkout = "", guests, hidden = {}, tone = "light" }: Props) {
+export function StaySearchBar({ q = "", checkin = "", checkout = "", guests, hidden = {}, tone = "light", action = "/stays" }: Props) {
   const today = todayIST();
   const uid = useId();
   const [ci, setCi] = useState(checkin);
@@ -77,7 +79,7 @@ export function StaySearchBar({ q = "", checkin = "", checkout = "", guests, hid
   return (
     <div className="w-full">
       <form
-        action="/stays"
+        action={action}
         method="get"
         role="search"
         aria-label="Search stays"
