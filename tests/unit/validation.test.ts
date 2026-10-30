@@ -5,7 +5,7 @@ import { stayRequestSchema } from "@/lib/validation/booking";
 import { contactEnquirySchema, gardeningEnquirySchema, partnerApplicationSchema } from "@/lib/validation/enquiries";
 import { propertyFormSchema, slugify } from "@/lib/validation/property";
 
-const validSignUp = { full_name: "Asha Rao", email: "Asha@Example.com ", phone: "+91 98765 43210", password: "Sup3rSecretPass", confirm_password: "Sup3rSecretPass", account_type: "traveller", accept_terms: "on" };
+const validSignUp = { full_name: "Asha Rao", email: "Asha@Example.com ", phone: "+91 98765 43210", password: "Sup3rSecretPass", confirm_password: "Sup3rSecretPass", accept_terms: "on" };
 
 describe("signUpSchema", () => {
   it("accepts a valid sign-up and normalises the email", () => {
@@ -13,13 +13,25 @@ describe("signUpSchema", () => {
     expect(r.success).toBe(true);
     if (r.success) expect(r.data.email).toBe("asha@example.com");
   });
-  it("rejects an attempt to register as admin", () => {
-    expect(signUpSchema.safeParse({ ...validSignUp, account_type: "admin" }).success).toBe(false);
+  it("has no role field: a submitted account_type / role is dropped, never trusted", () => {
+    const r = signUpSchema.safeParse({ ...validSignUp, account_type: "admin", role: "admin" });
+    expect(r.success).toBe(true);
+    if (r.success) expect(Object.keys(r.data)).not.toEqual(expect.arrayContaining(["account_type"]));
+    if (r.success) expect(JSON.stringify(r.data)).not.toMatch(/admin/);
   });
   it("enforces password strength and confirmation", () => {
     expect(signUpSchema.safeParse({ ...validSignUp, password: "short", confirm_password: "short" }).success).toBe(false);
     expect(signUpSchema.safeParse({ ...validSignUp, password: "alllowercase123", confirm_password: "alllowercase123" }).success).toBe(false);
     expect(signUpSchema.safeParse({ ...validSignUp, confirm_password: "different" }).success).toBe(false);
+  });
+  it("reports a password mismatch together with other problems instead of hiding it", () => {
+    const r = signUpSchema.safeParse({ ...validSignUp, confirm_password: "Different1Password", accept_terms: undefined });
+    expect(r.success).toBe(false);
+    if (!r.success) {
+      const errors = r.error.flatten().fieldErrors;
+      expect(errors.confirm_password).toContain("Passwords do not match");
+      expect(errors.accept_terms).toBeDefined();
+    }
   });
   it("requires accepting the terms", () => {
     expect(signUpSchema.safeParse({ ...validSignUp, accept_terms: undefined }).success).toBe(false);

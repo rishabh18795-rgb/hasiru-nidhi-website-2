@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { AppPage, Card } from "@/components/app/ui";
 import { BackendNotice } from "@/components/site/backend-notice";
 import { SignInForm } from "@/components/auth/auth-forms";
+import { GoogleButton, OrDivider } from "@/components/auth/google-button";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { safeNextPath } from "@/lib/auth";
 
@@ -14,6 +15,10 @@ export const metadata: Metadata = {
 
 const NOTICES: Record<string, string> = {
   link_invalid: "That link is invalid or has expired. Please sign in, or request a new link.",
+  oauth_cancelled: "Google sign-in was cancelled. You can try again or use your email and password.",
+  oauth_failed: "We couldn't complete Google sign-in. Please try again or use your email and password.",
+  oauth_unavailable: "Google sign-in isn't available yet. Please use your email and password.",
+  missing_profile: "We couldn't find your account details. Please try again, or contact support if it keeps happening.",
 };
 
 export default async function SignInPage({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
@@ -28,6 +33,12 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
       {isSupabaseConfigured() ? (
         <Card>
           {notice ? <p role="alert" className="mb-5 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800">{notice}</p> : null}
+          {adminArea ? null : (
+            <>
+              <GoogleButton intent={hostArea ? "host" : "customer"} next={next || undefined} />
+              <OrDivider />
+            </>
+          )}
           <SignInForm next={next || undefined} />
           {adminArea ? null : <p className="mt-6 text-center text-sm text-ink/65">
             {hostArea ? "New host?" : "New to Hasiru Nidhi?"}{" "}

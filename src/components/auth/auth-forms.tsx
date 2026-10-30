@@ -4,8 +4,8 @@ import { useActionState } from "react";
 import Link from "next/link";
 
 import type { FormState } from "@/lib/action";
-import { requestPasswordReset, resetPassword, signIn, signUp } from "@/app/auth/actions";
-import { CheckboxField, Field, NativeSelect, TextInput } from "@/components/forms/fields";
+import { requestPasswordReset, resetPassword, signIn, signUpCustomer, signUpHost } from "@/app/auth/actions";
+import { CheckboxField, Field, PasswordInput, TextInput } from "@/components/forms/fields";
 import { FormMessage } from "@/components/forms/form-message";
 import { SubmitButton } from "@/components/forms/submit-button";
 
@@ -21,7 +21,7 @@ export function SignInForm({ next }: { next?: string }) {
         <TextInput id="email" name="email" type="email" autoComplete="email" defaultValue={state?.values?.email} error={!!state?.fieldErrors?.email} />
       </Field>
       <Field label="Password" htmlFor="password" error={state?.fieldErrors?.password} required>
-        <TextInput id="password" name="password" type="password" autoComplete="current-password" error={!!state?.fieldErrors?.password} />
+        <PasswordInput id="password" name="password" autoComplete="current-password" error={!!state?.fieldErrors?.password} />
       </Field>
       <div className="flex justify-end">
         <Link href="/forgot-password" className="text-sm text-forest-700 underline underline-offset-2 hover:text-forest-900">
@@ -33,8 +33,12 @@ export function SignInForm({ next }: { next?: string }) {
   );
 }
 
-export function SignUpForm({ defaultType, next }: { defaultType: "traveller" | "host"; next?: string }) {
-  const [state, action] = useActionState(signUp, initial);
+/**
+ * One sign-up form, two server actions. "host" and "customer" are separate experiences: the account type is not a field the
+ * visitor (or a script) can choose — the action that runs decides it on the server.
+ */
+function SignUpFormBase({ kind, next }: { kind: "customer" | "host"; next?: string }) {
+  const [state, action] = useActionState(kind === "host" ? signUpHost : signUpCustomer, initial);
   const e = state?.fieldErrors ?? {};
   const v = state?.values ?? {};
   if (state?.ok) return <FormMessage state={state} />;
@@ -42,26 +46,20 @@ export function SignUpForm({ defaultType, next }: { defaultType: "traveller" | "
     <form action={action} className="flex flex-col gap-5" noValidate>
       {next ? <input type="hidden" name="next" value={next} /> : null}
       <FormMessage state={state} />
-      <Field label="I want to" htmlFor="account_type" error={e.account_type} required>
-        <NativeSelect id="account_type" name="account_type" defaultValue={v.account_type ?? defaultType}>
-          <option value="traveller">Find and book stays (traveller)</option>
-          <option value="host">List my property (host)</option>
-        </NativeSelect>
-      </Field>
       <Field label="Full name" htmlFor="full_name" error={e.full_name} required>
         <TextInput id="full_name" name="full_name" autoComplete="name" defaultValue={v.full_name} error={!!e.full_name} />
       </Field>
       <Field label="Email" htmlFor="email" error={e.email} required>
         <TextInput id="email" name="email" type="email" autoComplete="email" defaultValue={v.email} error={!!e.email} />
       </Field>
-      <Field label="Phone (optional)" htmlFor="phone" error={e.phone} hint="Shared with a host only when you send them a booking request.">
+      <Field label="Phone number (optional)" htmlFor="phone" error={e.phone} hint={kind === "host" ? "Helps our team reach you about your listing." : "Shared with a host only when you send them a booking request."}>
         <TextInput id="phone" name="phone" type="tel" autoComplete="tel" defaultValue={v.phone} placeholder="+91 98765 43210" error={!!e.phone} />
       </Field>
       <Field label="Password" htmlFor="password" error={e.password} hint="At least 10 characters with upper-case, lower-case and a number." required>
-        <TextInput id="password" name="password" type="password" autoComplete="new-password" error={!!e.password} />
+        <PasswordInput id="password" name="password" autoComplete="new-password" error={!!e.password} />
       </Field>
       <Field label="Confirm password" htmlFor="confirm_password" error={e.confirm_password} required>
-        <TextInput id="confirm_password" name="confirm_password" type="password" autoComplete="new-password" error={!!e.confirm_password} />
+        <PasswordInput id="confirm_password" name="confirm_password" toggleLabel="confirm password" autoComplete="new-password" error={!!e.confirm_password} />
       </Field>
       <CheckboxField
         name="accept_terms"
@@ -77,6 +75,9 @@ export function SignUpForm({ defaultType, next }: { defaultType: "traveller" | "
     </form>
   );
 }
+
+export const CustomerSignUpForm = ({ next }: { next?: string }) => <SignUpFormBase kind="customer" next={next} />;
+export const HostSignUpForm = ({ next }: { next?: string }) => <SignUpFormBase kind="host" next={next} />;
 
 export function ForgotPasswordForm() {
   const [state, action] = useActionState(requestPasswordReset, initial);
@@ -99,10 +100,10 @@ export function ResetPasswordForm() {
     <form action={action} className="flex flex-col gap-5" noValidate>
       <FormMessage state={state} />
       <Field label="New password" htmlFor="password" error={e.password} hint="At least 10 characters with upper-case, lower-case and a number." required>
-        <TextInput id="password" name="password" type="password" autoComplete="new-password" error={!!e.password} />
+        <PasswordInput id="password" name="password" toggleLabel="new password" autoComplete="new-password" error={!!e.password} />
       </Field>
       <Field label="Confirm new password" htmlFor="confirm_password" error={e.confirm_password} required>
-        <TextInput id="confirm_password" name="confirm_password" type="password" autoComplete="new-password" error={!!e.confirm_password} />
+        <PasswordInput id="confirm_password" name="confirm_password" toggleLabel="confirm new password" autoComplete="new-password" error={!!e.confirm_password} />
       </Field>
       <SubmitButton pendingLabel="Updating…">Update password</SubmitButton>
     </form>

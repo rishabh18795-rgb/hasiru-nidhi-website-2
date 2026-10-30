@@ -9,12 +9,16 @@ export const signUpSchema = z
     phone: optionalPhone,
     password: passwordSchema,
     confirm_password: z.string(),
-    account_type: z.enum(["traveller", "host"]),
     accept_terms: z.literal("on", "You must accept the Terms and Privacy Policy"),
   })
   .refine((v) => v.password === v.confirm_password, {
     path: ["confirm_password"],
     message: "Passwords do not match",
+    // Report a mismatch even when another field is also invalid (zod would otherwise skip this check).
+    when: (payload) => {
+      const v = payload.value as { password?: unknown; confirm_password?: unknown };
+      return typeof v.password === "string" && typeof v.confirm_password === "string";
+    },
   });
 
 export const signInSchema = z.object({
@@ -29,6 +33,11 @@ export const resetSchema = z
   .refine((v) => v.password === v.confirm_password, {
     path: ["confirm_password"],
     message: "Passwords do not match",
+    // Report a mismatch even when another field is also invalid (zod would otherwise skip this check).
+    when: (payload) => {
+      const v = payload.value as { password?: unknown; confirm_password?: unknown };
+      return typeof v.password === "string" && typeof v.confirm_password === "string";
+    },
   });
 
 export const profileSchema = z.object({

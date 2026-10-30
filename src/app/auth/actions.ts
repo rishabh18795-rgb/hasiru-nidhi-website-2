@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 
 import { createServerSupabase } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
@@ -9,6 +9,8 @@ import { safeNextPath } from "@/lib/auth";
 import { formValues, zodFieldErrors, type FormState } from "@/lib/action";
 import { forgotSchema, resetSchema, signInSchema, signUpSchema } from "@/lib/validation/auth";
 import { siteConfig } from "@/lib/site";
+import { canCreateHosts, markNewAccountAsHost } from "@/lib/auth-admin";
+import { OAUTH_INTENT_COOKIE, OAUTH_INTENT_MAX_AGE_SECONDS, defaultLanding, serializeIntent } from "@/lib/auth-intent";
 
 const NOT_CONFIGURED: FormState = {
   ok: false,
@@ -45,35 +47,82 @@ export async function signIn(_prev: FormState, formData: FormData): Promise<Form
   redirect(safeNextPath(values.next));
 }
 
-export async function signUp(_prev: FormState, formData: FormData): Promise<FormState> {
+type SignUpKind = "customer" | "host";
+
+/**
+ * Creates an account. The ROLE is decided here, on the server, by which action was called — never by anything in the form or in
+ * the sign-up metadata (the database ignores that). Hosts are upgraded with the service role right after the user exists.
+ */
+async function register(kind: SignUpKind, formData: FormData): Promise<FormState> {
   if (!isSupabaseConfigured()) return NOT_CONFIGURED;
   const values = formValues(formData);
   const parsed = signUpSchema.safeParse(values);
-  const echo = { full_name: values.full_name ?? "", email: values.email ?? "", phone: values.phone ?? "", account_type: values.account_type ?? "traveller" };
+  const echo = { full_name: values.full_name ?? "", email: values.email ?? "", phone: values.phone ?? "" };
   if (!parsed.success) return { ok: false, fieldErrors: zodFieldErrors(parsed.error), values: echo };
+  if (kind === "host" && !canCreateHosts()) {
+    return { ok: false, message: "Host registration isn't available yet: the server is missing part of its configuration. Please contact support.", values: echo };
+  }
 
   const v = parsed.data;
-  // Where to land after verifying the e-mail: the page they were heading to, else the right home for their account type.
-  const landing = safeNextPath(values.next, v.account_type === "host" ? "/host/properties/new" : "/dashboard");
+  const landing = safeNextPath(values.next, defaultLanding(kind));
   const supabase = await createServerSupabase();
   const { data, error } = await supabase.auth.signUp({
     email: v.email,
     password: v.password,
     options: {
-      // account_type is limited to traveller|host by the schema AND by the database trigger.
-      data: { full_name: v.full_name, phone: v.phone ?? "", account_type: v.account_type },
+      data: { full_name: v.full_name, phone: v.phone ?? "" },
       emailRedirectTo: `${await origin()}/auth/callback?next=${encodeURIComponent(landing)}`,
     },
   });
   if (error) {
-    return { ok: false, message: error.message.toLowerCase().includes("already") ? "An account with this email already exists. Try signing in." : "We couldn't create your account. Please try again.", values: echo };
+    return { ok: false, message: error.message.toLowerCase().includes("already") ? ALREADY_REGISTERED : "We couldn't create your account. Please try again.", values: echo };
   }
-  // With e-mail confirmation on, there is no session yet; otherwise the user is already signed in.
+  // With e-mail confirmation on, signing up an existing address returns a placeholder user with no identities: never touch it.
+  if (!data.user || data.user.identities?.length === 0) return { ok: false, message: ALREADY_REGISTERED, values: echo };
+
+  if (kind === "host" && !(await markNewAccountAsHost(data.user.id))) {
+    return { ok: false, message: "Your account was created, but we couldn't set it up as a host. Verify your email, sign in, then use “List Your Property” to switch it to a host account.", values: echo };
+  }
+  // With e-mail confirmation on there is no session yet; otherwise the user is already signed in.
   if (data.session) redirect(landing);
   return {
     ok: true,
-    message: "Account created. We've sent a verification link to your email — open it to activate your account, then sign in.",
+    message: "Account created. We've sent a verification link to your email — open it to activate your account" + (kind === "host" ? ", and you'll go straight to the listing steps." : "."),
   };
+}
+
+const ALREADY_REGISTERED = "An account with this email already exists. Try signing in, or use “Forgot your password?”. If you signed up with Google, choose Continue with Google.";
+
+export async function signUpCustomer(_prev: FormState, formData: FormData): Promise<FormState> {
+  return register("customer", formData);
+}
+
+export async function signUpHost(_prev: FormState, formData: FormData): Promise<FormState> {
+  return register("host", formData);
+}
+
+/**
+ * Starts Google sign-in. The intent (host vs customer) and destination are stored in an httpOnly cookie that only the server
+ * reads in the callback; the redirect URL carries no role or destination, so it cannot be edited to ask for more.
+ */
+export async function signInWithGoogle(formData: FormData): Promise<void> {
+  if (!isSupabaseConfigured()) redirect("/sign-in?error=oauth_unavailable");
+  const kind = formData.get("intent") === "host" ? "host" : "customer";
+  const next = safeNextPath(String(formData.get("next") ?? ""), "");
+  const jar = await cookies();
+  jar.set(OAUTH_INTENT_COOKIE, serializeIntent(kind, next), {
+    httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production", path: "/", maxAge: OAUTH_INTENT_MAX_AGE_SECONDS,
+  });
+  const supabase = await createServerSupabase();
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: { redirectTo: `${await origin()}/auth/callback`, queryParams: { prompt: "select_account" } },
+  });
+  if (error || !data.url) {
+    jar.delete(OAUTH_INTENT_COOKIE);
+    redirect(`/sign-in?error=${/provider is not enabled|unsupported provider/i.test(error?.message ?? "") ? "oauth_unavailable" : "oauth_failed"}`);
+  }
+  redirect(data.url);
 }
 
 export async function requestPasswordReset(_prev: FormState, formData: FormData): Promise<FormState> {

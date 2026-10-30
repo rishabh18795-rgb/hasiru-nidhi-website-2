@@ -1,4 +1,7 @@
+"use client";
+
 import * as React from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -41,6 +44,50 @@ export function TextInput({ className, error, ...props }: React.ComponentProps<"
       aria-describedby={error && props.id ? `${props.id}-error` : undefined}
       {...props}
     />
+  );
+}
+
+/**
+ * Password field with a show/hide control inside it. Hidden by default; toggling never changes the value, keeps focus on
+ * the field with the caret where it was, and the button is a real <button> with a state-aware label (keyboard and screen reader friendly).
+ */
+export function PasswordInput({ className, error, toggleLabel = "password", ...props }: Omit<React.ComponentProps<"input">, "type"> & { error?: boolean; toggleLabel?: string }) {
+  const [visible, setVisible] = React.useState(false);
+  const ref = React.useRef<HTMLInputElement>(null);
+  function toggle() {
+    const el = ref.current;
+    const start = el?.selectionStart ?? null;
+    const end = el?.selectionEnd ?? null;
+    setVisible((v) => !v);
+    // Put focus (and the caret) back on the field once the type has switched.
+    requestAnimationFrame(() => {
+      el?.focus();
+      if (el && start !== null && end !== null) el.setSelectionRange(start, end);
+    });
+  }
+  return (
+    <div className="relative">
+      <input
+        ref={ref}
+        type={visible ? "text" : "password"}
+        className={cn(controlClass, "h-11 pr-12", className)}
+        aria-invalid={error || undefined}
+        aria-describedby={error && props.id ? `${props.id}-error` : undefined}
+        autoCapitalize="none"
+        autoCorrect="off"
+        spellCheck={false}
+        {...props}
+      />
+      <button
+        type="button"
+        onClick={toggle}
+        aria-label={visible ? `Hide ${toggleLabel}` : `Show ${toggleLabel}`}
+        aria-pressed={visible}
+        className="absolute inset-y-0 right-0 flex w-11 items-center justify-center rounded-r-xl text-forest-800/70 hover:text-forest-900 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-forest-500/40"
+      >
+        {visible ? <EyeOff className="h-4.5 w-4.5" aria-hidden="true" /> : <Eye className="h-4.5 w-4.5" aria-hidden="true" />}
+      </button>
+    </div>
   );
 }
 
