@@ -330,9 +330,9 @@ export interface FaqEntry {
 
 export const faqs: FaqEntry[] = [
   {
-    question: "Where exactly is Hasiru Nidhi located, and how far from Bengaluru?",
+    question: "Where exactly is Hasiru Nidhi located?",
     answer:
-      "We're just off Kanakapura Road in Harohalli, roughly 45–60 minutes from central Bengaluru depending on traffic. The final stretch is a quiet country road — we send a detailed map link with every confirmed booking.",
+      "We're just off Kanakapura Road in Harohalli, Bengaluru Rural. The final stretch is a quiet country road — we send a detailed map link with every confirmed booking.",
   },
   {
     question: "Can we visit for the day without an overnight stay?",
@@ -446,7 +446,6 @@ export const blogPosts: BlogPost[] = [
 ];
 
 export const stats = [
-  { value: "45", label: "Minutes from central Bengaluru" },
   { value: "12", label: "Acres of working farmland" },
   { value: "9", label: "Distinct nature experiences" },
   { value: "4", label: "Core experiences to choose from" },

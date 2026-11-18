@@ -30,6 +30,7 @@ export async function searchStays(f: StayFilters): Promise<StaySearchOutcome> {
       p_sort: f.sort,
       p_limit: PAGE_SIZE,
       p_offset: (f.page - 1) * PAGE_SIZE,
+      p_pin: f.pin || null,
     });
     if (error) throw error;
     const results = ((data ?? []) as SearchResult[]).map((r) => ({ ...r, total_count: Number(r.total_count) }));

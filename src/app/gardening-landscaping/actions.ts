@@ -59,9 +59,10 @@ export async function submitGardeningEnquiry(_prev: FormState, formData: FormDat
       name: v.name, email: v.email ?? null, phone: v.phone ?? null, location: v.location, property_type: v.property_type,
       garden_size: v.garden_size || null, services: v.services, requirements: v.requirements || null,
       budget_range: v.budget_range || null, photo_paths,
+      pin_code: v.pin_code || null, preferred_date: v.preferred_date || null, preferred_time_window: v.preferred_time_window || null,
     },
     `New gardening quote request from ${v.name}`,
-    `Location: ${v.location}\nProperty: ${v.property_type}\nSize: ${v.garden_size ?? "-"}\nBudget: ${v.budget_range ?? "-"}\nServices: ${v.services.join(", ") || "-"}\nContact: ${v.email ?? ""} ${v.phone ?? ""}\n\n${v.requirements ?? ""}\n\nPhotos: ${photo_paths.length}. Manage in Admin > Enquiries.`,
+    `Location: ${v.location}${v.pin_code ? ` (PIN ${v.pin_code})` : ""}\nPreferred: ${v.preferred_date || "-"} ${v.preferred_time_window || ""}\nProperty: ${v.property_type}\nSize: ${v.garden_size ?? "-"}\nBudget: ${v.budget_range ?? "-"}\nServices: ${v.services.join(", ") || "-"}\nContact: ${v.email ?? ""} ${v.phone ?? ""}\n\n${v.requirements ?? ""}\n\nPhotos: ${photo_paths.length}. Manage in Admin > Gardening.`,
   );
   return result.ok
     ? { ok: true, message: "Thank you — your quote request is with our team. We'll contact you to discuss the project." }

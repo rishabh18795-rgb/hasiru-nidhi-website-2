@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { emailSchema, honeypot, optionalEmail, optionalPhone, phoneSchema } from "@/lib/validation/common";
+import { todayIST } from "@/lib/format";
 
 /** Optional integer field: a blank input means "not provided", not 0. */
 const optionalInt = (min: number, max: number) =>
@@ -38,6 +39,8 @@ export const partnerApplicationSchema = z.object({
   website: honeypot,
 });
 
+export const gardeningTimeWindows = ["Morning", "Afternoon", "Evening", "Flexible"] as const;
+
 export const gardeningServices = [
   { value: "garden-design", label: "Garden design and development" },
   { value: "lawn", label: "Lawn installation and maintenance" },
@@ -67,7 +70,11 @@ export const gardeningEnquirySchema = z
     location: z.string().trim().min(2, "Enter the project location").max(200),
     property_type: z.enum(gardeningPropertyTypes, "Choose a property type"),
     garden_size: z.string().trim().max(80).optional(),
-    services: z.array(z.enum(gardeningServices.map((s) => s.value) as [string, ...string[]])).max(20).default([]),
+    // Gardening is its own service line: at least one service must be chosen, and the enquiry never touches stay bookings.
+    services: z.array(z.enum(gardeningServices.map((s) => s.value) as [string, ...string[]])).min(1, "Choose at least one service").max(20),
+    pin_code: z.string().trim().regex(/^\d{6}$/, "Enter a 6-digit PIN code").optional().or(z.literal("")),
+    preferred_date: z.string().trim().regex(/^\d{4}-\d{2}-\d{2}$/, "Choose a valid date").refine((d) => d >= todayIST(), "Choose today or a later date").optional().or(z.literal("")),
+    preferred_time_window: z.enum(gardeningTimeWindows, "Choose a time window").optional().or(z.literal("")),
     requirements: z.string().trim().max(4000).optional(),
     budget_range: z.string().trim().max(80).optional(),
     website: honeypot,

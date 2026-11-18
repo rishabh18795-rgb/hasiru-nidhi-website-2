@@ -47,3 +47,19 @@ describe("parseStayFilters", () => {
     expect(activeFilterCount(parseStayFilters({ category: "cottage", guests: "2", amenities: "wifi" }, NOW))).toBe(3);
   });
 });
+
+describe("PIN code filter", () => {
+  it("keeps a six-digit PIN and round-trips through the URL", () => {
+    const f = parseStayFilters({ pin: "562112", q: "Harohalli" }, NOW);
+    expect(f.pin).toBe("562112");
+    expect(stayFiltersToQuery(f)).toContain("pin=562112");
+    expect(parseStayFilters(Object.fromEntries(new URLSearchParams(stayFiltersToQuery(f))), NOW).pin).toBe("562112");
+  });
+  it.each(["5621", "56211a", "5621122", "", "'; drop table properties; --"])("drops %s (never reaches the database)", (pin) => {
+    expect(parseStayFilters({ pin }, NOW).pin).toBe("");
+  });
+  it("is part of the search itself, not a counted filter", () => {
+    expect(activeFilterCount(parseStayFilters({ pin: "562112" }, NOW))).toBe(0);
+  });
+});
+

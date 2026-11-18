@@ -132,3 +132,23 @@ describe("booking selection survives sign-in", () => {
     expect(authHrefForBooking("sign-in", "demo-x", {})).toBe("/sign-in?next=%2Fstays%2Fdemo-x%23booking");
   });
 });
+
+describe("PIN-code search in demo mode (same rules as the database)", () => {
+  it("every demo listing has a six-digit PIN", () => {
+    for (const d of demoProperties) expect(d.postal_code, d.slug).toMatch(/^\d{6}$/);
+  });
+  it("an exact PIN finds that listing only; an unrelated PIN finds nothing", () => {
+    const farm = demoProperties[0];
+    expect(slugs({ pin: farm.postal_code })).toEqual([farm.slug]);
+    expect(slugs({ pin: "110001" })).toEqual([]);
+  });
+  it("a six-digit location is treated as a PIN, and a partial PIN is not accepted", () => {
+    const farm = demoProperties[0];
+    expect(slugs({ q: farm.postal_code })).toEqual([farm.slug]);
+    expect(slugs({ pin: farm.postal_code.slice(0, 5) })).toHaveLength(demoProperties.length); // invalid PIN is ignored, never half-matched
+  });
+  it("results carry the PIN", () => {
+    expect(searchDemo(f({ pin: demoProperties[1].postal_code }), TODAY).results[0].postal_code).toBe(demoProperties[1].postal_code);
+  });
+});
+

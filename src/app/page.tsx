@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
-import { ArrowUpRight, ChevronDown } from "lucide-react";
+import { ArrowUpRight, BadgeCheck, CalendarCheck, ChevronDown, Leaf, Receipt, ShieldCheck } from "lucide-react";
 
 import { LinkButton } from "@/components/site/link-button";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/site/reveal";
@@ -9,7 +9,6 @@ import { SectionHeading } from "@/components/site/section-heading";
 import { PillarCard } from "@/components/site/pillar-card";
 import { ExperienceCard } from "@/components/site/experience-card";
 import { TestimonialCard } from "@/components/site/testimonial-card";
-import { StatRow } from "@/components/site/stat-row";
 import { CtaBand } from "@/components/site/cta-band";
 import { HeroBackdrop } from "@/components/site/hero-backdrop";
 import {
@@ -24,6 +23,7 @@ import { StaySearchBar } from "@/components/stays/search-bar";
 import { StayCard } from "@/components/stays/stay-card";
 import { getFeaturedStays } from "@/lib/data/stays";
 import { getCatalog } from "@/lib/data/catalog";
+import { gardeningServices } from "@/lib/validation/enquiries";
 
 export const metadata: Metadata = {
   title: `${siteConfig.name} — ${siteConfig.tagline}`,
@@ -43,8 +43,8 @@ export default async function HomePage() {
         <HeroBackdrop image={images.heroSunriseFields} />
         <div className="container-nidhi relative flex flex-col items-start pt-20">
           <Reveal>
-            <p className="text-eyebrow text-sand-300">
-              A Nature Experience Retreat · Bengaluru
+            <p className="text-eyebrow text-sand-300!">
+              Curated nature stays · Karnataka
             </p>
           </Reveal>
           <Reveal delay={0.08}>
@@ -61,29 +61,28 @@ export default async function HomePage() {
           </Reveal>
           <Reveal delay={0.18}>
             <p className="mt-6 max-w-lg text-lg leading-relaxed text-cream/75">
-              An hour from Bengaluru, Hasiru Nidhi trades traffic for tree
-              cover — working gardens, quiet cycling trails, farmhouse stays
-              and evenings by the fire, built around one idea: that nature is
-              still the best place to slow down.
+              Find farm stays, cottages and eco-retreats hosted by people who love their land —
+              reviewed by our team, requested directly with the host, with the price shown
+              before you ask. Search by PIN code or place, pick your dates, and slow down.
             </p>
           </Reveal>
           <Reveal delay={0.28}>
             <div className="mt-10 flex flex-wrap items-center gap-4">
               <LinkButton
-                href="/book"
+                href="/stays"
                 size="lg"
                 className="rounded-full bg-sand-400 px-8 text-forest-950 hover:bg-sand-300"
               >
-                Book Your Experience
+                Explore Stays
                 <ArrowUpRight className="h-4 w-4" />
               </LinkButton>
               <LinkButton
-                href="/experiences"
+                href="/host/register"
                 variant="outline"
                 size="lg"
                 className="rounded-full border-cream/30 bg-transparent px-8 text-cream hover:bg-cream/10"
               >
-                Explore Experiences
+                Become a Host
               </LinkButton>
             </div>
           </Reveal>
@@ -148,13 +147,6 @@ export default async function HomePage() {
               </Reveal>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* STATS */}
-      <section className="bg-cream py-20">
-        <div className="container-nidhi">
-          <StatRow />
         </div>
       </section>
 
@@ -241,6 +233,50 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* GARDENING SERVICES: a separate service line with its own enquiry flow (never part of stay search or booking) */}
+      <section id="gardening-services" aria-labelledby="home-gardening-heading" className="bg-forest-50 py-24 sm:py-28">
+        <div className="container-nidhi">
+          <div className="grid overflow-hidden rounded-[2.5rem] bg-forest-900 text-cream lg:grid-cols-2">
+            <div className="relative min-h-[18rem] lg:min-h-[30rem]">
+              <Image
+                src={images.gardeningTools}
+                alt="A child learning to garden among leaves at Hasiru Nidhi"
+                fill
+                sizes="(min-width: 1024px) 45vw, 100vw"
+                className="object-cover"
+              />
+            </div>
+            <div className="flex flex-col justify-center p-8 sm:p-12">
+              <p className="inline-flex items-center gap-2 text-eyebrow text-sand-300!">
+                <Leaf className="h-4 w-4" aria-hidden="true" /> Gardening Services
+              </p>
+              <h2 id="home-gardening-heading" className="mt-4 font-display text-4xl font-medium leading-tight sm:text-5xl">
+                Gardens designed, planted and cared for.
+              </h2>
+              <p className="mt-4 max-w-lg text-base leading-relaxed text-cream/75">
+                A separate service from our stays. Tell us about your garden, terrace or lawn and
+                our team will get back to you. Gardening enquiries never create a stay booking.
+              </p>
+              <ul className="mt-6 flex flex-wrap gap-2" aria-label="Gardening services">
+                {gardeningServices.slice(0, 6).map((service) => (
+                  <li key={service.value} className="rounded-full bg-cream/10 px-3.5 py-1.5 text-sm text-cream/90 ring-1 ring-cream/20">
+                    {service.label}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <LinkButton href="/gardening#enquire" size="lg" className="rounded-full bg-sand-400 px-7 text-forest-950 hover:bg-sand-300">
+                  Enquire Now <ArrowUpRight className="h-4 w-4" />
+                </LinkButton>
+                <LinkButton href="/gardening" variant="outline" size="lg" className="rounded-full border-cream/30 bg-transparent px-7 text-cream hover:bg-cream/10">
+                  About gardening services
+                </LinkButton>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* EXPERIENCES GRID */}
       <section className="bg-cream py-28">
         <div className="container-nidhi">
@@ -301,13 +337,41 @@ export default async function HomePage() {
             tone="light"
           />
           <Reveal delay={0.1} className="flex flex-wrap gap-4 lg:justify-end">
-            <LinkButton href="/list-your-property" size="lg" className="rounded-full bg-sand-400 px-8 text-forest-950 hover:bg-sand-300">
-              List Your Property <ArrowUpRight className="h-4 w-4" />
+            <LinkButton href="/host/register" size="lg" className="rounded-full bg-sand-400 px-8 text-forest-950 hover:bg-sand-300">
+              Create a host account <ArrowUpRight className="h-4 w-4" />
             </LinkButton>
-            <LinkButton href="/become-a-host" variant="outline" size="lg" className="rounded-full border-cream/30 bg-transparent px-8 text-cream hover:bg-cream/10">
-              About hosting
+            <LinkButton href="/list-your-property" variant="outline" size="lg" className="rounded-full border-cream/30 bg-transparent px-8 text-cream hover:bg-cream/10">
+              How hosting works
             </LinkButton>
           </Reveal>
+        </div>
+      </section>
+
+      {/* TRUST + COMPANY: only statements the platform actually enforces */}
+      <section aria-labelledby="trust-heading" className="bg-cream py-24">
+        <div className="container-nidhi">
+          <SectionHeading eyebrow="Why Hasiru Nidhi" title="Stays you can request with confidence." className="mb-0" />
+          <h2 id="trust-heading" className="sr-only">Why book with Hasiru Nidhi</h2>
+          <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { icon: ShieldCheck, title: "Every listing is reviewed", copy: "Hosts submit their property and our team reviews it before it appears in search." },
+              { icon: BadgeCheck, title: "Request to book", copy: "You send a request and the host confirms. Nothing is booked until they accept." },
+              { icon: CalendarCheck, title: "No double bookings", copy: "A date can be confirmed for only one guest, however many people ask." },
+              { icon: Receipt, title: "Clear prices", copy: "See the nightly rate, extra-guest and fee breakdown before you send a request." },
+            ].map((item) => (
+              <li key={item.title} className="rounded-2xl bg-white p-6 ring-1 ring-forest-900/8">
+                <item.icon className="h-6 w-6 text-forest-700" aria-hidden="true" />
+                <h3 className="mt-4 font-display text-lg text-forest-950">{item.title}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-ink/65">{item.copy}</p>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-10 text-sm text-ink/55">
+            Hasiru Nidhi is operated by Hasiru Nidhi Horizons Private Limited. Read our{" "}
+            <Link href="/terms" className="underline">Terms</Link>,{" "}
+            <Link href="/privacy" className="underline">Privacy Policy</Link> and{" "}
+            <Link href="/cancellation-policy" className="underline">Cancellation Policy</Link>.
+          </p>
         </div>
       </section>
 

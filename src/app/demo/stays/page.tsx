@@ -25,7 +25,7 @@ export default async function DemoStaysPage({ searchParams }: { searchParams: Pr
   const { results, total } = searchDemo(filters, today);
   const catalog = demoCatalog();
   const filterCount = activeFilterCount(filters);
-  const hasAnyFilter = Boolean(filters.q) || filterCount > 0;
+  const hasAnyFilter = Boolean(filters.q) || Boolean(filters.pin) || filterCount > 0;
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   const selection = { checkin: filters.checkin, checkout: filters.checkout, guests: filters.guests };
   const action = "/demo/stays";
@@ -39,7 +39,7 @@ export default async function DemoStaysPage({ searchParams }: { searchParams: Pr
           <h1 className="mt-3 max-w-3xl text-4xl font-medium tracking-tight text-forest-950 sm:text-5xl">Six demonstration stays</h1>
           <p className="mt-3 max-w-2xl text-sm text-ink/65">Every listing here is fictional demonstration data — names, places, prices, photographs and availability are illustrative.</p>
           <div className="mt-8">
-            <StaySearchBar action={action} q={filters.q} checkin={filters.checkin} checkout={filters.checkout} guests={filters.guests}
+            <StaySearchBar action={action} q={filters.q} pin={filters.pin} checkin={filters.checkin} checkout={filters.checkout} guests={filters.guests}
               hidden={{ category: filters.category, sort: filters.sort !== "featured" ? filters.sort : undefined }} />
           </div>
 
@@ -60,7 +60,7 @@ export default async function DemoStaysPage({ searchParams }: { searchParams: Pr
             </aside>
 
             <div>
-              <p className="text-sm text-ink/60" aria-live="polite" data-testid="demo-result-count">{total} {total === 1 ? "demo stay" : "demo stays"}{filters.q ? ` for “${filters.q}”` : ""}</p>
+              <p className="text-sm text-ink/60" aria-live="polite" data-testid="demo-result-count">{total} {total === 1 ? "demo stay" : "demo stays"}{filters.pin ? ` for PIN ${filters.pin}` : ""}{filters.q ? ` for “${filters.q}”` : ""}</p>
               {results.length === 0 ? (
                 <div className="mt-4 rounded-2xl border border-dashed border-forest-900/20 bg-white/60 px-6 py-14 text-center">
                   <p className="font-display text-xl text-forest-950">No demo stays match those filters</p>

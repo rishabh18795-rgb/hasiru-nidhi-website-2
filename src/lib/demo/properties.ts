@@ -19,6 +19,8 @@ export interface DemoProperty {
   description: string;
   city: string;
   state: string;
+  /** Real post-office PIN of the demo town (the listing itself is fictional and labelled so). */
+  postal_code: string;
   region: string;
   rooms: number;
   bedrooms: number;
@@ -63,7 +65,7 @@ export const demoExperienceNames = (d: DemoProperty) => d.experiences.map((e) =>
 
 export function demoToSearchResult(d: DemoProperty): SearchResult {
   return {
-    id: d.slug, slug: d.slug, name: d.name, summary: d.summary, city: d.city, state: d.state, region: d.region,
+    id: d.slug, slug: d.slug, name: d.name, summary: d.summary, city: d.city, state: d.state, region: d.region, postal_code: d.postal_code,
     category_slug: d.category, category_name: CATEGORY_NAMES[d.category] ?? d.category, price_inr: d.price_inr, price_unit: d.price_unit,
     max_guests: d.max_guests, rooms_count: d.rooms, is_featured: d.featured, is_sample: true, bedrooms: d.bedrooms, bathrooms: d.bathrooms,
     amenity_names: demoAmenityNames(d), cover_path: d.images[0]?.path ?? null, cover_source: "static", cover_alt: d.images[0]?.alt ?? null, total_count: 0,
@@ -75,7 +77,11 @@ const has = (hay: string, needle: string) => hay.toLowerCase().includes(needle.t
 /** Same rules as the search_properties() database function, applied in memory (demo mode only). */
 export function searchDemo(f: StayFilters, today: string): { results: SearchResult[]; total: number } {
   let list = demoProperties.filter((d) => {
-    if (f.q && ![d.name, d.city, d.region, d.state, d.summary].some((x) => has(x, f.q))) return false;
+    // Same rule as the database: a six-digit location is a PIN code.
+    const queryIsPin = /^\d{6}$/.test(f.q.trim());
+    const pin = f.pin || (queryIsPin ? f.q.trim() : "");
+    if (pin && d.postal_code !== pin) return false;
+    if (f.q && !queryIsPin && ![d.name, d.city, d.region, d.state, d.summary].some((x) => has(x, f.q))) return false;
     if (f.category && d.category !== f.category) return false;
     if (f.min !== null && d.price_inr < f.min) return false;
     if (f.max !== null && d.price_inr > f.max) return false;

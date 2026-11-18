@@ -93,6 +93,17 @@ describe("gardeningEnquirySchema", () => {
     expect(gardeningEnquirySchema.safeParse({ ...base, services: ["hack"] }).success).toBe(false);
     expect(gardeningEnquirySchema.safeParse({ ...base, property_type: "Castle" }).success).toBe(false);
   });
+  it("needs at least one service", () => {
+    expect(gardeningEnquirySchema.safeParse({ ...base, services: [] }).success).toBe(false);
+  });
+  it("takes an optional six-digit PIN, preferred date and time window", () => {
+    const tomorrow = new Date(Date.now() + 86400000).toISOString().slice(0, 10);
+    expect(gardeningEnquirySchema.safeParse({ ...base, pin_code: "562112", preferred_date: tomorrow, preferred_time_window: "Morning" }).success).toBe(true);
+    expect(gardeningEnquirySchema.safeParse({ ...base, pin_code: "", preferred_date: "", preferred_time_window: "" }).success).toBe(true);
+    for (const bad of [{ pin_code: "5621" }, { pin_code: "56211a" }, { preferred_date: "2020-01-01" }, { preferred_date: "tomorrow" }, { preferred_time_window: "Midnight" }]) {
+      expect(gardeningEnquirySchema.safeParse({ ...base, ...bad }).success, JSON.stringify(bad)).toBe(false);
+    }
+  });
 });
 
 describe("propertyFormSchema", () => {

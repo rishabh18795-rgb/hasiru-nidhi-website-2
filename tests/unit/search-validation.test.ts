@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { validateSearch } from "@/components/stays/search-bar";
 
 const today = "2026-10-30";
-const v = (checkin = "", checkout = "", guests = "") => validateSearch({ checkin, checkout, guests }, today);
+const v = (checkin = "", checkout = "", guests = "", pin = "") => validateSearch({ checkin, checkout, guests, pin }, today);
 
 describe("search form rules", () => {
   it("accepts an empty search (browse everything) and a complete valid one", () => {
@@ -28,3 +28,18 @@ describe("search form rules", () => {
     expect(r.guests).toBeDefined();
   });
 });
+
+describe("PIN code field", () => {
+  it("is optional, and accepts exactly six digits", () => {
+    expect(v("", "", "", "")).toEqual({});
+    expect(v("", "", "", "562112")).toEqual({});
+  });
+  it.each(["5621", "56211", "5621123", "56A112", "562 112", "abcdef"])("rejects %s", (pin) => expect(v("", "", "", pin).pin).toMatch(/6-digit/));
+  it("is reported together with the other problems", () => {
+    const r = v("2026-11-05", "2026-11-03", "0", "12");
+    expect(r.pin).toBeDefined();
+    expect(r.dates).toBeDefined();
+    expect(r.guests).toBeDefined();
+  });
+});
+

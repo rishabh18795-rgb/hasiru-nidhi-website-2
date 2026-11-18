@@ -11,6 +11,8 @@ export const PAGE_SIZE = 12;
 
 export interface StayFilters {
   q: string;
+  /** Six-digit Indian PIN code (empty when not searching by PIN). */
+  pin: string;
   category: string;
   min: number | null;
   max: number | null;
@@ -56,6 +58,7 @@ export function parseStayFilters(raw: RawParams, now: Date = new Date()): StayFi
   const sort = first(raw.sort);
   return {
     q: first(raw.q).trim().slice(0, 100),
+    pin: /^\d{6}$/.test(first(raw.pin).trim()) ? first(raw.pin).trim() : "",
     category: /^[a-z0-9-]{1,60}$/.test(first(raw.category)) ? first(raw.category) : "",
     min: intOrNull(first(raw.min), 0, 10_000_000),
     max: intOrNull(first(raw.max), 0, 10_000_000),
@@ -73,6 +76,7 @@ export function parseStayFilters(raw: RawParams, now: Date = new Date()): StayFi
 export function stayFiltersToQuery(f: Partial<StayFilters>): string {
   const params = new URLSearchParams();
   if (f.q) params.set("q", f.q);
+  if (f.pin) params.set("pin", f.pin);
   if (f.category) params.set("category", f.category);
   if (f.min !== null && f.min !== undefined) params.set("min", String(f.min));
   if (f.max !== null && f.max !== undefined) params.set("max", String(f.max));

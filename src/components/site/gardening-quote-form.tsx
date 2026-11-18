@@ -8,7 +8,8 @@ import { CheckboxField, Field, Honeypot, NativeSelect, TextArea, TextInput } fro
 import { FormMessage } from "@/components/forms/form-message";
 import { SubmitButton } from "@/components/forms/submit-button";
 import { createBrowserSupabase } from "@/lib/supabase/browser";
-import { ENQUIRY_PHOTO_LIMITS, gardeningPropertyTypes, gardeningServices } from "@/lib/validation/enquiries";
+import { ENQUIRY_PHOTO_LIMITS, gardeningPropertyTypes, gardeningServices, gardeningTimeWindows } from "@/lib/validation/enquiries";
+import { todayIST } from "@/lib/format";
 
 const initial: FormState = {};
 const BUDGETS = ["Under ₹25,000", "₹25,000 – ₹50,000", "₹50,000 – ₹1,00,000", "₹1,00,000 – ₹3,00,000", "Above ₹3,00,000", "Not sure yet"];
@@ -59,6 +60,7 @@ export function GardeningQuoteForm() {
         <Field label="Phone" htmlFor="g-phone" error={e.phone}><TextInput id="g-phone" name="phone" type="tel" autoComplete="tel" defaultValue={state?.values?.phone} placeholder="+91 98765 43210" error={!!e.phone} /></Field>
         <Field label="Email" htmlFor="g-email" error={e.email} hint="Phone or email — at least one."><TextInput id="g-email" name="email" type="email" autoComplete="email" defaultValue={state?.values?.email} error={!!e.email} /></Field>
         <Field label="Project location" htmlFor="g-location" error={e.location} required><TextInput id="g-location" name="location" defaultValue={state?.values?.location} placeholder="Area, city" error={!!e.location} /></Field>
+        <Field label="PIN code" htmlFor="g-pin" error={e.pin_code} hint="Optional. Helps us check we can serve your area."><TextInput id="g-pin" name="pin_code" inputMode="numeric" maxLength={6} defaultValue={state?.values?.pin_code} placeholder="e.g. 562112" autoComplete="postal-code" error={!!e.pin_code} /></Field>
         <Field label="Property type" htmlFor="g-type" error={e.property_type} required>
           <NativeSelect id="g-type" name="property_type" defaultValue={state?.values?.property_type ?? ""} error={!!e.property_type}>
             <option value="" disabled>Choose one</option>
@@ -67,12 +69,22 @@ export function GardeningQuoteForm() {
         </Field>
         <Field label="Approximate garden size" htmlFor="g-size" error={e.garden_size} hint="e.g. 600 sq ft terrace, 2 guntha lawn"><TextInput id="g-size" name="garden_size" defaultValue={state?.values?.garden_size} maxLength={80} /></Field>
       </div>
-      <fieldset>
-        <legend className="mb-2.5 text-sm font-medium text-forest-950">What do you need?</legend>
+      <fieldset aria-describedby={e.services ? "g-services-err" : undefined}>
+        <legend className="mb-2.5 text-sm font-medium text-forest-950">Service needed <span aria-hidden="true">*</span></legend>
+        {e.services ? <p id="g-services-err" role="alert" className="mb-2 text-sm text-red-700">{e.services}</p> : null}
         <div className="grid gap-2.5 sm:grid-cols-2">
           {gardeningServices.map((s) => <CheckboxField key={s.value} name="services" value={s.value} id={`svc-${s.value}`} label={s.label} />)}
         </div>
       </fieldset>
+      <div className="grid gap-5 sm:grid-cols-2">
+        <Field label="Preferred date" htmlFor="g-date" error={e.preferred_date} hint="Optional."><TextInput id="g-date" name="preferred_date" type="date" min={todayIST()} defaultValue={state?.values?.preferred_date} error={!!e.preferred_date} /></Field>
+        <Field label="Preferred time" htmlFor="g-time" error={e.preferred_time_window} hint="Optional.">
+          <NativeSelect id="g-time" name="preferred_time_window" defaultValue={state?.values?.preferred_time_window ?? ""}>
+            <option value="">No preference</option>
+            {gardeningTimeWindows.map((t) => <option key={t}>{t}</option>)}
+          </NativeSelect>
+        </Field>
+      </div>
       <Field label="Budget range" htmlFor="g-budget" error={e.budget_range}>
         <NativeSelect id="g-budget" name="budget_range" defaultValue={state?.values?.budget_range ?? ""}>
           <option value="">Prefer not to say</option>
@@ -83,7 +95,7 @@ export function GardeningQuoteForm() {
       <Field label="Photos of the space (optional)" htmlFor="g-photos" hint="Up to 5 images (JPEG, PNG, WebP), 5 MB each.">
         <input id="g-photos" name="photos" type="file" accept="image/jpeg,image/png,image/webp" multiple className="block w-full text-sm text-ink/70 file:mr-4 file:rounded-full file:border-0 file:bg-forest-50 file:px-4 file:py-2 file:text-sm file:font-medium file:text-forest-800 hover:file:bg-forest-100" />
       </Field>
-      <SubmitButton disabled={busy} pendingLabel="Sending…" className="self-start">{busy ? "Uploading photos…" : "Request a quote"}</SubmitButton>
+      <SubmitButton disabled={busy} pendingLabel="Sending…" className="self-start">{busy ? "Uploading photos…" : "Send gardening enquiry"}</SubmitButton>
       <p className="text-xs text-ink/55">We use these details only to respond to your enquiry. See our <a href="/privacy" className="underline">Privacy Policy</a>.</p>
     </form>
   );

@@ -1,19 +1,21 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowUpRight, Calendar, ClipboardList, Droplets, Sprout } from "lucide-react";
+import { ArrowUpRight, Calendar, ClipboardList, Droplets, Flower2, Leaf, Sprout } from "lucide-react";
 
 import { PageHero } from "@/components/site/page-hero";
 import { SectionHeading } from "@/components/site/section-heading";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/site/reveal";
 import { CtaBand } from "@/components/site/cta-band";
+import { GardeningQuoteForm } from "@/components/site/gardening-quote-form";
+import { gardeningServices } from "@/lib/validation/enquiries";
 import { images } from "@/lib/content";
 import { basePath } from "@/lib/base-path";
 
 export const metadata: Metadata = {
   title: "Gardening Services",
   description:
-    "Hands-in-the-soil gardening experiences at Hasiru Nidhi, plus a preview of our upcoming plant store and nursery near Bengaluru.",
+    "Garden design, lawns, plants and ongoing care from the Hasiru Nidhi team — send a gardening enquiry. A service separate from nature-stay bookings.",
   alternates: { canonical: `${basePath}/gardening` },
 };
 
@@ -48,20 +50,67 @@ export default function GardeningPage() {
   return (
     <>
       <PageHero
-        eyebrow="Pillar 03 — Grow"
-        title="Get your hands in the soil."
-        description="Our kitchen garden isn't a backdrop — it feeds the table. Guests are welcome to walk it, spend an unhurried hour among the beds, and take home whatever they learn."
+        eyebrow="Gardening Services"
+        title="Gardens designed, planted and cared for."
+        description="Gardening is its own service at Hasiru Nidhi — separate from stay bookings. Tell us about your space and our team will come back to you with next steps."
         image={images.gardeningTools}
         crumb="Gardening Services"
-        primaryCta={{ label: "Book a Gardening Experience", href: "/book?experience=gardening" }}
-        secondaryCta={{ label: "Garden design & landscaping services", href: "/gardening-landscaping" }}
+        primaryCta={{ label: "Enquire Now", href: "#enquire" }}
+        secondaryCta={{ label: "Garden design & landscaping", href: "/gardening-landscaping" }}
       />
+
+      <section className="bg-forest-50 py-24" aria-labelledby="gardening-services-heading">
+        <div className="container-nidhi">
+          <SectionHeading
+            eyebrow="Our services"
+            title="What we can help you with."
+            description="Residential gardens, villas, terraces and commercial spaces. Share what you need and we will tell you what is possible."
+          />
+          <ul id="gardening-services-heading" className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {gardeningServices.map((service, i) => (
+              <li key={service.value} className="flex items-start gap-3 rounded-2xl bg-white p-5 ring-1 ring-forest-900/10">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-forest-800 text-cream">
+                  {i % 3 === 0 ? <Leaf className="h-5 w-5" aria-hidden="true" /> : i % 3 === 1 ? <Flower2 className="h-5 w-5" aria-hidden="true" /> : <Sprout className="h-5 w-5" aria-hidden="true" />}
+                </span>
+                <span className="font-medium leading-snug text-forest-950">{service.label}</span>
+              </li>
+            ))}
+          </ul>
+          <ol className="mt-14 grid gap-6 sm:grid-cols-3" aria-label="How a gardening enquiry works">
+            {[
+              ["1", "Tell us about your space", "Share the location, type of property, the services you need and, if you can, photos."],
+              ["2", "Our team reviews it", "A member of the Hasiru Nidhi gardening team reads your enquiry and photos."],
+              ["3", "We get back to you", "We contact you with next steps. Any quote is an estimate, confirmed once we understand the site."],
+            ].map(([n, title, copy]) => (
+              <li key={n} className="rounded-2xl border border-forest-900/10 bg-cream p-6">
+                <span className="font-display text-3xl text-sand-500">{n}</span>
+                <h3 className="mt-2 font-display text-lg text-forest-950">{title}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-ink/65">{copy}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <section id="enquire" className="scroll-mt-24 bg-cream py-24">
+        <div className="container-nidhi grid gap-10 lg:grid-cols-[1fr_1.4fr]">
+          <SectionHeading
+            eyebrow="Enquire now"
+            title="Send a gardening enquiry."
+            description="Your enquiry goes to our gardening team, separately from any property booking. We use your details only to respond. We do not charge anything at this stage."
+          />
+          <Reveal className="rounded-[2rem] bg-white p-8 ring-1 ring-forest-900/8 sm:p-10">
+            <GardeningQuoteForm />
+          </Reveal>
+        </div>
+      </section>
 
       <section className="bg-cream py-28">
         <div className="container-nidhi">
           <SectionHeading
-            eyebrow="What You Can Join"
+            eyebrow="Guest experiences at the farm"
             title="From a short walkthrough to a full working session."
+            description="Separate from gardening services: these are activities guests can join at Hasiru Nidhi's own working garden."
           />
           <StaggerGroup className="mt-14 grid gap-6 sm:grid-cols-2">
             {activities.map((activity) => (
@@ -138,11 +187,11 @@ export default function GardeningPage() {
 
       <CtaBand
         title="Come grow with us."
-        description="Gardening walkthroughs are included in every stay, and available to day visitors on request."
-        primaryLabel="Book a Gardening Experience"
-        primaryHref="/book?experience=gardening"
-        secondaryLabel="Ask About Upcoming Sessions"
-        secondaryHref="/contact"
+        description="Need help with your own garden? Send an enquiry. Want to visit ours? Book a gardening experience."
+        primaryLabel="Gardening enquiry"
+        primaryHref="#enquire"
+        secondaryLabel="Book a Gardening Experience"
+        secondaryHref="/book?experience=gardening"
       />
     </>
   );

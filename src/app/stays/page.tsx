@@ -24,7 +24,7 @@ export default async function StaysPage({ searchParams }: { searchParams: Promis
   const [catalog, outcome] = await Promise.all([getCatalog(), searchStays(filters)]);
   const filterCount = activeFilterCount(filters);
   const totalPages = Math.max(1, Math.ceil(outcome.total / PAGE_SIZE));
-  const hasAnyFilter = Boolean(filters.q) || filterCount > 0;
+  const hasAnyFilter = Boolean(filters.q) || Boolean(filters.pin) || filterCount > 0;
   const retryHref = `/stays${stayFiltersToQuery(filters)}`;
 
   return (
@@ -35,7 +35,7 @@ export default async function StaysPage({ searchParams }: { searchParams: Promis
           Find a quiet place in nature.
         </h1>
         <div className="mt-8">
-          <StaySearchBar q={filters.q} checkin={filters.checkin} checkout={filters.checkout} guests={filters.guests}
+          <StaySearchBar q={filters.q} pin={filters.pin} checkin={filters.checkin} checkout={filters.checkout} guests={filters.guests}
             hidden={{ category: filters.category, sort: filters.sort !== "featured" ? filters.sort : undefined }} />
         </div>
 
@@ -67,7 +67,7 @@ export default async function StaysPage({ searchParams }: { searchParams: Promis
             {/* ---------------- results */}
             <div>
               <p className="text-sm text-ink/60" aria-live="polite">
-                {outcome.error ? "" : `${outcome.total} ${outcome.total === 1 ? "stay" : "stays"}${filters.q ? ` for “${filters.q}”` : ""}`}
+                {outcome.error ? "" : `${outcome.total} ${outcome.total === 1 ? "stay" : "stays"}${filters.pin ? ` for PIN ${filters.pin}` : ""}${filters.q ? ` for “${filters.q}”` : ""}`}
               </p>
               {outcome.error ? (
                 <div role="alert" className="mt-4 space-y-4 rounded-2xl border border-red-200 bg-red-50 p-6 text-sm text-red-800">
@@ -79,10 +79,10 @@ export default async function StaysPage({ searchParams }: { searchParams: Promis
                 </div>
               ) : outcome.results.length === 0 ? (
                 <div className="mt-4 rounded-2xl border border-dashed border-forest-900/20 bg-white/60 px-6 py-14 text-center">
-                  <p className="font-display text-xl text-forest-950">{hasAnyFilter ? "No stays match those filters" : "No stays are live yet"}</p>
+                  <p className="font-display text-xl text-forest-950">{filters.pin && !filters.q ? `No properties found for PIN ${filters.pin}` : hasAnyFilter ? "No stays match those filters" : "No stays are live yet"}</p>
                   <p className="mx-auto mt-2 max-w-md text-sm text-ink/60">
                     {hasAnyFilter
-                      ? "Try different dates, fewer filters, or a broader destination."
+                      ? "Try a nearby PIN code, a city name, different dates or fewer filters. We only show approved, published stays."
                       : "Property owners are being onboarded. Check back soon — or list your own property."}
                   </p>
                   <Link href={hasAnyFilter ? "/stays" : "/list-your-property"} className="mt-5 inline-flex h-10 items-center rounded-full bg-forest-800 px-5 text-sm font-medium text-cream hover:bg-forest-700">

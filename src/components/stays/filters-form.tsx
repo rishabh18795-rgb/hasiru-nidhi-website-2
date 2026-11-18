@@ -23,6 +23,7 @@ export function StayFiltersForm({
   return (
     <form action={action} method="get" className="flex flex-col gap-5 p-5">
       {filters.q ? <input type="hidden" name="q" value={filters.q} /> : null}
+      {filters.pin ? <input type="hidden" name="pin" value={filters.pin} /> : null}
       {filters.checkin ? <input type="hidden" name="checkin" value={filters.checkin} /> : null}
       {filters.checkout ? <input type="hidden" name="checkout" value={filters.checkout} /> : null}
       <div>
