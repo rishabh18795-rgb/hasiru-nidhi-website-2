@@ -1,107 +1,115 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { Check } from "lucide-react";
 
 import { PageHero } from "@/components/site/page-hero";
-import { Reveal } from "@/components/site/reveal";
+import { SectionHeading } from "@/components/site/section-heading";
 import { LinkButton } from "@/components/site/link-button";
 import { CtaBand } from "@/components/site/cta-band";
-import { pricingTiers, images } from "@/lib/content";
-import { cn } from "@/lib/utils";
+import { images } from "@/lib/content";
+import { cancellationPolicies } from "@/lib/validation/property";
 import { basePath } from "@/lib/base-path";
 
 export const metadata: Metadata = {
-  title: "Pricing",
-  description:
-    "Transparent pricing for Hasiru Nidhi day visits, farmhouse overnights, weekend retreats and corporate offsites near Bengaluru.",
+  title: "Pricing: how stays are priced and booked",
+  description: "How property pricing works, what the price breakdown shows, how a booking request moves forward, and why online payment is not available yet.",
   alternates: { canonical: `${basePath}/pricing` },
 };
 
-function bookingHrefFor(tierName: string) {
-  // Corporate offsites are a group/enquiry-led conversation, not a
-  // self-serve booking — route those to Contact instead.
-  if (tierName === "Corporate Offsite") return "/contact";
-  return "/book?experience=nature-stay";
-}
+const breakdown = [
+  ["Nightly rate", "Set by the host. Some hosts set a different weekend rate."],
+  ["Extra-guest charge", "Some hosts charge for guests above a stated number."],
+  ["Cleaning fee", "A one-time charge, if the host has set one."],
+  ["Tax", "Shown as a percentage, if the host has set one."],
+  ["Minimum and maximum stay", "Shown on the listing, and applied when you choose dates."],
+];
+
+const process = [
+  ["Check the price", "Pick your dates and guests on the property page. The breakdown for your dates appears before you send anything."],
+  ["Send a request", "Sending a request costs nothing. The host accepts or declines it."],
+  ["Arrange payment", "Payment is not collected on this website yet. Advance and balance are arranged between you and the host once the request is accepted."],
+];
 
 export default function PricingPage() {
   return (
     <>
       <PageHero
         eyebrow="Pricing"
-        title="Simple, transparent tariffs."
-        description="Indicative tariffs for Hasiru Nidhi's own stays and experiences. Final prices and any applicable taxes are confirmed when you book."
-        image={images.mistyHills}
+        title="Know the price before you ask."
+        description="Each property sets its own price. The full breakdown for your dates is shown on the listing before you send a request."
+        image={images.cabinMisty}
         crumb="Pricing"
+        primaryCta={{ label: "Explore available stays", href: "/stays" }}
+        secondaryCta={{ label: "Cancellation policy", href: "/cancellation-policy" }}
       />
 
-      <section className="bg-cream py-28">
+      <section className="bg-cream py-24" aria-labelledby="how-priced">
         <div className="container-nidhi">
-          <div className="grid gap-6 lg:grid-cols-4">
-            {pricingTiers.map((tier) => (
-              <Reveal key={tier.name}>
-                <div
-                  className={cn(
-                    "flex h-full flex-col rounded-3xl bg-white p-7 ring-1 ring-forest-900/8",
-                    tier.featured && "ring-2 ring-forest-700"
-                  )}
-                >
-                  {tier.featured ? (
-                    <span className="w-fit rounded-full bg-forest-800 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-cream">
-                      Popular
-                    </span>
-                  ) : (
-                    <span className="h-[26px]" />
-                  )}
-                  <h3 className="mt-4 font-display text-xl text-forest-950">{tier.name}</h3>
-                  <div className="mt-3 flex items-baseline gap-1.5">
-                    <span className="font-display text-3xl text-forest-950">{tier.price}</span>
-                  </div>
-                  <p className="text-xs text-ink/50">{tier.unit}</p>
-                  <p className="mt-4 text-sm leading-relaxed text-ink/65">{tier.description}</p>
-                  <ul className="mt-5 flex flex-1 flex-col gap-2.5">
-                    {tier.features.map((feature) => (
-                      <li key={feature} className="flex items-start gap-2.5 text-sm text-ink/70">
-                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-forest-600" />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                  <LinkButton
-                    href={bookingHrefFor(tier.name)}
-                    size="lg"
-                    className={cn(
-                      "mt-7 rounded-full",
-                      tier.featured
-                        ? "bg-forest-800 text-cream hover:bg-forest-700"
-                        : "bg-forest-50 text-forest-900 hover:bg-forest-100"
-                    )}
-                  >
-                    Book Now
-                  </LinkButton>
-                </div>
-              </Reveal>
+          <SectionHeading eyebrow="Property pricing" title="Set by each host, shown in full." description="There is no single tariff, because every property is different. Instead of a rate card, each listing shows what a stay would cost for the dates you choose." />
+          <h2 id="how-priced" className="sr-only">What a price breakdown can include</h2>
+          <dl className="mt-12 grid gap-4 md:grid-cols-2">
+            {breakdown.map(([t, c]) => (
+              <div key={t} className="rounded-2xl bg-white p-6 ring-1 ring-forest-900/8">
+                <dt className="font-display text-lg text-forest-950">{t}</dt>
+                <dd className="mt-1 text-sm leading-relaxed text-ink/65">{c}</dd>
+              </div>
             ))}
+          </dl>
+          <p className="mt-6 text-sm text-ink/60">What appears depends on the host. If a charge is not shown on a listing, it has not been set.</p>
+        </div>
+      </section>
+
+      <section className="bg-forest-50 py-24" aria-labelledby="process-heading">
+        <div className="container-nidhi">
+          <SectionHeading eyebrow="From request to stay" title="Three steps, and payment is not one of them yet." />
+          <h2 id="process-heading" className="sr-only">How booking and payment work</h2>
+          <ol className="mt-12 grid gap-6 md:grid-cols-3">
+            {process.map(([t, c], i) => (
+              <li key={t} className="rounded-3xl bg-white p-7 ring-1 ring-forest-900/8">
+                <span className="font-display text-4xl text-sand-500">{i + 1}</span>
+                <h3 className="mt-2 font-display text-xl text-forest-950">{t}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-ink/65">{c}</p>
+              </li>
+            ))}
+          </ol>
+          <p className="mt-8 max-w-3xl rounded-2xl bg-white p-5 text-sm leading-relaxed text-ink/70 ring-1 ring-forest-900/8"><strong className="text-forest-950">Online payment is not set up on this website.</strong> Hasiru Nidhi does not currently collect or hold guest payments. Please do not send money to anyone claiming to take payment on our behalf. When online payment is introduced, this page will say so.</p>
+        </div>
+      </section>
+
+      <section className="bg-cream py-24" aria-labelledby="cancel-heading">
+        <div className="container-nidhi max-w-4xl">
+          <SectionHeading eyebrow="Cancellations" title="Each listing shows its policy." />
+          <h2 id="cancel-heading" className="sr-only">Cancellation policies</h2>
+          <ul className="mt-10 space-y-3">
+            {cancellationPolicies.map((p) => (
+              <li key={p.value} className="rounded-2xl bg-white p-5 ring-1 ring-forest-900/8"><span className="font-medium capitalize text-forest-950">{p.value}</span>: {p.label.split("—")[1]?.trim()}</li>
+            ))}
+          </ul>
+          <p className="mt-6 text-sm text-ink/60">Read the full <Link href="/cancellation-policy" className="underline">cancellation and refund policy</Link>.</p>
+        </div>
+      </section>
+
+      <section className="bg-sand-50 py-20">
+        <div className="container-nidhi grid gap-8 lg:grid-cols-2">
+          <div className="rounded-3xl bg-white p-8 ring-1 ring-forest-900/8">
+            <h2 className="font-display text-2xl text-forest-950">The Hasiru Nidhi farm</h2>
+            <p className="mt-3 text-base leading-relaxed text-ink/70">Prices for visits to our own farm are confirmed by our team when you enquire. There is no published rate card.</p>
+            <LinkButton href="/book" className="mt-5 rounded-full bg-forest-800 px-6 text-cream hover:bg-forest-700">Send an enquiry</LinkButton>
           </div>
-          <Reveal delay={0.1}>
-            <p className="mt-10 max-w-2xl text-sm leading-relaxed text-ink/50">
-              Rates shown are per adult and current as of this season; they
-              may vary during peak weekends and public holidays. Children
-              under 6 stay and eat free; ages 6–12 are charged 50% of the
-              adult rate. Group and corporate pricing is quoted separately —
-              see our{" "}
-              <Link href="/contact" className="underline underline-offset-2">
-                contact page
-              </Link>{" "}
-              to enquire.
-            </p>
-          </Reveal>
+          <div className="rounded-3xl bg-white p-8 ring-1 ring-forest-900/8">
+            <h2 className="font-display text-2xl text-forest-950">Gardening Services</h2>
+            <p className="mt-3 text-base leading-relaxed text-ink/70">Gardening work is quoted separately after an enquiry. It is not part of stay pricing.</p>
+            <LinkButton href="/gardening#enquire" variant="outline" className="mt-5 rounded-full border-forest-800/25 px-6 text-forest-900 hover:bg-forest-900/5">Gardening enquiry</LinkButton>
+          </div>
         </div>
       </section>
 
       <CtaBand
-        title="Ready to lock in your dates?"
-        description="Payment arrangements are confirmed when you book. Prices shown are indicative."
+        title="Ready to see real prices?"
+        description="Search for a stay and choose your dates to see the full breakdown."
+        primaryLabel="Explore available stays"
+        primaryHref="/stays"
+        secondaryLabel="List your property"
+        secondaryHref="/list-your-property"
       />
     </>
   );

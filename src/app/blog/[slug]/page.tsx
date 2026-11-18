@@ -76,8 +76,9 @@ export default async function BlogPostPage({ params }: { params: Params }) {
             <h1 className="mt-4 font-display text-4xl leading-[1.1] tracking-tight text-forest-950 sm:text-5xl">
               {post.title}
             </h1>
-            <p className="mt-4 text-sm text-ink/45">
-              {new Date(post.date).toLocaleDateString("en-IN", {
+            <p className="mt-5 text-lg leading-relaxed text-ink/70">{post.excerpt}</p>
+            <p className="mt-4 text-sm text-ink/55">
+              By the Hasiru Nidhi team · {new Date(post.date).toLocaleDateString("en-IN", {
                 day: "numeric",
                 month: "long",
                 year: "numeric",
@@ -88,7 +89,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
           <Reveal delay={0.14} className="relative mt-10 aspect-[16/9] overflow-hidden rounded-[2rem]">
             <Image
               src={post.image}
-              alt={post.title}
+              alt=""
               fill
               sizes="(min-width: 1024px) 768px, 90vw"
               className="object-cover"
@@ -103,9 +104,28 @@ export default async function BlogPostPage({ params }: { params: Params }) {
               </p>
             ))}
           </Reveal>
+
+          <aside className="mt-16 border-t border-forest-900/10 pt-10" aria-labelledby="more-reading">
+            <h2 id="more-reading" className="font-display text-xl text-forest-950">Keep reading</h2>
+            <ul className="mt-4 space-y-3">
+              {blogPosts.filter((p) => p.slug !== post.slug).map((p) => (
+                <li key={p.slug}>
+                  <Link href={`/blog/${p.slug}`} className="text-base text-forest-700 underline underline-offset-4 hover:text-forest-900">{p.title}</Link>
+                  <span className="ml-2 text-xs text-ink/50">{p.category}</span>
+                </li>
+              ))}
+            </ul>
+          </aside>
         </div>
       </article>
-      <CtaBand />
+      <CtaBand
+        title="Find a stay that fits."
+        description="Search nature stays by PIN code or place, and see the full price before you ask."
+        primaryLabel="Explore available stays"
+        primaryHref="/stays"
+        secondaryLabel="All experiences"
+        secondaryHref="/experiences"
+      />
     </>
   );
 }

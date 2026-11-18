@@ -1,180 +1,103 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { Metadata } from "next";
-import { Bike, Clock, Gauge, MapPinned, Shirt, Users } from "lucide-react";
+import { ArrowUpRight, Droplets, HardHat, Sunrise } from "lucide-react";
 
 import { PageHero } from "@/components/site/page-hero";
 import { SectionHeading } from "@/components/site/section-heading";
-import { Reveal, StaggerGroup, StaggerItem } from "@/components/site/reveal";
+import { Reveal } from "@/components/site/reveal";
+import { LinkButton } from "@/components/site/link-button";
 import { CtaBand } from "@/components/site/cta-band";
-import { WhatsAppButton } from "@/components/site/whatsapp-button";
 import { images } from "@/lib/content";
 import { basePath } from "@/lib/base-path";
 
 export const metadata: Metadata = {
-  title: "Cycling",
-  description:
-    "Guided cycling trails through lush Karnataka countryside at Hasiru Nidhi, near Bengaluru — paced for scenery, not speed.",
+  title: "Cycling and Outdoors: slow rides near nature stays",
+  description: "Cycling as part of a nature stay: why to ride slowly, how to find cycling-friendly stays, and sensible habits for a safe ride.",
   alternates: { canonical: `${basePath}/cycling` },
 };
 
-const stats = [
-  { icon: MapPinned, label: "Route Length", value: "8 km loop" },
-  { icon: Clock, label: "Duration", value: "45–60 min" },
-  { icon: Gauge, label: "Difficulty", value: "Easy, gentle grades" },
-  { icon: Bike, label: "Bikes", value: "Provided, all sizes" },
-];
-
-const routes = [
-  {
-    name: "The Farmland Loop",
-    time: "Sunrise or late afternoon",
-    copy: "Our signature ride — a flat, easy loop past paddy fields, the pond and the boundary tree line. Suitable for first-time riders and children over ten.",
-    image: images.cyclistSoloHill,
-  },
-  {
-    name: "The Village Extension",
-    time: "Seasonal, weather permitting",
-    copy: "For guests who want more distance, this extends the loop through the neighbouring village — a longer, slightly hillier ride best suited to confident riders.",
-    image: images.cyclistsDuo,
-  },
-];
-
-const practicalInfo = [
-  {
-    icon: Users,
-    title: "Who It's For",
-    copy: "First-time riders, families with children over ten, and anyone who'd rather notice the scenery than beat a personal best. No cycling experience needed.",
-  },
-  {
-    icon: Shirt,
-    title: "What to Bring",
-    copy: "Comfortable closed shoes and a light layer for early starts. We provide the bicycle, helmet and water bottle — no gear needed from your end.",
-  },
-  {
-    icon: Gauge,
-    title: "Safety on the Trail",
-    copy: "Helmets are compulsory and provided. Rides stay on the marked farm trail at a leisurely pace; our team briefs every rider before they set off.",
-  },
+const tips = [
+  { icon: HardHat, title: "Helmet and bicycle check", copy: "Wear a helmet, and check the brakes, tyres and saddle before you set off." },
+  { icon: Sunrise, title: "Ride in daylight", copy: "Early mornings and late afternoons are cooler and quieter. Tell someone where you are going." },
+  { icon: Droplets, title: "Water and sun cover", copy: "Carry drinking water, wear a hat and sunscreen, and take a break when you need one." },
 ];
 
 export default function CyclingPage() {
   return (
     <>
       <PageHero
-        eyebrow="Pillar 02 — Ride"
-        title="Ride slower. See more."
-        description="Our cycling trail was never built for speed. It's a route chosen for what you notice at ten kilometres an hour — a heron at the pond, the tree-lined lanes, the particular gold of morning light over the fields."
+        eyebrow="Cycling and outdoors"
+        title="Slow miles, open country."
+        description="Riding for the view rather than the stopwatch. Cycling is one of the experiences a stay can offer, and a good reason to choose a place in the countryside."
         image={images.cyclistSoloHill}
-        crumb="Cycling"
-        primaryCta={{ label: "Book a Cycling Experience", href: "/book?experience=cycling" }}
-        secondaryCta={{ label: "Ask About Cycling", href: "/contact" }}
+        crumb="Cycling & Outdoors"
+        primaryCta={{ label: "Find cycling-friendly stays", href: "/stays?category=cycling-friendly" }}
+        secondaryCta={{ label: "Read the journal guide", href: "/blog/the-slow-case-for-cycling-through-farmland" }}
       />
 
       <section className="bg-cream py-24">
-        <div className="container-nidhi">
-          <StaggerGroup className="grid grid-cols-2 gap-6 lg:grid-cols-4">
-            {stats.map((stat) => (
-              <StaggerItem key={stat.label}>
-                <div className="rounded-2xl bg-forest-50 p-6 text-center">
-                  <stat.icon className="mx-auto h-6 w-6 text-forest-600" />
-                  <p className="mt-3 font-display text-lg text-forest-950">{stat.value}</p>
-                  <p className="mt-1 text-xs uppercase tracking-wide text-ink/50">{stat.label}</p>
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerGroup>
-        </div>
-      </section>
-
-      <section className="bg-sand-50 py-28">
-        <div className="container-nidhi">
-          <SectionHeading
-            eyebrow="The Routes"
-            title="Two rides, chosen by how far you want to go."
-          />
-          <div className="mt-14 grid gap-8 lg:grid-cols-2">
-            {routes.map((route) => (
-              <Reveal key={route.name}>
-                <div className="overflow-hidden rounded-[2rem] bg-white ring-1 ring-forest-900/8">
-                  <div className="relative aspect-[16/10]">
-                    <Image
-                      src={route.image}
-                      alt={route.name}
-                      fill
-                      sizes="(min-width: 1024px) 45vw, 90vw"
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="p-8">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-forest-600">
-                      {route.time}
-                    </p>
-                    <h3 className="mt-2 font-display text-2xl text-forest-950">{route.name}</h3>
-                    <p className="mt-3 text-sm leading-relaxed text-ink/65">{route.copy}</p>
-                  </div>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-forest-950 py-28">
-        <div className="container-nidhi">
-          <SectionHeading
-            eyebrow="Good to Know"
-            title="No spandex required."
-            description="Rides are self-paced and unguided during the day, with an optional guided sunrise ride available on request for overnight guests."
-            tone="light"
-          />
-          <StaggerGroup className="mt-14 grid gap-6 sm:grid-cols-3">
-            {practicalInfo.map((item) => (
-              <StaggerItem key={item.title}>
-                <div className="h-full rounded-2xl bg-cream/5 p-6 ring-1 ring-cream/10">
-                  <item.icon className="h-6 w-6 text-sand-300" />
-                  <h3 className="mt-4 font-display text-lg text-cream">{item.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-cream/60">{item.copy}</p>
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerGroup>
-        </div>
-      </section>
-
-      <section className="bg-cream py-28">
         <div className="container-nidhi grid gap-14 lg:grid-cols-2 lg:items-center">
           <div>
             <SectionHeading
-              eyebrow="Bring Your Own, or Use Ours"
-              title="Cycling is part of every stay, not an add-on."
-              description="Whether you're here for a Day Escape or a full weekend, the trail and the bicycles are included at no extra cost — no separate booking needed once you've planned your visit."
+              eyebrow="Why ride slowly"
+              title="The countryside is best at ten kilometres an hour."
+              description="At an easy pace you notice a farmer at work, a bird at the edge of a pond, the way early light settles on a field. You do not need to be a cyclist, and you do not need the right kit. You need a sensible bicycle, a quiet road and time."
             />
           </div>
-          <Reveal delay={0.1} className="relative aspect-[4/3] overflow-hidden rounded-[2rem]">
-            <Image
-              src={images.bicycleDetail}
-              alt="A quiet countryside road on the Hasiru Nidhi cycling trail"
-              fill
-              sizes="(min-width: 1024px) 45vw, 90vw"
-              className="object-cover"
-            />
+          <Reveal className="relative aspect-[4/3] overflow-hidden rounded-[2.5rem]">
+            <Image src={images.cyclistsDuo} alt="Two cyclists riding on a tree-lined road in the Karnataka countryside" fill sizes="(min-width: 1024px) 45vw, 92vw" className="object-cover" />
           </Reveal>
         </div>
       </section>
 
-      <section className="bg-cream py-14">
-        <div className="container-nidhi flex flex-col items-center gap-4 text-center">
-          <p className="text-sm text-ink/65">Planning a group outing or a cycling day for friends or colleagues?</p>
-          <WhatsAppButton topic="group" label="Ask about group cycling on WhatsApp" />
+      <section className="bg-forest-50 py-24" aria-labelledby="how-heading">
+        <div className="container-nidhi max-w-4xl">
+          <SectionHeading eyebrow="How it works here" title="A feature of stays, not a booking of its own." />
+          <h2 id="how-heading" className="sr-only">How cycling works on Hasiru Nidhi</h2>
+          <div className="mt-8 space-y-5 text-base leading-relaxed text-ink/75">
+            <p>Hasiru Nidhi does not sell cycling tours or run routes of its own through this website. Instead, hosts can mark a property as <strong>cycling-friendly</strong> and tag it with the <strong>cycling trails</strong> experience, which means it offers things like bicycles, suggested routes or early-start breakfasts.</p>
+            <p>What exactly a stay offers is up to the host and is described on its page. Check the listing, and ask the host about bicycles, routes and local conditions before you travel.</p>
+          </div>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <LinkButton href="/stays?category=cycling-friendly" size="lg" className="rounded-full bg-forest-800 px-7 text-cream hover:bg-forest-700">Find cycling-friendly stays <ArrowUpRight className="h-4 w-4" /></LinkButton>
+            <LinkButton href="/stays?experiences=cycling-trails" variant="outline" size="lg" className="rounded-full border-forest-800/25 px-7 text-forest-900 hover:bg-forest-900/5">Stays with cycling trails</LinkButton>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-cream py-24" aria-labelledby="safe-heading">
+        <div className="container-nidhi">
+          <SectionHeading eyebrow="Before you ride" title="Three habits for a safe, unhurried ride." />
+          <h2 id="safe-heading" className="sr-only">Safety habits for an unhurried ride</h2>
+          <ul className="mt-12 grid gap-6 md:grid-cols-3">
+            {tips.map((t) => (
+              <li key={t.title} className="rounded-3xl bg-white p-7 ring-1 ring-forest-900/8">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-forest-800 text-cream"><t.icon className="h-5 w-5" aria-hidden="true" /></span>
+                <h3 className="mt-5 font-display text-lg text-forest-950">{t.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-ink/65">{t.copy}</p>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-8 text-sm text-ink/60">General guidance only. Always follow your host&apos;s advice about local roads, weather and conditions.</p>
+        </div>
+      </section>
+
+      <section className="bg-sand-50 py-20">
+        <div className="container-nidhi max-w-3xl">
+          <Reveal>
+            <h2 className="font-display text-2xl text-forest-950">Cycling at the Hasiru Nidhi farm</h2>
+            <p className="mt-3 text-base leading-relaxed text-ink/70">If you would like to ride during a visit to our own farm, mention it when you <Link href="/book?experience=cycling" className="underline">send an enquiry</Link>. Our team will tell you what can be arranged for your dates. Nothing is booked until you hear back from us.</p>
+          </Reveal>
         </div>
       </section>
 
       <CtaBand
-        title="Ready to ride?"
-        description="Tell us your dates and how many are coming — cycling is included in every visit we plan."
-        primaryLabel="Book a Cycling Experience"
-        primaryHref="/book?experience=cycling"
-        secondaryLabel="Ask About Cycling"
+        title="Plan a ride-friendly escape."
+        description="Look for cycling-friendly stays, or tell us what you have in mind."
+        primaryLabel="Find cycling-friendly stays"
+        primaryHref="/stays?category=cycling-friendly"
+        secondaryLabel="Ask our team"
         secondaryHref="/contact"
       />
     </>

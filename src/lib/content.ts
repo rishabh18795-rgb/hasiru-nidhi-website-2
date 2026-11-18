@@ -72,7 +72,7 @@ export const pillars: Pillar[] = [
     label: "01 — Stay",
     title: "Nature Stay",
     summary:
-      "Farmhouse rooms and open-air cottages built into the landscape, where the loudest sound after dark is a cricket chorus.",
+      "Farm stays, cottages and eco-retreats set in the landscape, listed by their owners and reviewed by our team.",
     image: images.cabinMisty,
   },
   {
@@ -82,7 +82,7 @@ export const pillars: Pillar[] = [
     label: "02 — Ride",
     title: "Cycling",
     summary:
-      "Quiet backroads, working farmland and gentle climbs — guided rides paced for first-timers and early risers alike.",
+      "Quiet roads and farm tracks, ridden at the pace of the scenery. Look for cycling-friendly stays.",
     image: images.cyclistSoloHill,
   },
   {
@@ -116,64 +116,64 @@ export interface ExperienceEntry {
 
 export const experiences: ExperienceEntry[] = [
   {
-    title: "Nature Stay",
-    description:
-      "Farmhouse rooms and cottages framed by field and forest, designed for uninterrupted rest.",
-    image: images.cabinMisty,
-    href: "/nature-stay",
-  },
-  {
-    title: "Cycling Trails",
-    description:
-      "Guided rides through working farmland on routes chosen for scenery over speed.",
+    title: "Cycling trails",
+    description: "Unhurried rides on quiet roads and farm tracks, at the pace of the scenery rather than the clock.",
     image: images.cyclistSoloHill,
     href: "/cycling",
   },
   {
-    title: "Gardening & Growing",
-    description:
-      "A working kitchen garden you can join, from seed tray to harvest basket.",
+    title: "Gardening sessions",
+    description: "Time among beds, seedlings and compost: a gentle way to learn how food and flowers grow.",
     image: images.seedlingsPots,
-    href: "/gardening",
+    href: "/stays?experiences=gardening-sessions",
   },
   {
-    title: "Landscaping & Grounds",
-    description:
-      "Native planting and thoughtful land design across the property, open to walk and study.",
-    image: images.rosePathway,
-    href: "/landscaping",
-  },
-  {
-    title: "Bonfire Evenings",
-    description:
-      "Firelight, quiet conversation and a sky full of stars once the sun goes down.",
-    image: images.bonfireGroup,
-  },
-  {
-    title: "Healthy, Honest Food",
-    description:
-      "Meals built around what the garden gives that week, served at a shared table.",
-    image: images.breakfastSpread,
-  },
-  {
-    title: "Village Experiences",
-    description:
-      "Walks into the neighbouring village — its bazaar, its bullock carts, its everyday rhythm.",
+    title: "Nature walks",
+    description: "Slow walks for trees, birds and the small details that disappear at speed.",
     image: images.forestRoadGold,
+    href: "/stays?experiences=nature-walks",
   },
   {
-    title: "Family Experiences",
-    description:
-      "Open ground, real mud and no screens — a day the children will describe long after.",
-    image: images.kidsPlayingMisty,
+    title: "Bonfire evenings",
+    description: "Firelight, open sky and conversation once the day winds down.",
+    image: images.bonfireGroup,
+    href: "/stays?experiences=bonfire-evenings",
   },
   {
-    title: "Corporate Retreats",
-    description:
-      "Offsites built around outdoor work, shared meals and enough quiet to think clearly.",
-    image: images.corporateRusticMeeting,
+    title: "Farm-to-table meals",
+    description: "Simple meals shaped by what the season and the garden offer.",
+    image: images.breakfastSpread,
+    href: "/stays?experiences=farm-to-table-meals",
+  },
+  {
+    title: "Village walks",
+    description: "A walk into nearby village life, with a local guide where the host arranges one.",
+    image: images.mistyHills,
+    href: "/stays?experiences=village-walk",
+  },
+  {
+    title: "Stargazing",
+    description: "Dark-sky evenings, away from the glow of the city.",
+    image: images.milkyWay,
+    href: "/stays?experiences=stargazing",
+  },
+  {
+    title: "Yoga and slow mornings",
+    description: "Outdoor movement, rest and nowhere to be before breakfast.",
+    image: images.pineForestSoft,
+    href: "/stays?experiences=yoga-wellness",
   },
 ];
+
+/** The platform's real stay categories (the same ones hosts choose from and guests can filter by). */
+export const stayCategories = [
+  { slug: "farm-stay", name: "Farm stays", description: "Stay on a working farm or garden estate, close to the growing season and the people who tend it.", image: images.farmhouseCottage },
+  { slug: "village-homestay", name: "Village homestays", description: "Live alongside a local host family and see everyday village life from the inside.", image: images.mistyHills },
+  { slug: "cottage", name: "Cottages", description: "Private cottages set in nature, for guests who want space and quiet.", image: images.cabinMisty },
+  { slug: "eco-retreat", name: "Eco-retreats", description: "Low-impact stays built around the landscape rather than on top of it.", image: images.forestLightBeam },
+  { slug: "family-getaway", name: "Family getaways", description: "Easy, safe stays that work for children and grandparents alike.", image: images.kidsPlayingMisty },
+  { slug: "cycling-friendly", name: "Cycling-friendly stays", description: "Stays that offer bicycles, safe routes and early-start breakfasts.", image: images.cyclistsDuo },
+] as const;
 
 export interface Testimonial {
   quote: string;
@@ -188,138 +188,45 @@ export const testimonials: Testimonial[] = [];
 export interface Package {
   slug: string;
   name: string;
-  duration: string;
   bestFor: string;
   description: string;
-  inclusions: string[];
   image: string;
   featured?: boolean;
 }
 
+/**
+ * Experience packages at the Hasiru Nidhi farm are planned through an enquiry. Prices, inclusions, timings and availability are NOT
+ * published here because none of them has been confirmed by the business; the team provides them when someone enquires.
+ */
 export const packages: Package[] = [
   {
     slug: "day-escape",
-    name: "The Day Escape",
-    duration: "9 AM – 6 PM",
-    bestFor: "First visits, small groups",
-    description:
-      "A full day on the grounds — garden walk, a short cycling loop, and a farm-table lunch — without committing to an overnight stay.",
-    inclusions: [
-      "Guided garden & grounds walk",
-      "Leisure cycling loop (bikes provided)",
-      "Farm-table lunch",
-      "Evening tea and snacks",
-    ],
+    name: "A day on the farm",
+    bestFor: "First visits and small groups",
+    description: "A day outdoors without an overnight stay: time in the garden, a gentle walk or ride, and a meal at the table.",
     image: images.gardeningTools,
   },
   {
     slug: "farmhouse-overnight",
-    name: "Farmhouse Overnight",
-    duration: "1 Night / 2 Days",
-    bestFor: "Couples, families, small groups",
-    description:
-      "Our signature stay — a night in a farmhouse room, bonfire under open sky, and a full day of nature-led experiences.",
-    inclusions: [
-      "Overnight farmhouse or cottage stay",
-      "All meals (dinner, breakfast, lunch)",
-      "Bonfire evening",
-      "Cycling trail & garden walk",
-      "Village walk (seasonal)",
-    ],
+    name: "A night on the farm",
+    bestFor: "Couples, families and small groups",
+    description: "One night close to the land, with an evening outdoors and a slow morning after.",
     image: images.farmhouseCottage,
     featured: true,
   },
   {
     slug: "weekend-retreat",
-    name: "The Weekend Retreat",
-    duration: "2 Nights / 3 Days",
-    bestFor: "Slow travellers, small groups",
-    description:
-      "For guests who want to properly unhurry — two full days across cycling, gardening, village walks and long, unscheduled afternoons.",
-    inclusions: [
-      "2 nights farmhouse or cottage stay",
-      "All meals, both days",
-      "Cycling trail, garden immersion, village walk",
-      "Two bonfire evenings",
-      "One guided nature session (birding or stargazing, seasonal)",
-    ],
+    name: "A weekend retreat",
+    bestFor: "Slow travellers and small groups",
+    description: "A longer stay for guests who want unscheduled afternoons as well as planned experiences.",
     image: images.cabinMisty,
   },
   {
     slug: "corporate-offsite",
-    name: "Corporate Offsite",
-    duration: "Custom, day or overnight",
-    bestFor: "Teams of 10–60",
-    description:
-      "A working offsite built around the outdoors — team activities on the grounds, meeting-ready spaces, and food that keeps energy steady through the day.",
-    inclusions: [
-      "Private meeting/breakout space",
-      "Outdoor team activities (garden, cycling, or lawn games)",
-      "Full-day catering",
-      "Custom itinerary & dedicated coordinator",
-    ],
+    name: "A team day outdoors",
+    bestFor: "Teams planning an offsite",
+    description: "An outdoor-led day for a team, planned around your group size, goals and dates.",
     image: images.corporateRusticMeeting,
-  },
-];
-
-export interface PricingTier {
-  name: string;
-  price: string;
-  unit: string;
-  description: string;
-  features: string[];
-  featured?: boolean;
-}
-
-export const pricingTiers: PricingTier[] = [
-  {
-    name: "Day Visit",
-    price: "₹1,800",
-    unit: "per adult",
-    description: "Grounds access, one guided activity and a farm-table lunch.",
-    features: [
-      "9 AM – 6 PM access",
-      "One guided experience",
-      "Farm-table lunch included",
-      "Children under 6 free",
-    ],
-  },
-  {
-    name: "Farmhouse Overnight",
-    price: "₹6,500",
-    unit: "per adult, twin sharing",
-    description: "Our most-booked stay — a full night and two days on the grounds.",
-    features: [
-      "1 night in a farmhouse room",
-      "All meals included",
-      "Bonfire evening",
-      "Cycling & garden walk",
-    ],
-    featured: true,
-  },
-  {
-    name: "Weekend Retreat",
-    price: "₹11,800",
-    unit: "per adult, twin sharing",
-    description: "Two nights, unhurried — for guests who want the fullest experience.",
-    features: [
-      "2 nights, farmhouse or cottage",
-      "All meals, both days",
-      "Two bonfire evenings",
-      "One seasonal nature session",
-    ],
-  },
-  {
-    name: "Corporate Offsite",
-    price: "On request",
-    unit: "custom per group",
-    description: "Priced by group size, duration and activities selected.",
-    features: [
-      "Private breakout space",
-      "Custom activity itinerary",
-      "Full-day catering",
-      "Dedicated coordinator",
-    ],
   },
 ];
 
@@ -372,37 +279,37 @@ export const faqs: FaqEntry[] = [
   {
     question: "Can we visit for the day without an overnight stay?",
     answer:
-      "Yes — the Day Escape package runs 9 AM to 6 PM and includes a guided activity and lunch. Day visits are by prior booking only; we don't accept walk-ins so we can keep group sizes comfortable.",
+      "Day visits to our farm are arranged by enquiry. Use the Farm Visit Enquiry page to tell us your date and group size. Our team replies to confirm timings, what is included and the cost, and nothing is booked until you hear back.",
   },
   {
-    question: "Is Hasiru Nidhi suitable for young children and older guests?",
+    question: "Is it suitable for young children and older guests?",
     answer:
-      "Very much so. The grounds are flat to gently sloped with paved and packed-earth paths. We ask that young children be supervised near the pond and garden beds, and we're happy to adapt activities for mobility needs — just let us know when booking.",
+      "Suitability depends on the property and the activity. For our own farm, tell our team about young children, older guests or mobility needs when you enquire. For a marketplace stay, check the listing and ask the host before you request.",
   },
   {
-    question: "What is the food like, and can you accommodate dietary needs?",
+    question: "What about food and dietary needs?",
     answer:
-      "Meals are vegetarian, largely sourced from our own garden and local farms, and served at a shared table. We accommodate Jain, vegan and common allergy requirements with advance notice.",
+      "Meals vary by property, and each listing says what the host can provide. For a visit to our farm, mention any dietary needs when you enquire so our team can confirm what is possible.",
   },
   {
     question: "Do you allow pets?",
     answer:
-      "Well-behaved leashed pets are welcome on the grounds. Please mention this at the time of booking so we can prepare the right room and manage introductions to our own farm animals.",
+      "Pet rules are set by each host and appear in the house rules on the listing. If the listing does not say, ask the host before you request. For a visit to our farm, ask when you enquire.",
   },
   {
     question: "What should we pack?",
     answer:
-      "Comfortable closed shoes for the garden and cycling trail, a light layer for the evening, and sun protection. We provide bicycles, helmets and gardening tools — no equipment needed from your end.",
+      "Comfortable closed shoes, a light layer for the evening, a hat, sun protection and drinking water suit most nature stays. What a property provides, such as bicycles or tools, is described on its listing, so check it or ask the host.",
   },
   {
     question: "How do I book an experience at the Hasiru Nidhi farm?",
     answer:
-      "Use the Book Your Experience page to tell us what you would like and when. Our team replies to confirm availability and arrangements; nothing is booked until you hear back. The website does not take online payments yet.",
+      "Use the Farm Visit Enquiry page to tell us what you would like and when. Our team replies to confirm availability and arrangements; nothing is booked until you hear back. The website does not take online payments yet.",
   },
   {
-    question: "Can Hasiru Nidhi host a group larger than 20 people?",
+    question: "Can I bring a large group?",
     answer:
-      "Yes, for both leisure groups and corporate offsites. Larger groups typically book the full property — reach out via the Contact page with your headcount and dates and we'll put together a custom plan.",
+      "Group limits differ by property, and each listing shows its maximum guests. For a larger group at our farm, send an enquiry with your headcount and dates and our team will tell you what is possible.",
   },
 ];
 
@@ -420,70 +327,66 @@ export interface BlogPost {
 export const blogPosts: BlogPost[] = [
   {
     slug: "why-a-kitchen-garden-changes-how-you-eat",
-    title: "Why a Kitchen Garden Changes How You Eat",
-    excerpt:
-      "There is a specific kind of hunger that only shows up after an hour of weeding. Here's what our working garden has taught us about food.",
-    date: "2026-05-14",
-    readTime: "6 min read",
+    title: "Why a kitchen garden changes how you eat",
+    excerpt: "An hour among growing things shifts how people think about food. A short guide to making the most of garden time on a nature stay.",
+    date: "2026-11-18",
+    readTime: "3 min read",
     category: "Gardening",
     image: images.seedlingsPots,
     content: [
-      "Most of what we grow at Hasiru Nidhi never makes it to a supplier's crate. It goes from bed to basket to kitchen, usually within a few hours, which changes the food in ways that are hard to describe until you've tasted it — a tomato that still smells faintly of its own vine, greens that haven't spent three days in transit.",
-      "The garden also changes the pace of a meal. When you've watched something grow from seed tray to harvest, you tend to eat it more slowly, and cook it more simply. We've found ourselves doing less to the food, not more, letting a good carrot or a ripe brinjal carry the plate on its own.",
-      "For guests, an hour in the garden before lunch tends to do something similar. People who've never thought much about where a vegetable comes from leave the beds with soil under their nails and, more often than not, a noticeably better appetite.",
+      "Food that has travelled from bed to basket in a few hours tastes different, and it asks to be cooked simply. A vegetable straight from the soil rarely needs much more than heat, salt and a little patience.",
+      "Spending time in a garden also changes the pace of a meal. When you have watched something grow from a seedling, you tend to eat it more slowly. Even an hour of weeding or watering can make an ordinary lunch feel earned.",
+      "If a stay on Hasiru Nidhi offers gardening sessions or kitchen-garden access, the listing will say so. Wear closed shoes, bring a hat and water, and let the host guide you: gardens are working places, not displays.",
     ],
   },
   {
     slug: "the-slow-case-for-cycling-through-farmland",
-    title: "The Slow Case for Cycling Through Farmland",
-    excerpt:
-      "Our cycling trail was never designed for speed. Here's why we built it around scenery, gradient and quiet instead.",
-    date: "2026-04-02",
-    readTime: "5 min read",
+    title: "The slow case for cycling through the countryside",
+    excerpt: "Riding for the view rather than the stopwatch: what changes, and a few sensible habits for a safe, unhurried ride.",
+    date: "2026-11-18",
+    readTime: "3 min read",
     category: "Cycling",
     image: images.cyclistSoloHill,
     content: [
-      "When people hear 'cycling trail,' they often picture spandex and stopwatches. Ours is closer to a long, unhurried walk on two wheels — a loop through working farmland, past tanks and tree lines, paced so a first-time rider and a seasoned one can comfortably ride together.",
-      "We chose the route for what you'd see at ten kilometres an hour rather than thirty: a farmer transplanting rice, a heron working the edge of a pond, the particular gold that morning light takes on over a paddy field in February.",
-      "Most guests tell us the same thing afterward — that twenty minutes in, they stopped thinking about the ride and started just looking around. That's the whole design brief, really.",
+      "A slow ride has a different purpose from a fast one. At an easy pace you notice a farmer at work, a bird at the edge of a pond, the way early light settles on a field. That is the whole point of riding for pleasure.",
+      "A few habits make an unhurried ride safer. Wear a helmet, carry water, ride in daylight, keep to quiet roads and tracks, and tell someone where you are going. Check the bicycle before you set off, especially the brakes and tyres.",
+      "Some stays are listed as cycling-friendly and may offer bicycles or suggest routes. Always confirm with the host what is available before you travel, and follow their advice about local roads and conditions.",
     ],
   },
   {
     slug: "planning-a-corporate-offsite-that-doesnt-feel-like-work",
-    title: "Planning a Corporate Offsite That Doesn't Feel Like Work",
-    excerpt:
-      "The best offsites we've hosted spend less time in a conference room and more time outdoors. Here's how we structure a day.",
-    date: "2026-02-20",
-    readTime: "7 min read",
-    category: "Corporate Retreats",
+    title: "Planning a team day outdoors",
+    excerpt: "A practical checklist for an outdoor-led team day: purpose, pace, food and a proper break from routine.",
+    date: "2026-11-18",
+    readTime: "4 min read",
+    category: "Team days",
     image: images.corporateRusticMeeting,
     content: [
-      "The teams that get the most out of a day at Hasiru Nidhi rarely spend it sitting down. We usually recommend front-loading the outdoors — a garden activity or cycling session first thing, while the morning is still cool — and saving indoor discussion for the part of the day when energy naturally dips.",
-      "A shared, unhurried meal does more for a team than most icebreakers we've seen. Something happens when people are passing dishes around a long table that doesn't happen in a seminar room.",
-      "If you're planning an offsite elsewhere, the lesson travels: build the day around a change of environment and a genuine break in routine, not just a change of address for the same meeting.",
+      "Start with a single purpose. A team day outdoors works best when you know whether it is meant to plan, to connect or simply to rest. Everything else, from the schedule to the venue, follows from that.",
+      "Front-load the outdoors. Put the active or hands-on part early, when energy is high, and keep any discussion for a quieter, shaded stretch later. Leave real gaps in the day; people connect in the unscheduled minutes.",
+      "Plan food and logistics early: group size, dietary needs, travel time, shade, drinking water and a plan for rain. If you would like to explore a team day at the Hasiru Nidhi farm, send us an enquiry with your headcount and dates and our team will reply with what is possible.",
     ],
   },
   {
     slug: "a-field-guide-to-our-bonfire-evenings",
-    title: "A Field Guide to Our Bonfire Evenings",
-    excerpt:
-      "What actually happens after dinner, once the fire is lit and the sky opens up.",
-    date: "2026-01-11",
-    readTime: "4 min read",
-    category: "Nature Stay",
+    title: "A field guide to a good bonfire evening",
+    excerpt: "What makes an evening by the fire work, and how to enjoy it safely and considerately.",
+    date: "2026-11-18",
+    readTime: "3 min read",
+    category: "Nature stays",
     image: images.bonfireGroup,
     content: [
-      "There's no programme for our bonfire evenings, and that's deliberate. The fire is lit shortly after dinner, chairs are arranged loosely around it, and what happens next is mostly up to the group — conversation, quiet, sometimes a guitar if a guest has brought one.",
-      "On clear nights, we point out what we can of the sky. Away from city glow, the difference is immediate; guests who've never consciously looked for a constellation usually find one within a few minutes.",
-      "It's a small, low-effort part of the stay, and consistently one of the most remembered. Sometimes the best design decision is simply to leave enough space for nothing scheduled to happen.",
+      "A good bonfire evening needs very little: a safe, contained fire, loose seating, warm layers and enough time. There is no need for a programme. Conversation usually arrives by itself once the light fades.",
+      "Away from city lights the sky is worth a look. Give your eyes a few minutes to adjust, put phones away, and see what you can find overhead. Clear, moonless nights show the most.",
+      "Fire safety matters more than atmosphere. Keep children and loose clothing away from the flames, never leave a fire unattended, and follow your host's rules about where and when fires are allowed. Where a stay offers bonfire evenings, the listing will say so.",
     ],
   },
 ];
 
 export const stats = [
   { value: "12", label: "Acres of working farmland" },
-  { value: "9", label: "Distinct nature experiences" },
-  { value: "4", label: "Core experiences to choose from" },
+  { value: String(experiences.length), label: "Kinds of experience a stay can offer" },
+  { value: String(stayCategories.length), label: "Kinds of nature stay to choose from" },
 ];
 
 export const futureVentures = [

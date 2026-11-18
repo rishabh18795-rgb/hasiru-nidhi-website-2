@@ -9,9 +9,9 @@ import { images } from "@/lib/content";
 import { basePath } from "@/lib/base-path";
 
 export const metadata: Metadata = {
-  title: "Book Your Experience",
+  title: "Farm Visit Enquiry",
   description:
-    "Plan your visit to Hasiru Nidhi — tell us what you'd like to experience, when, and who's coming, and we'll help you plan the right visit.",
+    "Enquire about visiting the Hasiru Nidhi farm. Share your dates and group size and our team replies to confirm what is possible.",
   alternates: { canonical: `${basePath}/book` },
 };
 
@@ -35,11 +35,11 @@ export default function BookPage() {
   return (
     <>
       <PageHero
-        eyebrow="Book Your Experience"
-        title="Plan your experience at Hasiru Nidhi."
-        description="Tell us what you'd like to experience, when you'd like to visit, and who you're coming with. We'll help you plan the right experience."
+        eyebrow="Farm visit enquiry"
+        title="Enquire about a visit to the farm."
+        description="Tell us what you would like to do, when, and who is coming. Our team replies to confirm what is possible. Nothing is booked until you hear back."
         image={images.heroSunriseFields}
-        crumb="Book Your Experience"
+        crumb="Farm Visit Enquiry"
       />
 
       <section className="bg-cream py-28">

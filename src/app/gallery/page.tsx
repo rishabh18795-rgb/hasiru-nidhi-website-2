@@ -1,35 +1,41 @@
-import Image from "next/image";
 import type { Metadata } from "next";
 
 import { PageHero } from "@/components/site/page-hero";
-import { Reveal } from "@/components/site/reveal";
+import { PhotoGallery, type PhotoItem } from "@/components/site/photo-gallery";
 import { CtaBand } from "@/components/site/cta-band";
 import { images } from "@/lib/content";
 import { basePath } from "@/lib/base-path";
 
 export const metadata: Metadata = {
-  title: "Gallery",
-  description:
-    "A visual tour of Hasiru Nidhi — farmhouse stays, cycling trails, gardens, bonfire evenings and the working landscape near Bengaluru.",
+  title: "Gallery: the countryside, farm life and slow days",
+  description: "Photographs of Karnataka countryside, farm stays, cycling roads, gardens and evenings outdoors. Browse by category and open any photo full size.",
   alternates: { canonical: `${basePath}/gallery` },
 };
 
-const galleryItems = [
-  { src: images.heroSunriseFields, caption: "Sunrise over the paddy fields", tall: true },
-  { src: images.cabinMisty, caption: "A tiled-roof farmhouse verandah" },
-  { src: images.strawberryHarvest, caption: "An afternoon among the flower beds" },
-  { src: images.cyclistSoloHill, caption: "A ride through the tree-lined lanes" },
-  { src: images.rosePathway, caption: "A natural path through the grounds", tall: true },
-  { src: images.bonfireGroup, caption: "Bonfire evening, after dinner" },
-  { src: images.breakfastSpread, caption: "Breakfast, largely from our own beds" },
-  { src: images.kidsPlayingMisty, caption: "An afternoon on open ground" },
-  { src: images.seedlingsPots, caption: "Fresh from the kitchen garden" },
-  { src: images.farmhouseCottage, caption: "The farmhouse courtyard at golden hour", tall: true },
-  { src: images.milkyWay, caption: "Clear skies, away from city light" },
-  { src: images.cyclistsDuo, caption: "A scenic stretch of the cycling route" },
-  { src: images.saladBowl, caption: "Discovering the garden, one leaf at a time" },
-  { src: images.corporateRusticMeeting, caption: "An offsite walk through the grounds" },
-  { src: images.forestLightBeam, caption: "Hills at dusk, near Hasiru Nidhi" },
+const categories = ["Landscapes", "Stays", "Cycling", "Gardens and food", "Evenings", "People outdoors"];
+
+const items: PhotoItem[] = [
+  { src: images.heroSunriseFields, category: "Landscapes", caption: "Sunrise over paddy fields", alt: "Sunrise over green paddy fields and coconut palms in Karnataka" },
+  { src: images.mistyHills, category: "Landscapes", caption: "Misty hills near a village", alt: "Misty green hills above a village in Karnataka" },
+  { src: images.forestLightBeam, category: "Landscapes", caption: "A forest valley at dusk", alt: "A forested valley in the Western Ghats at dusk" },
+  { src: images.forestPath, category: "Landscapes", caption: "A winding hill road", alt: "A winding road through green hills in Karnataka" },
+  { src: images.rosePathway, category: "Landscapes", caption: "A forest path of red soil", alt: "A forest path of red soil running between trees" },
+  { src: images.cabinMisty, category: "Stays", caption: "A tiled-roof verandah", alt: "The verandah of a tiled-roof farmhouse in Karnataka" },
+  { src: images.farmhouseCottage, category: "Stays", caption: "A farmhouse courtyard", alt: "A farmhouse cottage courtyard in warm evening light" },
+  { src: images.cozyInterior, category: "Stays", caption: "A shaded verandah corridor", alt: "A shaded verandah corridor of a country house" },
+  { src: images.cyclistSoloHill, category: "Cycling", caption: "A family on a tree-lined lane", alt: "A family of three cycling along a tree-lined country lane" },
+  { src: images.cyclistsDuo, category: "Cycling", caption: "A plantation road", alt: "A scenic plantation road in the Karnataka countryside" },
+  { src: images.forestRoadGold, category: "Cycling", caption: "A quiet road among coconut trees", alt: "A quiet rural road lined with coconut trees" },
+  { src: images.strawberryHarvest, category: "Gardens and food", caption: "Among the flower beds", alt: "A smiling woman standing in a flower bed" },
+  { src: images.eucalyptusBranch, category: "Gardens and food", caption: "Marigolds in bloom", alt: "Marigold flowers growing in a garden" },
+  { src: images.seedlingsPots, category: "Gardens and food", caption: "A harvest of vegetables", alt: "An assortment of freshly harvested vegetables" },
+  { src: images.carrotsHarvest, category: "Gardens and food", caption: "A mixed vegetable harvest", alt: "A mixed harvest of garden vegetables" },
+  { src: images.gardeningTools, category: "Gardens and food", caption: "A child with a leaf", alt: "A child holding a leaf in a garden" },
+  { src: images.breakfastSpread, category: "Gardens and food", caption: "A South Indian breakfast", alt: "Idli and sambar served as a South Indian breakfast" },
+  { src: images.bonfireGroup, category: "Evenings", caption: "Gathering by firelight", alt: "People gathered around a fire in the evening" },
+  { src: images.milkyWay, category: "Evenings", caption: "A night sky away from the city", alt: "The Milky Way over a dark night sky" },
+  { src: images.kidsPlayingMisty, category: "People outdoors", caption: "Children playing in an open field", alt: "Children playing in an open field" },
+  { src: images.corporateRusticMeeting, category: "People outdoors", caption: "A group walking through a grove", alt: "A group of people walking through a grove of trees" },
 ];
 
 export default function GalleryPage() {
@@ -37,42 +43,29 @@ export default function GalleryPage() {
     <>
       <PageHero
         eyebrow="Gallery"
-        title="The grounds, as they actually look."
-        description="No staged shots — this is what a day at Hasiru Nidhi looks like, across seasons and light."
-        image={images.pineForestSoft}
+        title="The countryside, in pictures."
+        description="Landscapes, farm life, quiet roads and evenings outdoors. Browse by category and open any photograph full size."
+        image={images.heroSunriseFields}
         crumb="Gallery"
+        primaryCta={{ label: "Explore available stays", href: "/stays" }}
       />
 
-      <section className="bg-cream py-28">
+      <section className="bg-cream py-20">
         <div className="container-nidhi">
-          <div className="columns-1 gap-4 sm:columns-2 lg:columns-3 [&>*]:mb-4 [&>*]:break-inside-avoid">
-            {galleryItems.map((item, i) => (
-              <Reveal
-                key={item.caption}
-                delay={(i % 6) * 0.05}
-                className="group relative overflow-hidden rounded-2xl"
-              >
-                <div className={item.tall ? "relative aspect-[3/4]" : "relative aspect-[4/3]"}>
-                  <Image
-                    src={item.src}
-                    alt={item.caption}
-                    fill
-                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 flex items-end bg-gradient-to-t from-forest-950/70 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                    <p className="p-4 text-sm text-cream">{item.caption}</p>
-                  </div>
-                </div>
-              </Reveal>
-            ))}
-          </div>
+          <PhotoGallery items={items} categories={categories} />
+          <p className="mt-10 max-w-3xl text-sm leading-relaxed text-ink/60">
+            These photographs are illustrative of the Karnataka countryside and rural life. They are not photographs of any particular listed property. Each stay shows its own host-supplied photographs on its page.
+          </p>
         </div>
       </section>
 
       <CtaBand
-        title="Prefer to see it in person?"
-        description="Photos only tell half of it. Come spend a day on the grounds."
+        title="See a stay for yourself."
+        description="Each property page has its own photographs, amenities and price breakdown."
+        primaryLabel="Explore available stays"
+        primaryHref="/stays"
+        secondaryLabel="Ask our team"
+        secondaryHref="/contact"
       />
     </>
   );

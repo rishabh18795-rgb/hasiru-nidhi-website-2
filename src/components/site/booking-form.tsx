@@ -26,9 +26,10 @@ import {
 } from "@/lib/booking-schema";
 
 const packageLabels: Record<string, string> = {
-  "day-escape": "The Day Escape",
-  "farmhouse-overnight": "Farmhouse Overnight",
-  "weekend-retreat": "The Weekend Retreat",
+  "day-escape": "A day on the farm",
+  "farmhouse-overnight": "A night on the farm",
+  "weekend-retreat": "A weekend retreat",
+  "corporate-offsite": "A team day outdoors",
 };
 
 export function BookingForm() {

@@ -1,197 +1,150 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { Metadata } from "next";
-import { Bike, Flame, Sprout, Sunrise, Users } from "lucide-react";
+import { ArrowUpRight, BadgeCheck, ReceiptText, ScrollText, ShieldCheck } from "lucide-react";
 
 import { PageHero } from "@/components/site/page-hero";
 import { SectionHeading } from "@/components/site/section-heading";
-import { Reveal, StaggerGroup, StaggerItem } from "@/components/site/reveal";
-import { CtaBand } from "@/components/site/cta-band";
+import { Reveal } from "@/components/site/reveal";
 import { LinkButton } from "@/components/site/link-button";
-import { images } from "@/lib/content";
+import { CtaBand } from "@/components/site/cta-band";
+import { images, stayCategories } from "@/lib/content";
 import { basePath } from "@/lib/base-path";
 
 export const metadata: Metadata = {
-  title: "Nature Stay",
-  description:
-    "Farmhouse rooms and open-air cottages at the Hasiru Nidhi farm near Bengaluru: deep verandahs, natural materials and a working farm at your doorstep.",
+  title: "Nature Stays: farm stays, cottages and eco-retreats",
+  description: "What a nature stay is, the kinds of stay you can find on Hasiru Nidhi, what to expect, and how to search by PIN code or place.",
   alternates: { canonical: `${basePath}/nature-stay` },
 };
 
-const rooms = [
-  {
-    name: "Farmhouse Room",
-    slug: "farmhouse-room",
-    description:
-      "Our original stay — four rooms inside the main farmhouse, each with a private verandah facing the fields. Simple, quiet, and close to the kitchen and bonfire circle.",
-    image: images.farmhouseCottage,
-    occupancy: "2 adults + 1 child",
-    privacy: "Shared farmhouse building, private room",
-    details: ["Twin or double bed", "Attached bath, hot water", "Verandah seating", "Fan-cooled, ceiling height for airflow"],
-  },
-  {
-    name: "Cottage",
-    slug: "cottage",
-    description:
-      "Set slightly apart from the main house for guests who want more distance from the common areas — same natural materials, a touch more privacy.",
-    image: images.cabinMisty,
-    occupancy: "2 adults + 1 child",
-    privacy: "Standalone, fully private",
-    details: ["Double bed", "Attached bath, hot water", "Private sit-out", "Closer to the cycling trailhead"],
-  },
+const expect = [
+  { icon: ShieldCheck, title: "Reviewed listings", copy: "Every property is reviewed by our team before it appears in search." },
+  { icon: ReceiptText, title: "The full price up front", copy: "Each listing shows a price breakdown for your dates before you send a request." },
+  { icon: BadgeCheck, title: "A host who confirms", copy: "You send a request and the host accepts or declines it. Nothing is booked until they accept." },
+  { icon: ScrollText, title: "Rules you can read first", copy: "House rules, check-in times and the cancellation policy are shown on the property page." },
 ];
 
-const included = [
-  { icon: Sunrise, title: "Full Farm Access", copy: "Gardens, trails, animals and grounds, open from check-in to check-out." },
-  { icon: Sprout, title: "Garden Access", copy: "Walk the working kitchen garden any time, guided sessions included." },
-  { icon: Bike, title: "Cycling Access", copy: "Bicycles and helmets provided for the farmland loop, no extra charge." },
-  { icon: Flame, title: "Bonfire Evenings", copy: "Lit most nights, weather permitting — part of every overnight stay." },
-  { icon: Users, title: "All Meals", copy: "Vegetarian, largely from our own beds, served at a shared table." },
+const steps = [
+  ["Search", "Enter a six-digit PIN code or a place, then your dates and the number of guests."],
+  ["Choose", "Open a property to see its photographs, amenities, house rules and price breakdown."],
+  ["Request", "Send the host a booking request. You can follow its status under My bookings."],
 ];
 
 export default function NatureStayPage() {
   return (
     <>
       <PageHero
-        eyebrow="Pillar 01 — Stay"
-        title="Wake up closer to the land."
-        description="Rooms built into the landscape rather than on top of it — natural materials, deep shade, and views chosen over amenities."
+        eyebrow="Nature stays"
+        title="Stay close to the land."
+        description="A nature stay swaps the city for fields, trees and quiet. Find farm stays, cottages and eco-retreats listed by their owners, or list your own."
         image={images.cabinMisty}
         crumb="Nature Stay"
-        primaryCta={{ label: "Enquire About Your Stay", href: "/book?experience=nature-stay" }}
-        secondaryCta={{ label: "View Stay Options", href: "#stay-options" }}
+        primaryCta={{ label: "Explore available stays", href: "/stays" }}
+        secondaryCta={{ label: "List your property", href: "/list-your-property" }}
       />
 
-      <section className="bg-cream py-28">
+      <section className="bg-cream py-24">
         <div className="container-nidhi grid gap-14 lg:grid-cols-2 lg:items-center">
           <div>
             <SectionHeading
-              eyebrow="What the Stay Feels Like"
-              title="Slow mornings, full days, quiet nights."
-              description="A stay here moves between a handful of farmhouse rooms and standalone cottages, each opening onto the working grounds rather than a hallway. Days are loosely structured around the garden and the cycling trail; evenings settle around the bonfire once the light goes. Guests have full run of the farm for the length of their stay — the gardens, the animals, the paths between them — with nothing scheduled that doesn't need to be."
+              eyebrow="What it means"
+              title="Less hotel, more place."
+              description="A nature stay is built around where it is: a working farm, a village home, a cottage among trees. The point is not luxury for its own sake but rest, fresh air and time that moves at the pace of the landscape. You may share a garden with the people who tend it, hear birds before alarms, and eat what the season allows."
             />
-          </div>
-          <Reveal className="relative aspect-[4/5] overflow-hidden rounded-[2.5rem]">
-            <Image
-              src={images.cozyInterior}
-              alt="A wooden verandah corridor at Hasiru Nidhi"
-              fill
-              sizes="(min-width: 1024px) 45vw, 90vw"
-              className="object-cover"
-            />
-          </Reveal>
-        </div>
-      </section>
-
-      <section id="stay-options" className="scroll-mt-24 bg-sand-50 py-28">
-        <div className="container-nidhi">
-          <SectionHeading
-            eyebrow="Where You'll Sleep"
-            title="Two ways to stay, both close to the ground."
-            description="Every room opens onto the farm rather than a corridor — the idea is to make it hard to forget where you are, even indoors."
-          />
-          <div className="mt-14 grid gap-8 lg:grid-cols-2">
-            {rooms.map((room) => (
-              <Reveal key={room.name}>
-                <div className="flex h-full flex-col overflow-hidden rounded-[2rem] bg-white ring-1 ring-forest-900/8">
-                  <div className="relative aspect-[16/10]">
-                    <Image
-                      src={room.image}
-                      alt={room.name}
-                      fill
-                      sizes="(min-width: 1024px) 45vw, 90vw"
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="flex flex-1 flex-col p-8">
-                    <h3 className="font-display text-2xl text-forest-950">{room.name}</h3>
-                    <p className="mt-3 text-sm leading-relaxed text-ink/65">{room.description}</p>
-                    <dl className="mt-5 grid grid-cols-2 gap-x-4 gap-y-3 text-xs text-ink/55">
-                      <div>
-                        <dt className="uppercase tracking-wide">Occupancy</dt>
-                        <dd className="mt-0.5 text-sm text-ink/75">{room.occupancy}</dd>
-                      </div>
-                      <div>
-                        <dt className="uppercase tracking-wide">Privacy</dt>
-                        <dd className="mt-0.5 text-sm text-ink/75">{room.privacy}</dd>
-                      </div>
-                    </dl>
-                    <ul className="mt-5 grid grid-cols-2 gap-2 text-sm text-ink/60">
-                      {room.details.map((detail) => (
-                        <li key={detail} className="flex items-center gap-2">
-                          <span className="h-1 w-1 rounded-full bg-forest-500" />
-                          {detail}
-                        </li>
-                      ))}
-                    </ul>
-                    <LinkButton
-                      href={`/book?experience=nature-stay&stay=${room.slug}`}
-                      size="lg"
-                      className="mt-7 w-fit rounded-full bg-forest-800 text-cream hover:bg-forest-700"
-                    >
-                      Enquire About This Stay
-                    </LinkButton>
-                  </div>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-forest-950 py-28">
-        <div className="container-nidhi">
-          <SectionHeading
-            eyebrow="What's Included"
-            title="Everything you need, nothing you don't."
-            tone="light"
-          />
-          <StaggerGroup className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
-            {included.map((item) => (
-              <StaggerItem key={item.title}>
-                <div className="h-full rounded-2xl bg-cream/5 p-6 ring-1 ring-cream/10">
-                  <item.icon className="h-6 w-6 text-sand-300" />
-                  <h3 className="mt-4 font-display text-lg text-cream">{item.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-cream/60">{item.copy}</p>
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerGroup>
-        </div>
-      </section>
-
-      <section className="bg-sand-50 py-28">
-        <div className="container-nidhi grid gap-14 lg:grid-cols-2 lg:items-center">
-          <Reveal className="relative aspect-[4/5] overflow-hidden rounded-[2.5rem]">
-            <Image
-              src={images.campingTentDusk}
-              alt="An evening bonfire gathering at Hasiru Nidhi"
-              fill
-              sizes="(min-width: 1024px) 45vw, 90vw"
-              className="object-cover"
-            />
-          </Reveal>
-          <div>
-            <SectionHeading
-              eyebrow="After Dark"
-              title="The farm doesn't stop being beautiful at night."
-              description="Once the sky clears of city glow, guests are often surprised by how much of it shows up overhead. We keep a few telescopes on hand during peak season, and point out what we can on clear nights by the fire."
-            />
-            <Reveal delay={0.15} className="mt-8">
-              <LinkButton href="/packages" size="lg" className="rounded-full bg-forest-800 px-7 text-cream hover:bg-forest-700">
-                View Stay Packages
-              </LinkButton>
+            <Reveal delay={0.12}>
+              <p className="mt-5 text-base leading-relaxed text-ink/70">
+                What each stay offers differs from property to property, and that is the charm. Read the listing carefully: it tells you what is included, what the house rules are and what the host can arrange.
+              </p>
             </Reveal>
+          </div>
+          <Reveal className="relative aspect-[4/3] overflow-hidden rounded-[2.5rem]">
+            <Image src={images.farmhouseCottage} alt="A tiled-roof farmhouse courtyard at golden hour" fill sizes="(min-width: 1024px) 45vw, 92vw" className="object-cover" />
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="bg-forest-50 py-24" aria-labelledby="kinds-heading">
+        <div className="container-nidhi">
+          <SectionHeading eyebrow="Kinds of stay" title="Six ways to stay near nature." description="These are the categories hosts choose from and guests can filter by. Availability depends on which properties are live." />
+          <h2 id="kinds-heading" className="sr-only">Kinds of nature stay</h2>
+          <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {stayCategories.map((c) => (
+              <li key={c.slug}>
+                <Link href={`/stays?category=${c.slug}`} className="group flex h-full flex-col overflow-hidden rounded-3xl bg-white ring-1 ring-forest-900/8 transition-shadow hover:shadow-xl hover:shadow-forest-950/10 focus-visible:outline-2 focus-visible:outline-forest-600">
+                  <span className="relative block aspect-[16/10] overflow-hidden">
+                    <Image src={c.image} alt="" fill sizes="(min-width: 1024px) 30vw, 90vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />
+                  </span>
+                  <span className="flex flex-1 flex-col p-6">
+                    <span className="font-display text-xl text-forest-950">{c.name}</span>
+                    <span className="mt-1.5 flex-1 text-sm leading-relaxed text-ink/65">{c.description}</span>
+                    <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-forest-700">Browse {c.name.toLowerCase()} <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" /></span>
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section className="bg-cream py-24" aria-labelledby="expect-heading">
+        <div className="container-nidhi">
+          <SectionHeading eyebrow="What to expect" title="Clear, careful and personal." />
+          <h2 id="expect-heading" className="sr-only">What to expect when you book</h2>
+          <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {expect.map((e) => (
+              <li key={e.title} className="rounded-3xl bg-white p-7 ring-1 ring-forest-900/8">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-forest-800 text-cream"><e.icon className="h-5 w-5" aria-hidden="true" /></span>
+                <h3 className="mt-5 font-display text-lg text-forest-950">{e.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-ink/65">{e.copy}</p>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-8 max-w-3xl text-sm text-ink/60">Payment is not collected on this website yet. Sending a request costs nothing, and payment arrangements are shared when a booking is confirmed. See <Link href="/pricing" className="underline">how pricing works</Link>.</p>
+        </div>
+      </section>
+
+      <section className="bg-sand-50 py-24" aria-labelledby="find-heading">
+        <div className="container-nidhi">
+          <SectionHeading eyebrow="How to find a stay" title="Three simple steps." />
+          <h2 id="find-heading" className="sr-only">How to find and request a stay</h2>
+          <ol className="mt-12 grid gap-6 md:grid-cols-3">
+            {steps.map(([t, c], i) => (
+              <li key={t} className="rounded-3xl bg-white p-7 ring-1 ring-forest-900/8">
+                <span className="font-display text-4xl text-sand-500">{i + 1}</span>
+                <h3 className="mt-2 font-display text-xl text-forest-950">{t}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-ink/65">{c}</p>
+              </li>
+            ))}
+          </ol>
+          <div className="mt-10 flex flex-wrap gap-3">
+            <LinkButton href="/stays" size="lg" className="rounded-full bg-forest-800 px-7 text-cream hover:bg-forest-700">Explore available stays <ArrowUpRight className="h-4 w-4" /></LinkButton>
+            <LinkButton href="/demo/stays" variant="outline" size="lg" className="rounded-full border-forest-800/25 px-7 text-forest-900 hover:bg-forest-900/5">Preview with demo listings</LinkButton>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-cream py-24" aria-labelledby="farm-heading">
+        <div className="container-nidhi grid gap-10 lg:grid-cols-2">
+          <div id="farm" className="rounded-3xl bg-white p-8 ring-1 ring-forest-900/8">
+            <h2 id="farm-heading" className="font-display text-2xl text-forest-950">At the Hasiru Nidhi farm</h2>
+            <p className="mt-3 text-base leading-relaxed text-ink/70">Hasiru Nidhi began as a working farm near Bengaluru. If you would like to stay or spend a day at our own farm, tell us your dates and group size. Our team replies to confirm what is available. Farm visits are arranged by enquiry and are separate from the marketplace listings above.</p>
+            <LinkButton href="/book?experience=nature-stay" className="mt-5 rounded-full bg-forest-800 px-6 text-cream hover:bg-forest-700">Enquire about the farm</LinkButton>
+          </div>
+          <div className="rounded-3xl bg-forest-900 p-8 text-cream">
+            <h2 className="font-display text-2xl">Own a property in nature?</h2>
+            <p className="mt-3 text-base leading-relaxed text-cream/80">List it with your own photographs and prices, keep control of your calendar, and answer booking requests from your host dashboard. Our team reviews every listing before it goes live.</p>
+            <LinkButton href="/become-a-host" className="mt-5 rounded-full bg-sand-400 px-6 text-forest-950 hover:bg-sand-300">Become a host</LinkButton>
           </div>
         </div>
       </section>
 
       <CtaBand
-        title="Ready to slow down?"
-        description="Share your preferred dates and group size — we'll get back to you to confirm availability."
-        primaryLabel="Plan Your Stay"
-        primaryHref="/book?experience=nature-stay"
-        secondaryLabel="Talk to Us"
-        secondaryHref="/contact"
+        title="Ready to find your quiet place?"
+        description="Search by PIN code or place and see the full price before you ask."
+        primaryLabel="Explore available stays"
+        primaryHref="/stays"
+        secondaryLabel="List your property"
+        secondaryHref="/list-your-property"
       />
     </>
   );

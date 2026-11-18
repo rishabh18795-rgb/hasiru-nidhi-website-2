@@ -47,7 +47,7 @@ export function PageHero({
           <ChevronRight className="h-3 w-3" />
           <span className="text-cream/80">{crumb}</span>
         </nav>
-        <p className="text-eyebrow text-sand-300">{eyebrow}</p>
+        <p className="text-eyebrow text-sand-300!">{eyebrow}</p>
         <h1 className="mt-4 max-w-3xl text-5xl font-medium leading-[1.05] tracking-tight text-cream sm:text-6xl lg:text-7xl">
           {title}
         </h1>

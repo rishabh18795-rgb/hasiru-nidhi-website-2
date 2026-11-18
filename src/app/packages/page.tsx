@@ -1,100 +1,87 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { Metadata } from "next";
-import { Check } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 import { PageHero } from "@/components/site/page-hero";
-import { Reveal } from "@/components/site/reveal";
+import { SectionHeading } from "@/components/site/section-heading";
+import { StaggerGroup, StaggerItem } from "@/components/site/reveal";
 import { LinkButton } from "@/components/site/link-button";
 import { CtaBand } from "@/components/site/cta-band";
-import { packages, images } from "@/lib/content";
-import { cn } from "@/lib/utils";
+import { images, packages } from "@/lib/content";
 import { basePath } from "@/lib/base-path";
 
 export const metadata: Metadata = {
-  title: "Packages",
-  description:
-    "Day escapes, farmhouse overnights, weekend retreats and corporate offsites at Hasiru Nidhi — nature experience packages near Bengaluru.",
+  title: "Packages: farm days, nights and weekend ideas",
+  description: "Ideas for a day, a night or a weekend at the Hasiru Nidhi farm. Packages are arranged by enquiry, with details confirmed by our team.",
   alternates: { canonical: `${basePath}/packages` },
 };
-
-function bookingHrefFor(slug: string) {
-  // Corporate offsites are a group/enquiry-led conversation, not a
-  // self-serve booking — route those to Contact instead.
-  if (slug === "corporate-offsite") return "/contact";
-  return `/book?experience=nature-stay&package=${slug}`;
-}
 
 export default function PackagesPage() {
   return (
     <>
       <PageHero
         eyebrow="Packages"
-        title="Choose how much time you'd like."
-        description="From a single day to a full weekend, every package includes the full working farm — gardens, trails and animals — as standard."
+        title="Ideas for a day, a night or a weekend."
+        description="Starting points for a visit to our farm. Tell us what you have in mind and we will shape it around your group."
         image={images.farmhouseCottage}
         crumb="Packages"
+        primaryCta={{ label: "Send an enquiry", href: "/book" }}
+        secondaryCta={{ label: "Explore available stays", href: "/stays" }}
       />
 
-      <section className="bg-cream py-28">
+      <section className="bg-cream py-24" aria-labelledby="pkg-heading">
         <div className="container-nidhi">
-          <div className="grid gap-8 lg:grid-cols-2">
-            {packages.map((pkg) => (
-              <Reveal key={pkg.slug}>
-                <div
-                  className={cn(
-                    "flex h-full flex-col overflow-hidden rounded-[2rem] bg-white ring-1 ring-forest-900/8",
-                    pkg.featured && "ring-2 ring-forest-700"
-                  )}
-                >
+          <SectionHeading
+            eyebrow="How packages work"
+            title="Enquire first. We confirm the details."
+            description="These are ideas, not fixed products you can buy online. Inclusions, timings, prices and availability are confirmed by our team when you enquire, and nothing is booked or charged until you hear back from us."
+          />
+          <h2 id="pkg-heading" className="sr-only">Package ideas</h2>
+          <StaggerGroup className="mt-14 grid gap-6 md:grid-cols-2">
+            {packages.map((p) => (
+              <StaggerItem key={p.slug}>
+                <article className={`flex h-full flex-col overflow-hidden rounded-3xl bg-white ring-1 ${p.featured ? "ring-2 ring-forest-700" : "ring-forest-900/8"}`}>
                   <div className="relative aspect-[16/9]">
-                    <Image
-                      src={pkg.image}
-                      alt={pkg.name}
-                      fill
-                      sizes="(min-width: 1024px) 45vw, 90vw"
-                      className="object-cover"
-                    />
-                    {pkg.featured ? (
-                      <span className="absolute left-5 top-5 rounded-full bg-sand-400 px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-forest-950">
-                        Most Booked
-                      </span>
-                    ) : null}
+                    <Image src={p.image} alt="" fill sizes="(min-width: 768px) 45vw, 92vw" className="object-cover" />
                   </div>
-                  <div className="flex flex-1 flex-col p-8">
-                    <div className="flex flex-wrap items-baseline justify-between gap-2">
-                      <h3 className="font-display text-2xl text-forest-950">{pkg.name}</h3>
-                      <span className="text-sm font-medium text-forest-600">{pkg.duration}</span>
-                    </div>
-                    <p className="mt-1 text-xs uppercase tracking-wide text-ink/45">
-                      Best for {pkg.bestFor}
-                    </p>
-                    <p className="mt-4 text-sm leading-relaxed text-ink/65">{pkg.description}</p>
-                    <ul className="mt-5 flex flex-1 flex-col gap-2.5">
-                      {pkg.inclusions.map((item) => (
-                        <li key={item} className="flex items-start gap-2.5 text-sm text-ink/70">
-                          <Check className="mt-0.5 h-4 w-4 shrink-0 text-forest-600" />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                    <LinkButton
-                      href={bookingHrefFor(pkg.slug)}
-                      size="lg"
-                      className="mt-7 rounded-full bg-forest-800 text-cream hover:bg-forest-700"
-                    >
-                      Enquire About This Package
+                  <div className="flex flex-1 flex-col p-7">
+                    <p className="text-xs font-medium uppercase tracking-wider text-forest-600">Best for {p.bestFor}</p>
+                    <h3 className="mt-2 font-display text-2xl text-forest-950">{p.name}</h3>
+                    <p className="mt-2 flex-1 text-sm leading-relaxed text-ink/70">{p.description}</p>
+                    <LinkButton href={`/book?package=${p.slug}`} className="mt-6 self-start rounded-full bg-forest-800 px-6 text-cream hover:bg-forest-700">
+                      Enquire about this <ArrowUpRight className="h-4 w-4" />
                     </LinkButton>
                   </div>
-                </div>
-              </Reveal>
+                </article>
+              </StaggerItem>
             ))}
+          </StaggerGroup>
+        </div>
+      </section>
+
+      <section className="bg-forest-50 py-20">
+        <div className="container-nidhi grid gap-8 lg:grid-cols-2">
+          <div className="rounded-3xl bg-white p-8 ring-1 ring-forest-900/8">
+            <h2 className="font-display text-2xl text-forest-950">Want a stay at another property?</h2>
+            <p className="mt-3 text-base leading-relaxed text-ink/70">Marketplace stays are not packages. Each listing shows its own price breakdown for your dates. See <Link href="/pricing" className="underline">how pricing works</Link>.</p>
+            <LinkButton href="/stays" className="mt-5 rounded-full bg-forest-800 px-6 text-cream hover:bg-forest-700">Explore available stays</LinkButton>
+          </div>
+          <div className="rounded-3xl bg-forest-900 p-8 text-cream">
+            <h2 className="font-display text-2xl">Gardening help is separate</h2>
+            <p className="mt-3 text-base leading-relaxed text-cream/80">Services for your own garden have their own enquiry and are not part of any package.</p>
+            <LinkButton href="/gardening#enquire" className="mt-5 rounded-full bg-sand-400 px-6 text-forest-950 hover:bg-sand-300">Gardening enquiry</LinkButton>
           </div>
         </div>
       </section>
 
       <CtaBand
-        title="Planning something custom?"
-        description="Multi-day retreats, large groups and special occasions are all things we do regularly — just ask."
+        title="Tell us what you have in mind."
+        description="Share your dates, group size and ideas. Our team replies to confirm what is possible."
+        primaryLabel="Send an enquiry"
+        primaryHref="/book"
+        secondaryLabel="Contact us"
+        secondaryHref="/contact"
       />
     </>
   );
