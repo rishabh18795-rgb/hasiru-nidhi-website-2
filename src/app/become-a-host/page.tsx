@@ -61,6 +61,7 @@ export default function BecomeAHostPage() {
               <li>• An availability calendar and automatic protection against double bookings.</li>
               <li>• A booking-request inbox: accept, decline or cancel, with the guest notified each time.</li>
               <li>• A status tracker: draft, pending review, live, or rejected with the reviewer&apos;s reasons.</li>
+              <li>• A wallet with a transparent ledger: every booking, the platform commission, your share, and settlement status, traceable to the booking behind it.</li>
             </ul>
           </Reveal>
         </div>

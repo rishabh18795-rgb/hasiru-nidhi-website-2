@@ -330,7 +330,42 @@ export interface FaqEntry {
 
 export const faqs: FaqEntry[] = [
   {
-    question: "Where exactly is Hasiru Nidhi located?",
+    question: "What is Hasiru Nidhi?",
+    answer:
+      "Hasiru Nidhi is a marketplace for peaceful nature stays: farm stays, cottages, homestays and eco-retreats listed by their owners. It began as a working farm near Bengaluru and now also helps other property owners reach travellers. We also offer gardening services, which are separate from stay bookings.",
+  },
+  {
+    question: "How do I find and request a stay?",
+    answer:
+      "Use the search on the homepage or Explore Stays. Enter a six-digit PIN code or a place, then choose your dates and guests. Open a property to see its photographs, amenities, house rules and a full price breakdown, then send the host a booking request. A request is not a confirmed booking: the host reviews it and accepts or declines, and you can follow the status under My bookings.",
+  },
+  {
+    question: "Do I pay online?",
+    answer:
+      "Not yet. Sending a request costs nothing and nothing is charged on this website. Payment arrangements are shared when your booking is confirmed. We will announce online payment on the site once it is available, and we will never show a payment as received unless it has been.",
+  },
+  {
+    question: "Can I cancel a booking?",
+    answer:
+      "Yes. Every property shows its cancellation policy before you request. You can cancel a request, or a confirmed booking before check-in, from My bookings, and the host is told. Because the platform does not collect payment yet, any refund is settled between you and the host according to that policy.",
+  },
+  {
+    question: "How are properties checked before they appear?",
+    answer:
+      "Hosts submit their property with photographs, location and pricing, and our team reviews each listing before it is published. Listings that are still drafts, waiting for review, returned for changes or suspended never appear in search.",
+  },
+  {
+    question: "How do I list my property?",
+    answer:
+      "Create a host account, then follow the guided steps: property details, address and PIN code, photographs, amenities and rules, pricing and availability. You can save a draft at any time and submit when you are ready. After approval you manage your calendar, booking requests and earnings from your host dashboard.",
+  },
+  {
+    question: "Are Gardening Services part of a stay booking?",
+    answer:
+      "No. Gardening Services is a separate offering: you send an enquiry describing your space and our team replies. An enquiry never creates a stay booking, and a stay booking never creates a gardening job.",
+  },
+  {
+    question: "Where is the Hasiru Nidhi farm located?",
     answer:
       "We're just off Kanakapura Road in Harohalli, Bengaluru Rural. The final stretch is a quiet country road — we send a detailed map link with every confirmed booking.",
   },
@@ -360,9 +395,9 @@ export const faqs: FaqEntry[] = [
       "Comfortable closed shoes for the garden and cycling trail, a light layer for the evening, and sun protection. We provide bicycles, helmets and gardening tools — no equipment needed from your end.",
   },
   {
-    question: "How does booking and payment work?",
+    question: "How do I book an experience at the Hasiru Nidhi farm?",
     answer:
-      "Request availability through our Book Your Experience page, or find a stay under Explore Stays and send the host a booking request. A request is not a confirmed booking: it is confirmed only once the host (or our team) accepts it and you are notified. Payment arrangements are confirmed when you book; the website does not take online payments yet.",
+      "Use the Book Your Experience page to tell us what you would like and when. Our team replies to confirm availability and arrangements; nothing is booked until you hear back. The website does not take online payments yet.",
   },
   {
     question: "Can Hasiru Nidhi host a group larger than 20 people?",

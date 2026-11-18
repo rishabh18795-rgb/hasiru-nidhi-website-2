@@ -11,7 +11,7 @@ import { images } from "@/lib/content";
 export const metadata: Metadata = {
   title: "Gardening & landscaping services",
   description:
-    "Garden design, lawns, plants, balcony and terrace gardens, vertical gardens, pots and décor, and ongoing plant care for homes, villas, resorts and commercial spaces. Request a quote.",
+    "Garden design, lawns, plants, terrace and vertical gardens and ongoing plant care for homes, villas, resorts and commercial spaces. Request a quote.",
   alternates: { canonical: "/gardening-landscaping" },
 };
 

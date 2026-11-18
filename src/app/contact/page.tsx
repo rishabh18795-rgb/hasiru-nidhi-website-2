@@ -14,7 +14,7 @@ import { basePath } from "@/lib/base-path";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Questions, partnerships, corporate visits or general enquiries — get in touch with the Hasiru Nidhi team near Bengaluru.",
+    "Questions about a stay, listing your property, gardening services or a visit to our farm: get in touch with the Hasiru Nidhi team.",
   alternates: { canonical: `${basePath}/contact` },
 };
 
@@ -30,7 +30,7 @@ export default async function ContactPage() {
       <PageHero
         eyebrow="Contact"
         title="Let's talk about Hasiru Nidhi."
-        description="Have a question, planning a visit, exploring a partnership, or simply want to know more? Reach out to us."
+        description="Questions about a stay, listing your property, a gardening enquiry, or a visit to our farm? Tell us what you need and the right person will reply."
         image={images.forestPath}
         crumb="Contact"
       />

@@ -16,7 +16,7 @@ import { basePath } from "@/lib/base-path";
 export const metadata: Metadata = {
   title: "FAQ",
   description:
-    "Answers to common questions about visiting Hasiru Nidhi — location, bookings, food, pets and more.",
+    "Answers about finding and requesting a stay, payment, cancellation, listing a property and gardening services on Hasiru Nidhi.",
   alternates: { canonical: `${basePath}/faq` },
 };
 
@@ -40,7 +40,7 @@ export default function FaqPage() {
       <PageHero
         eyebrow="FAQ"
         title="Questions, answered plainly."
-        description="Everything guests most often ask before their first visit. Still unsure? Reach out directly."
+        description="How the marketplace works for travellers and hosts, how payment and cancellation work today, and what to know before visiting our farm. Still unsure? Reach out directly."
         image={images.forestRoadGold}
         crumb="FAQ"
       />

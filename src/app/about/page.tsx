@@ -1,6 +1,7 @@
+import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
-import { Leaf, Sprout, TreePine } from "lucide-react";
+import { Leaf, Sprout, TreePine, ArrowUpRight } from "lucide-react";
 
 import { PageHero } from "@/components/site/page-hero";
 import { SectionHeading } from "@/components/site/section-heading";
@@ -14,7 +15,7 @@ import { basePath } from "@/lib/base-path";
 export const metadata: Metadata = {
   title: "About Us",
   description:
-    "The story behind Hasiru Nidhi — a working farm and nature experience retreat built around a simple idea: cultivate the land, and the memories follow.",
+    "A working farm that grew into a marketplace for peaceful nature stays, plus a separate gardening service. The story and values behind Hasiru Nidhi.",
   alternates: { canonical: `${basePath}/about` },
 };
 
@@ -45,10 +46,34 @@ export default function AboutPage() {
       <PageHero
         eyebrow="About Hasiru Nidhi"
         title="Cultivating nature, one season at a time."
-        description="We are a working farm first, and a place to stay second — built on the belief that the best hospitality is simply good land, well kept."
+        description="Hasiru Nidhi began as a working farm. Today it also connects travellers with nature stays hosted by their owners, and offers gardening services. One belief runs through all of it: the best hospitality is good land, well kept."
         image={images.mistyHills}
         crumb="About"
       />
+
+      <section className="bg-forest-50 py-24" aria-labelledby="today-heading">
+        <div className="container-nidhi">
+          <SectionHeading
+            eyebrow="Hasiru Nidhi today"
+            title="Three ways to be close to nature."
+            description="One brand, three clearly separate offerings. Each has its own page and its own way to get in touch."
+          />
+          <h2 id="today-heading" className="sr-only">What Hasiru Nidhi offers</h2>
+          <ul className="mt-12 grid gap-6 md:grid-cols-3">
+            {[
+              { title: "Nature stays", copy: "A marketplace of farm stays, cottages and eco-retreats. Search by PIN code or place, compare real prices, and send a request that the host confirms personally.", href: "/stays", cta: "Explore stays" },
+              { title: "For property owners", copy: "List your own property with your photographs and prices, keep control of your calendar, and answer requests from a host dashboard. Our team reviews every listing before it goes live.", href: "/list-your-property", cta: "List your property" },
+              { title: "Gardening Services", copy: "Garden design, lawns, plants and ongoing care. This is a separate service: send an enquiry and our team replies. It never creates a stay booking.", href: "/gardening", cta: "Gardening enquiry" },
+            ].map((item) => (
+              <li key={item.title} className="flex flex-col rounded-2xl bg-white p-7 ring-1 ring-forest-900/8">
+                <h3 className="font-display text-xl text-forest-950">{item.title}</h3>
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-ink/70">{item.copy}</p>
+                <Link href={item.href} className="mt-5 inline-flex w-fit items-center gap-1 text-sm font-medium text-forest-700 hover:text-forest-900">{item.cta} <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" /></Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
 
       <section className="bg-cream py-28">
         <div className="container-nidhi grid gap-14 lg:grid-cols-2 lg:items-center">
