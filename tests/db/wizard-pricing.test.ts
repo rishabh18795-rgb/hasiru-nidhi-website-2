@@ -122,8 +122,8 @@ describe("listing wizard data and review outcomes", () => {
   async function submitted(slug: string): Promise<string> {
     const cat = await categoryId(db);
     const id = (await as<{ id: string }>(db, host,
-      `insert into public.properties (host_id, slug, name, category_id, description, city, state, terms_accepted_at, photo_rights_confirmed_at)
-       values ($1,$2,'Wizard Cottage',$3,$4,'Mysuru','Karnataka',now(),now()) returning id`,
+      `insert into public.properties (host_id, slug, name, category_id, description, city, state, postal_code, terms_accepted_at, photo_rights_confirmed_at)
+       values ($1,$2,'Wizard Cottage',$3,$4,'Mysuru','Karnataka','570001',now(),now()) returning id`,
       [host, slug, cat, "A lovely cottage with enough description text to satisfy the review rules."]))[0].id;
     await as(db, host, "insert into public.property_images (property_id, path, source) values ($1,'/images/x.jpg','static')", [id]);
     await as(db, host, "insert into public.property_private (property_id, address_line, contact_phone) values ($1,'1 Lane','+919000000001')", [id]);
@@ -134,8 +134,8 @@ describe("listing wizard data and review outcomes", () => {
   it("will not submit without the photograph-rights declaration", async () => {
     const cat = await categoryId(db);
     const id = (await as<{ id: string }>(db, host,
-      `insert into public.properties (host_id, slug, name, category_id, description, city, state, terms_accepted_at)
-       values ($1,'no-rights',  'Wizard Cottage',$2,$3,'Mysuru','Karnataka',now()) returning id`,
+      `insert into public.properties (host_id, slug, name, category_id, description, city, state, postal_code, terms_accepted_at)
+       values ($1,'no-rights',  'Wizard Cottage',$2,$3,'Mysuru','Karnataka','570001',now()) returning id`,
       [host, cat, "A lovely cottage with enough description text to satisfy the review rules."]))[0].id;
     await as(db, host, "insert into public.property_images (property_id, path, source) values ($1,'/images/x.jpg','static')", [id]);
     await as(db, host, "insert into public.property_private (property_id, address_line, contact_phone) values ($1,'1 Lane','+919000000001')", [id]);

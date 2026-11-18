@@ -23,14 +23,14 @@ export function buildSeed() {
 -- Remove everything again with supabase/scripts/remove_sample_data.sql.
 `);
   out.push(`insert into public.properties
-  (slug, name, category_id, summary, description, city, state, region, rooms_count, max_guests, bedrooms, beds, bathrooms,
+  (slug, name, category_id, summary, description, city, state, postal_code, region, rooms_count, max_guests, bedrooms, beds, bathrooms,
    accommodation_arrangement, price_inr, price_unit, weekend_price_inr, included_guests, extra_guest_fee_inr, cleaning_fee_inr,
    tax_percent, min_nights, max_nights, check_in_time, check_out_time, house_rules, cancellation_policy,
    status, is_featured, is_sample, terms_accepted_at, photo_rights_confirmed_at, submitted_at, published_at)
 values`);
   out.push(props.map((p) => `  (${[
     q(p.slug), q(p.name), `(select id from public.property_categories where slug = ${q(p.category)})`, q(p.summary), q(p.description),
-    q(p.city), q(p.state), q(p.region), p.rooms, p.max_guests, p.bedrooms, p.beds, p.bathrooms, q(p.arrangement), p.price_inr, q(p.price_unit),
+    q(p.city), q(p.state), q(p.postal_code), q(p.region), p.rooms, p.max_guests, p.bedrooms, p.beds, p.bathrooms, q(p.arrangement), p.price_inr, q(p.price_unit),
     q(p.weekend_price_inr ?? null), q(p.included_guests ?? null), q(p.extra_guest_fee_inr ?? null), q(p.cleaning_fee_inr ?? null),
     p.tax_percent ?? 0, p.min_nights, p.max_nights, q(p.check_in), q(p.check_out), q(p.house_rules), q(p.cancellation_policy),
     "'approved'", p.featured ? "true" : "false", "true", "now()", "now()", "now()", "now()",

@@ -21,7 +21,9 @@ async function callable(role: string): Promise<string[]> {
 // Read-only helpers that are safe for anyone (they only return what RLS already lets the caller see, or public data).
 const PUBLIC_HELPERS = ["is_admin", "is_host", "owns_property", "today_ist", "is_property_available", "property_unavailable_ranges", "search_properties", "quote_stay"];
 // Actions a signed-in user may invoke; each re-checks its own authorization inside the function.
-const SIGNED_IN_ACTIONS = ["request_booking", "respond_to_booking", "cancel_booking", "submit_property", "review_property", "admin_update_user", "moderate_review", "become_host", "reorder_property_images"];
+const SIGNED_IN_ACTIONS = ["request_booking", "respond_to_booking", "cancel_booking", "submit_property", "review_property", "admin_update_user", "moderate_review", "become_host", "reorder_property_images",
+  // commercial layer: every admin_* function checks is_admin() itself; booking_payment_status runs as the caller (RLS applies)
+  "admin_record_payment", "admin_record_refund", "admin_settleable_bookings", "admin_create_settlement", "admin_update_settlement", "admin_set_commission", "complete_booking", "booking_payment_status"];
 
 describe("who can call which function", () => {
   it("anonymous visitors can call only the public read helpers", async () => {
@@ -39,7 +41,8 @@ describe("who can call which function", () => {
   });
 
   it("internal helpers (notifications, audit, pricing core, photo limit) are not callable through the API by anyone but the owner", async () => {
-    for (const fn of ["notify", "notify_admins", "write_audit", "compute_stay_quote", "audit_admin_change", "property_images_limit", "handle_new_user"]) {
+    for (const fn of ["notify", "notify_admins", "write_audit", "compute_stay_quote", "audit_admin_change", "property_images_limit", "handle_new_user",
+    "compute_commission", "ledger_accrue", "ledger_reverse", "apply_refund", "booking_net_host_share", "setting_numeric", "setting_text", "setting_bool", "record_payment_event"]) {
       for (const role of ["anon", "authenticated"]) expect(await callable(role), `${role} must not execute ${fn}`).not.toContain(fn);
     }
   });
