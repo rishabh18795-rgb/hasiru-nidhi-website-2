@@ -95,7 +95,7 @@ export function StaySearchBar({ q = "", pin = "", checkin = "", checkout = "", g
         }}
         className={cn(
           "grid w-full grid-cols-2 gap-1 rounded-3xl p-2 shadow-xl shadow-forest-950/10 xl:flex xl:items-stretch xl:gap-0 xl:rounded-full",
-          tone === "dark" ? "bg-cream/95 backdrop-blur" : "bg-white ring-1 ring-forest-900/10",
+          tone === "dark" ? "glass" : "bg-white ring-1 ring-forest-900/10",
         )}
       >
         {Object.entries(hidden).map(([k, v]) => (v ? <input key={k} type="hidden" name={k} value={v} /> : null))}

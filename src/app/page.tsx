@@ -21,6 +21,7 @@ import {
 import { siteConfig } from "@/lib/site";
 import { StaySearchBar } from "@/components/stays/search-bar";
 import { StayCard } from "@/components/stays/stay-card";
+import { StayCarousel } from "@/components/stays/stay-carousel";
 import { getFeaturedStays } from "@/lib/data/stays";
 import { getCatalog } from "@/lib/data/catalog";
 import { gardeningServices } from "@/lib/validation/enquiries";
@@ -32,7 +33,7 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [featuredStays, catalog] = await Promise.all([getFeaturedStays(3), getCatalog()]);
+  const [featuredStays, catalog] = await Promise.all([getFeaturedStays(9), getCatalog()]);
   const featuredExperiences = experiences.slice(0, 6);
   const recentPosts = blogPosts.slice(0, 3);
 
@@ -44,7 +45,7 @@ export default async function HomePage() {
         <div className="container-nidhi relative flex flex-col items-start pt-20">
           <Reveal>
             <p className="text-eyebrow text-sand-300!">
-              Curated nature stays · Karnataka
+              Curated nature stays
             </p>
           </Reveal>
           <Reveal delay={0.08}>
@@ -88,6 +89,7 @@ export default async function HomePage() {
           </Reveal>
           <Reveal delay={0.38} className="mt-10 w-full max-w-5xl">
             <StaySearchBar tone="dark" />
+            <p className="mt-3 max-w-xl text-sm text-cream/75">Search by PIN code or place. You will see the full price breakdown before you send a request, and nothing is charged online.</p>
           </Reveal>
         </div>
 
@@ -174,8 +176,10 @@ export default async function HomePage() {
               </ul>
             ) : null}
             {featuredStays.length > 0 ? (
-              <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {featuredStays.map((s) => <StayCard key={s.id} stay={s} />)}
+              <div className="mt-10">
+                <StayCarousel label="Featured stays">
+                  {featuredStays.map((s) => <StayCard key={s.id} stay={s} />)}
+                </StayCarousel>
               </div>
             ) : null}
           </div>
@@ -333,7 +337,7 @@ export default async function HomePage() {
           <SectionHeading
             eyebrow="For property owners"
             title="Own a place in nature? List it with us."
-            description="Hasiru Nidhi is growing a network of farm stays, cottages, homestays and eco-retreats across Karnataka. Apply to list your property — every listing is reviewed, and you stay in control of your calendar and booking requests."
+            description="Hasiru Nidhi is a marketplace for farm stays, cottages, homestays and eco-retreats. List your property with your own photographs and prices, keep control of your calendar, and answer booking requests from your host dashboard. Our team reviews every listing before it goes live."
             tone="light"
           />
           <Reveal delay={0.1} className="flex flex-wrap gap-4 lg:justify-end">

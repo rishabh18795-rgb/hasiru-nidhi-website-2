@@ -9,7 +9,7 @@ export const siteConfig = {
   legalName: "Hasiru Nidhi Horizons Private Limited",
   tagline: "Cultivating Nature, Creating Memories",
   description:
-    "A nature experience retreat in the hills off Kanakapura Road, Bengaluru — cycling trails, working gardens, farmhouse stays, and slow, unhurried days spent outdoors.",
+    "Hasiru Nidhi is a marketplace for peaceful nature stays: farm stays, cottages and eco-retreats hosted by the people who care for them. Search by PIN code or place, see the full price, and send a booking request. Property owners can list and manage their stays. Gardening services are offered separately.",
   // Set NEXT_PUBLIC_SITE_URL to the production domain once it is connected.
   url: siteUrl,
   locale: "en_IN",

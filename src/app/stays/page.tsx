@@ -34,6 +34,7 @@ export default async function StaysPage({ searchParams }: { searchParams: Promis
         <h1 className="mt-3 max-w-3xl text-4xl font-medium tracking-tight text-forest-950 sm:text-5xl">
           Find a quiet place in nature.
         </h1>
+        <p className="mt-3 max-w-2xl text-base leading-relaxed text-ink/70">Every stay here has been reviewed by our team. Search by PIN code or place, pick your dates, and send the host a request. Hosts confirm each booking personally.</p>
         <div className="mt-8">
           <StaySearchBar q={filters.q} pin={filters.pin} checkin={filters.checkin} checkout={filters.checkout} guests={filters.guests}
             hidden={{ category: filters.category, sort: filters.sort !== "featured" ? filters.sort : undefined }} />
@@ -83,7 +84,7 @@ export default async function StaysPage({ searchParams }: { searchParams: Promis
                   <p className="mx-auto mt-2 max-w-md text-sm text-ink/60">
                     {hasAnyFilter
                       ? "Try a nearby PIN code, a city name, different dates or fewer filters. We only show approved, published stays."
-                      : "Property owners are being onboarded. Check back soon — or list your own property."}
+                      : "We are welcoming our first hosts, and every property is reviewed before it goes live. Please check back soon, or list your own property."}
                   </p>
                   <Link href={hasAnyFilter ? "/stays" : "/list-your-property"} className="mt-5 inline-flex h-10 items-center rounded-full bg-forest-800 px-5 text-sm font-medium text-cream hover:bg-forest-700">
                     {hasAnyFilter ? "Clear all filters" : "List your property"}
