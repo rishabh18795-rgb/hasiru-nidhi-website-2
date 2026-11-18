@@ -25,6 +25,10 @@ Nothing here requires code changes. Secrets go only into Vercel / your local `.e
 Verify: **Table editor** shows tables with the 🔒 RLS badge; **Storage** shows the two buckets
 (`property-images` public, `enquiry-photos` private).
 
+**If people already signed up before this step** (their accounts exist in Supabase Auth but have no profile), run `supabase/scripts/backfill_profiles_for_existing_users.sql` once afterwards. It gives each of them a plain traveller profile and changes nothing else.
+
+> **Free-plan Supabase projects pause after a period of inactivity.** While the project is paused, the Vercel integration is marked *Suspended* and **every new Vercel deployment fails at "Provisioning Integrations"** (no build runs). Resume the project in the Supabase dashboard (Restore can take several minutes), confirm the Vercel → Storage entry says *Available*, then redeploy. A Pro plan avoids the pauses.
+
 *(Optional, for testing)* paste `supabase/seed.sql` **after** the migrations to add the six labelled **demonstration** listings (Green Valley Farm Stay, Countryside Garden Cottage, Forest Edge Eco Retreat, Riverside Nature Escape, Organic Farm Experience, Weekend Cycling Retreat). It is generated from `supabase/demo-properties.json` (`npm run db:seed`) and is safe to run twice. Every one is flagged `is_sample`, shown with a **DEMO LISTING — SAMPLE DATA** badge and a demonstration notice, kept out of Google and the sitemap, and has no host, reviews or bookings. Remove them all later with `supabase/scripts/remove_sample_data.sql`. To test the host side of the booking flow, assign them to **your own** test host account with `supabase/scripts/assign_demo_listings_to_host.sql` (never to a made-up owner).
 
 *Demo mode:* separately from the database, `/demo/stays` shows the same six listings built into the site, clearly labelled, with nothing saved. Use it to try the interface before any database exists.
