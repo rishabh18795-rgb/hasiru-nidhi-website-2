@@ -16,9 +16,9 @@ interface CtaBandProps {
 }
 
 export function CtaBand({
-  title = "Ready to trade the city for a while?",
-  description = "Tell us your dates and group size — we'll help you choose the right experience and hold your spot.",
-  primaryLabel = "Book Your Experience",
+  title = "Ready for some quiet?",
+  description = "Tell us your dates and group size and our team will reply with what is possible. Nothing is booked until you hear back.",
+  primaryLabel = "Send an enquiry",
   primaryHref = "/book",
   secondaryLabel = siteConfig.contact.phone ? "Call " + siteConfig.contact.phoneDisplay : "Send us a message",
   secondaryHref = siteConfig.contact.phone ? `tel:${siteConfig.contact.phone.replace(/\s/g, "")}` : "/contact",

@@ -287,7 +287,7 @@ export default async function HomePage() {
           <div className="flex flex-wrap items-end justify-between gap-6">
             <SectionHeading
               eyebrow="Experiences"
-              title="Nine ways to spend a day outdoors."
+              title="Slow ways to spend time outdoors."
               className="mb-0"
             />
             <Reveal delay={0.1}>

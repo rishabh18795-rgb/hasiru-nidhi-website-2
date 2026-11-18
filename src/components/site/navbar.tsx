@@ -188,7 +188,7 @@ export function Navbar({ announcement }: { announcement?: string }) {
                 className="w-full rounded-full"
                 size="lg"
               >
-                Book Your Experience
+                Farm Visit Enquiry
               </LinkButton>
               <LinkButton
                 href="/list-your-property"

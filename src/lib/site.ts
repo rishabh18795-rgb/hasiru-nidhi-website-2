@@ -57,18 +57,15 @@ export const siteConfig = {
 } as const;
 
 export const navLinks = [
-  { label: "Home", href: "/" },
   { label: "Explore Stays", href: "/stays" },
+  { label: "Nature Stay", href: "/nature-stay" },
   {
     label: "Experiences",
     href: "/experiences",
     children: [
       { label: "All Experiences", href: "/experiences" },
-      { label: "Nature Stay", href: "/nature-stay" },
       { label: "Cycling & Outdoors", href: "/cycling" },
-      { label: "Gardening & Landscaping", href: "/gardening-landscaping" },
-      { label: "Gardening Experiences", href: "/gardening" },
-      { label: "Landscaping & Grounds", href: "/landscaping" },
+      { label: "Gallery", href: "/gallery" },
     ],
   },
   {
@@ -77,8 +74,17 @@ export const navLinks = [
     children: [
       { label: "Packages", href: "/packages" },
       { label: "Pricing", href: "/pricing" },
-      { label: "Book Your Experience", href: "/book" },
+      { label: "Farm Visit Enquiry", href: "/book" },
       { label: "FAQ", href: "/faq" },
+    ],
+  },
+  {
+    label: "Gardening Services",
+    href: "/gardening-landscaping",
+    children: [
+      { label: "Gardening & Landscaping", href: "/gardening-landscaping" },
+      { label: "Gardening Experiences", href: "/gardening" },
+      { label: "Landscaping & Grounds", href: "/landscaping" },
     ],
   },
   {
@@ -86,7 +92,6 @@ export const navLinks = [
     href: "/about",
     children: [
       { label: "About Hasiru Nidhi", href: "/about" },
-      { label: "Gallery", href: "/gallery" },
       { label: "Journal", href: "/blog" },
       { label: "Contact", href: "/contact" },
     ],
@@ -96,18 +101,19 @@ export const navLinks = [
 export const footerLinks = {
   explore: [
     { label: "Explore Stays", href: "/stays" },
+    { label: "Nature Stay", href: "/nature-stay" },
     { label: "Experiences", href: "/experiences" },
     { label: "Cycling & Outdoors", href: "/cycling" },
-    { label: "Gardening & Landscaping", href: "/gardening-landscaping" },
     { label: "Gallery", href: "/gallery" },
     { label: "The Journal", href: "/blog" },
   ],
   plan: [
-    { label: "Book Your Experience", href: "/book" },
     { label: "Packages", href: "/packages" },
     { label: "Pricing", href: "/pricing" },
-    { label: "List Your Property", href: "/list-your-property" },
+    { label: "Farm Visit Enquiry", href: "/book" },
+    { label: "Gardening Services", href: "/gardening-landscaping" },
     { label: "Become a Host", href: "/become-a-host" },
+    { label: "List Your Property", href: "/list-your-property" },
     { label: "About Hasiru Nidhi", href: "/about" },
     { label: "FAQ", href: "/faq" },
     { label: "Contact", href: "/contact" },

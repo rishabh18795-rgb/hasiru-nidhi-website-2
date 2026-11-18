@@ -127,7 +127,7 @@ export default async function ContactPage() {
               <p className="mt-6 text-center text-sm text-ink/50">
                 Already know you&apos;d like to visit?{" "}
                 <Link href="/book" className="underline underline-offset-2">
-                  Book Your Experience
+                  Farm Visit Enquiry
                 </Link>{" "}
                 instead.
               </p>
