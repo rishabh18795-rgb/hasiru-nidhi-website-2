@@ -65,13 +65,23 @@ export default async function AdminOverview() {
         <Stat label="New partner applications" value={newApps} />
         <Stat label="Open reports" value={openReports} />
       </div>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" aria-label="Money">
-        <Stat label="Total bookings" value={Object.values(bs).reduce((a, b) => a + b, 0)} />
-        <Stat label="Host earnings (net share)" value={formatINR(sumOf(ledger.data as Record<string, unknown>[] | null, "host_share_inr"))} hint="Host 80% share on confirmed bookings, after reversals" />
-        <Stat label="Platform commission (net)" value={formatINR(sumOf(ledger.data as Record<string, unknown>[] | null, "commission_inr"))} hint="From confirmed bookings, after reversals" />
-        <Stat label="Confirmed bookings without a recorded payment" value={owing.count ?? 0} hint="Online payment is not enabled; record payments in Admin → Payments" />
-        <Stat label="Settlements in progress" value={formatINR(sumOf(settling.data as Record<string, unknown>[] | null, "amount_inr"))} hint="Pending, processing or on hold" />
-      </div>
+      <section aria-label="Money" className="rounded-3xl bg-gradient-to-br from-forest-950 via-forest-900 to-forest-700 p-4 sm:p-5">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          {[
+            ["Total bookings", String(Object.values(bs).reduce((x, y) => x + y, 0)), "All statuses"],
+            ["Host earnings (net share)", formatINR(sumOf(ledger.data as Record<string, unknown>[] | null, "host_share_inr")), "80% share on confirmed bookings, after reversals"],
+            ["Platform commission (net)", formatINR(sumOf(ledger.data as Record<string, unknown>[] | null, "commission_inr")), "From confirmed bookings, after reversals"],
+            ["Bookings without a recorded payment", String(owing.count ?? 0), "Online payment is not enabled; record payments in Admin → Payments"],
+            ["Settlements in progress", formatINR(sumOf(settling.data as Record<string, unknown>[] | null, "amount_inr")), "Pending, processing or on hold"],
+          ].map(([label, value, hint]) => (
+            <div key={label} className="glass-dark rounded-2xl p-4">
+              <p className="text-xs uppercase tracking-wide text-cream/70">{label}</p>
+              <p className="mt-1 font-display text-2xl">{value}</p>
+              <p className="mt-1 text-xs leading-snug text-cream/70">{hint}</p>
+            </div>
+          ))}
+        </div>
+      </section>
 
       <Card>
         <CardTitle>Setup status</CardTitle>

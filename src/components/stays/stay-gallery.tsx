@@ -13,6 +13,8 @@ export interface GalleryImage {
 export function StayGallery({ images, name }: { images: GalleryImage[]; name: string }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [index, setIndex] = useState(0);
+  const [slide, setSlide] = useState(0);
+  const track = useRef<HTMLDivElement>(null);
   const count = images.length;
 
   const open = (i: number) => {
@@ -33,12 +35,50 @@ export function StayGallery({ images, name }: { images: GalleryImage[]; name: st
     return () => window.removeEventListener("keydown", onKey);
   }, [step]);
 
+  const goSlide = (d: number) => {
+    const el = track.current;
+    if (el) el.scrollBy({ left: d * el.clientWidth, behavior: "smooth" });
+  };
+
   if (count === 0) return null;
   const grid = images.slice(0, 5);
 
   return (
     <>
-      <div className={`grid gap-2 overflow-hidden rounded-3xl ${count === 1 ? "" : "md:grid-cols-4 md:grid-rows-2"}`}>
+      {count > 1 ? (
+        <div className="relative md:hidden" role="region" aria-roledescription="carousel" aria-label={`${name} photographs`}>
+          <div
+            ref={track}
+            tabIndex={0}
+            onScroll={(e) => setSlide(Math.round(e.currentTarget.scrollLeft / e.currentTarget.clientWidth))}
+            onKeyDown={(e) => {
+              if (e.key === "ArrowRight") { e.preventDefault(); goSlide(1); }
+              if (e.key === "ArrowLeft") { e.preventDefault(); goSlide(-1); }
+            }}
+            className="flex snap-x snap-mandatory overflow-x-auto rounded-3xl [scrollbar-width:none] focus-visible:outline-2 focus-visible:outline-forest-500 [&::-webkit-scrollbar]:hidden"
+          >
+            {images.map((img, i) => (
+              <button
+                key={img.src + i}
+                type="button"
+                onClick={() => open(i)}
+                aria-label={`Open photo ${i + 1} of ${count}: ${img.alt}`}
+                role="group"
+                aria-roledescription="slide"
+                className="relative aspect-[4/3] w-full shrink-0 snap-center bg-forest-50"
+              >
+                <Image src={img.src} alt={img.alt} fill priority={i === 0} sizes="100vw" className="object-cover" />
+              </button>
+            ))}
+          </div>
+          <span className="glass pointer-events-none absolute bottom-3 left-3 rounded-full px-3 py-1 text-xs font-medium text-forest-950" aria-live="polite">{slide + 1} / {count}</span>
+          <div className="absolute bottom-2.5 right-3 flex gap-2">
+            <button type="button" onClick={() => goSlide(-1)} aria-label="Previous photo" className="glass inline-flex h-9 w-9 items-center justify-center rounded-full text-forest-950"><ChevronLeft className="h-4 w-4" aria-hidden="true" /></button>
+            <button type="button" onClick={() => goSlide(1)} aria-label="Next photo" className="glass inline-flex h-9 w-9 items-center justify-center rounded-full text-forest-950"><ChevronRight className="h-4 w-4" aria-hidden="true" /></button>
+          </div>
+        </div>
+      ) : null}
+      <div className={`${count > 1 ? "hidden md:grid" : "grid"} gap-2 overflow-hidden rounded-3xl ${count === 1 ? "" : "md:grid-cols-4 md:grid-rows-2"}`}>
         {grid.map((img, i) => (
           <button
             key={img.src + i}
@@ -58,19 +98,13 @@ export function StayGallery({ images, name }: { images: GalleryImage[]; name: st
               className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
             />
             {i === grid.length - 1 && count > grid.length ? (
-              <span className="absolute inset-0 hidden items-center justify-center bg-forest-950/55 text-sm font-medium text-cream md:flex">
+              <span className="glass-dark absolute inset-0 hidden items-center justify-center rounded-none text-sm font-medium md:flex">
                 <Expand className="mr-2 h-4 w-4" aria-hidden="true" /> Show all {count} photos
               </span>
             ) : null}
           </button>
         ))}
       </div>
-      {count > 1 ? (
-        <button type="button" onClick={() => open(0)} className="mt-3 text-sm font-medium text-forest-800 underline underline-offset-2 md:hidden">
-          View all {count} photos
-        </button>
-      ) : null}
-
       <dialog
         ref={dialogRef}
         aria-label={`${name} photo gallery`}

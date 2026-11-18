@@ -76,6 +76,16 @@ export default async function HostWallet() {
         {adjustments < 0 ? <p className="mt-4 text-sm text-cream/85">Refund and cancellation adjustments included above: <strong>{formatINR(adjustments)}</strong> of your share.</p> : null}
       </section>
 
+      <details className="group rounded-2xl border border-forest-900/10 bg-white p-5 text-sm leading-relaxed text-ink/75">
+        <summary className="cursor-pointer list-none font-medium text-forest-950 marker:content-none">How your wallet is calculated <span className="text-ink/50 group-open:hidden">(show)</span></summary>
+        <div className="mt-3 space-y-3">
+          <p><strong>Commissionable base.</strong> Each booking stores the platform commission rate and amounts at the moment it was requested. Later changes to the rate never alter an existing booking. The default is 20%, so you keep 80% of the commissionable base. For example, on a base of ₹10,000 the commission is ₹2,000 and your share is ₹8,000.</p>
+          <p><strong>What is not assumed.</strong> Taxes are not part of the commissionable base. Whether cleaning fees, discounts and gateway charges are included follows the company&apos;s confirmed policy, which is shown on each booking&apos;s saved figures.</p>
+          <p><strong>Pending.</strong> A confirmed stay that is not yet completed, or a completed stay whose payment has not been recorded. <strong>Ready for settlement.</strong> A completed stay with a recorded payment that is not yet in a settlement. <strong>In settlement / Paid to you.</strong> Set by the Hasiru Nidhi team, with a bank reference when paid.</p>
+          <p><strong>Adjustments.</strong> If a confirmed booking is cancelled or a refund is recorded, a negative ledger line reverses the commission and your share in proportion. Ledger lines are never edited or deleted.</p>
+        </div>
+      </details>
+
       <section aria-labelledby="bk-h" className="space-y-3">
         <h2 id="bk-h" className="text-lg font-medium text-forest-950">Booking-wise earnings</h2>
         {earning.length === 0 ? <EmptyState title="No earnings yet" description="Earnings appear here once you confirm a booking request." /> : (

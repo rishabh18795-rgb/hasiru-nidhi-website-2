@@ -41,7 +41,7 @@ export function Navbar({ announcement }: { announcement?: string }) {
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-all duration-500",
         solid
-          ? "bg-cream/85 shadow-[0_1px_0_0_rgba(23,32,26,0.06)] backdrop-blur-lg"
+          ? "glass rounded-none border-x-0 border-t-0 shadow-[0_1px_0_0_rgba(23,32,26,0.06)]"
           : "bg-transparent"
       )}
     >
