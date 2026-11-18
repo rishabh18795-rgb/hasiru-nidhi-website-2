@@ -23,6 +23,7 @@ export default async function HostLayout({ children }: { children: React.ReactNo
     { href: "/host/properties", label: "My properties", icon: "properties" },
     { href: "/host/bookings", label: "Bookings", icon: "bookings", badge: count ?? 0 },
     { href: "/host/calendar", label: "Calendar", icon: "calendar" },
+    { href: "/host/earnings", label: "Earnings", icon: "earnings" },
     { href: "/host/enquiries", label: "Enquiries", icon: "enquiries" },
     { href: "/host/notifications", label: "Notifications", icon: "notifications", badge: unread ?? 0 },
     { href: "/host/settings", label: "Profile", icon: "settings" },

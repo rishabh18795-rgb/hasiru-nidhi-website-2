@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 import { Card, EmptyState, StatusBadge } from "@/components/app/ui";
-import { HostCancelForm, RespondToBookingForm } from "@/components/host/host-forms";
+import { CompleteStayForm, HostCancelForm, RespondToBookingForm } from "@/components/host/host-forms";
 import { requireRole } from "@/lib/auth";
 import { formatDate, formatDateTime, formatINR, nightsBetween, todayIST } from "@/lib/format";
 import type { Booking } from "@/lib/db/types";
@@ -23,11 +23,16 @@ function Row({ b, today }: { b: Booking; today: string }) {
         <div><dt className="text-xs uppercase tracking-wide text-ink/50">Guest</dt><dd className="mt-0.5">{b.guest_name || "—"}</dd></div>
         <div><dt className="text-xs uppercase tracking-wide text-ink/50">Contact</dt><dd className="mt-0.5">{b.guest_phone || "—"}<br />{b.guest_email || ""}</dd></div>
         <div><dt className="text-xs uppercase tracking-wide text-ink/50">Indicative total</dt><dd className="mt-0.5">{b.indicative_total_inr !== null ? formatINR(b.indicative_total_inr) : "Price on request"}</dd></div>
+        {b.host_share_inr !== null ? (
+          <div className="sm:col-span-3"><dt className="text-xs uppercase tracking-wide text-ink/50">Your earnings on this booking</dt>
+            <dd className="mt-0.5">{formatINR(b.host_share_inr)} <span className="text-ink/55">after {Number(b.commission_rate_percent)}% platform commission ({formatINR(b.commission_amount_inr)}) on {formatINR(b.commissionable_amount_inr)}</span></dd></div>
+        ) : null}
       </dl>
       {b.message ? <p className="rounded-xl bg-stone-50 px-4 py-3 text-sm text-ink/80"><span className="font-medium">Guest message:</span> {b.message}</p> : null}
       <p className="text-xs text-ink/50">Requested {formatDateTime(b.created_at)}</p>
       {b.status === "requested" ? <RespondToBookingForm bookingId={b.id} /> : null}
       {b.status === "confirmed" && b.check_in >= today ? <HostCancelForm bookingId={b.id} /> : null}
+      {b.status === "confirmed" && b.check_out <= today ? <CompleteStayForm bookingId={b.id} /> : null}
     </Card>
   );
 }

@@ -40,7 +40,9 @@ export const getSession = cache(async (): Promise<Session | null> => {
 export async function requireUser(nextPath?: string): Promise<Session> {
   const session = await getSession();
   if (!session) {
-    redirect(nextPath ? `/sign-in?next=${encodeURIComponent(nextPath)}` : "/sign-in");
+    // Host and admin areas have their own login pages; everything else uses the shared customer sign-in.
+    const login = nextPath?.startsWith("/admin") ? "/admin/login" : nextPath?.startsWith("/host") ? "/host/login" : "/sign-in";
+    redirect(nextPath ? `${login}?next=${encodeURIComponent(nextPath)}` : login);
   }
   if (session.profile.is_suspended) redirect("/account-suspended");
   return session;

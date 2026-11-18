@@ -47,6 +47,51 @@ export async function signIn(_prev: FormState, formData: FormData): Promise<Form
   redirect(safeNextPath(values.next));
 }
 
+/**
+ * Sign-in for a portal with its own login page. The credentials are checked like any other sign-in, then the account's
+ * ROLE (read from the database, never from the form) must match the portal; otherwise the session is ended again, so
+ * a traveller can't reach the host or admin area through these pages. `next` must stay inside the portal.
+ */
+async function portalSignIn(role: "host" | "admin", formData: FormData): Promise<FormState> {
+  if (!isSupabaseConfigured()) return NOT_CONFIGURED;
+  const values = formValues(formData);
+  const parsed = signInSchema.safeParse(values);
+  if (!parsed.success) return { ok: false, fieldErrors: zodFieldErrors(parsed.error), values: { email: values.email ?? "" } };
+
+  const supabase = await createServerSupabase();
+  const { data, error } = await supabase.auth.signInWithPassword(parsed.data);
+  if (error || !data.user) {
+    const unconfirmed = error ? /not confirmed/i.test(error.message) : false;
+    return {
+      ok: false,
+      message: unconfirmed ? "Please verify your email address first — check your inbox for the confirmation link." : "Incorrect email or password.",
+      values: { email: parsed.data.email },
+    };
+  }
+  const { data: profile } = await supabase.from("profiles").select("role, is_suspended").eq("id", data.user.id).maybeSingle();
+  if (!profile || profile.is_suspended || profile.role !== role) {
+    await supabase.auth.signOut();
+    return {
+      ok: false,
+      message: role === "admin"
+        ? "This account does not have administrator access."
+        : "This is not a host account. Use the customer sign in, or create a host account.",
+      values: { email: parsed.data.email },
+    };
+  }
+  const home = role === "admin" ? "/admin" : "/host";
+  const wanted = safeNextPath(values.next, home);
+  redirect(wanted === home || wanted.startsWith(`${home}/`) ? wanted : home);
+}
+
+export async function hostSignIn(_prev: FormState, formData: FormData): Promise<FormState> {
+  return portalSignIn("host", formData);
+}
+
+export async function adminSignIn(_prev: FormState, formData: FormData): Promise<FormState> {
+  return portalSignIn("admin", formData);
+}
+
 type SignUpKind = "customer" | "host";
 
 /**

@@ -17,7 +17,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const items = [
     { href: "/dashboard", label: "Overview", icon: "overview", exact: true },
     { href: "/dashboard/bookings", label: "My bookings", icon: "bookings" },
-    { href: "/dashboard/saved", label: "Saved stays", icon: "saved" },
+    { href: "/dashboard/saved", label: "Favourites", icon: "saved" },
     { href: "/dashboard/notifications", label: "Notifications", icon: "notifications", badge: count ?? 0 },
     { href: "/dashboard/profile", label: "Profile", icon: "profile" },
   ] as const;

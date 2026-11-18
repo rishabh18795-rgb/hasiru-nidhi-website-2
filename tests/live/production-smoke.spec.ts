@@ -113,11 +113,33 @@ test.describe("live marketplace boundaries", () => {
     expect(await page.locator('input[name="next"]').count()).toBe(0);
   });
 
-  test("customer, host and admin areas redirect signed-out visitors to sign-in", async ({ page }) => {
-    for (const path of ["/dashboard/bookings", "/host/bookings", "/host/properties/new", "/admin", "/admin/properties/pending"]) {
+  test("customer, host and admin areas redirect signed-out visitors to the matching login", async ({ page }) => {
+    for (const [path, login] of [["/dashboard/bookings", /\/sign-in\?next=/], ["/host/bookings", /\/host\/login\?next=/], ["/host/properties/new", /\/host\/login\?next=/], ["/admin", /\/admin\/login\?next=/], ["/admin/properties/pending", /\/admin\/login\?next=/]] as const) {
       await page.goto(path);
-      await expect(page, path).toHaveURL(/\/sign-in\?next=/);
+      await expect(page, path).toHaveURL(login);
     }
+  });
+
+  test("the homepage has no 45-minutes claim and has the separate Gardening Services section", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.locator("main")).not.toContainText(/45\s*(–|-)?\s*(60)?\s*min(ute)?s?\s+(from|away)|minutes from central/i);
+    await expect(page.locator('#gardening-services a[href="/gardening#enquire"]')).toContainText("Enquire Now");
+    await expect(page.getByRole("search", { name: "Search stays" }).getByText("PIN code", { exact: true })).toBeVisible();
+  });
+
+  test("the host and administrator login pages are real, separate and noindex", async ({ page }) => {
+    for (const [path, heading] of [["/host/login", "Host login"], ["/host/register", "Create your host account"], ["/admin/login", "Administrator sign in"]] as const) {
+      await page.goto(path);
+      await expect(page, path).toHaveURL(new RegExp(`${path}$`));
+      await expect(page.getByRole("heading", { level: 1 })).toHaveText(heading);
+      await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
+    }
+    await page.goto("/admin/login");
+    await expect(page.getByRole("button", { name: "Continue with Google" })).toHaveCount(0);
+  });
+
+  test("the payment webhook never fakes success while no provider exists", async ({ request }) => {
+    expect((await request.post("/api/payments/webhook/razorpay", { data: "{}", headers: { "x-signature": "x" } })).status()).toBe(503);
   });
 
   test("security headers, robots and sitemap", async ({ request }) => {

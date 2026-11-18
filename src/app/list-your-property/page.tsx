@@ -37,7 +37,7 @@ export default async function ListYourPropertyPage({ searchParams }: { searchPar
         image={images.farmhouseCottage}
         crumb="List Your Property"
         primaryCta={{ label: "Start Listing Your Property", href: "/host/properties/new" }}
-        secondaryCta={{ label: "Create Host Account", href: "/sign-up?type=host&next=%2Fhost%2Fproperties%2Fnew" }}
+        secondaryCta={{ label: "Create Host Account", href: "/host/register?next=%2Fhost%2Fproperties%2Fnew" }}
       />
 
       <section className="bg-cream pb-4 pt-14">

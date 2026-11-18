@@ -41,7 +41,7 @@ export function PartnerApplicationForm() {
       </div>
       <CheckboxField name="consent" error={e.consent} label={<>I agree that Hasiru Nidhi may contact me about listing my property, and I&apos;ve read the <Link href="/privacy" className="underline">Privacy Policy</Link> and <Link href="/terms" className="underline">Terms</Link>.</>} />
       <SubmitButton pendingLabel="Sending…" className="self-start">Send application</SubmitButton>
-      <p className="text-xs text-ink/55">Prefer to upload photographs and manage your listing yourself? <Link href="/sign-up?type=host" className="underline">Create a host account</Link> instead.</p>
+      <p className="text-xs text-ink/55">Prefer to upload photographs and manage your listing yourself? <Link href="/host/register" className="underline">Create a host account</Link> instead.</p>
     </form>
   );
 }

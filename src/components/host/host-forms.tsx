@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 
-import { addRoomType, blockDates, cancelAsHost, deleteDraft, respondToBooking, submitForReview } from "@/app/host/actions";
+import { addRoomType, blockDates, cancelAsHost, completeStay, deleteDraft, respondToBooking, submitForReview } from "@/app/host/actions";
 import type { FormState } from "@/lib/action";
 import { Field, TextArea, TextInput } from "@/components/forms/fields";
 import { FormMessage } from "@/components/forms/form-message";
@@ -94,5 +94,16 @@ export function HostCancelForm({ bookingId }: { bookingId: string }) {
         <SubmitButton variant="danger" pendingLabel="Cancelling…" className="self-start">Confirm cancellation</SubmitButton>
       </form>
     </details>
+  );
+}
+
+export function CompleteStayForm({ bookingId }: { bookingId: string }) {
+  const [state, action] = useActionState(completeStay, initial);
+  return (
+    <form action={action} className="flex flex-wrap items-center gap-3">
+      <input type="hidden" name="booking_id" value={bookingId} />
+      <SubmitButton variant="outline" pendingLabel="Saving…" className="h-10">Mark stay completed</SubmitButton>
+      <FormMessage state={state} />
+    </form>
   );
 }

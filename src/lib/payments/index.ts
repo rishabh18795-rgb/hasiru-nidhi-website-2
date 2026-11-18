@@ -1,19 +1,17 @@
 /**
- * PAYMENT INTEGRATION — INTENTIONALLY NOT ENABLED.
+ * PAYMENT PROVIDER SEAM — NO PROVIDER IS INTEGRATED YET.
  *
- * Bookings today are REQUESTS settled directly between guest and host; the platform holds no
- * funds and the UI says so everywhere (see /cancellation-policy and /terms). This module is the
- * documented seam where an online payment provider (e.g. Razorpay for INR) plugs in once the
- * business has a merchant account and credentials.
+ * Bookings are requests; the platform does not collect money and the UI says so. What exists today is the foundation a provider
+ * plugs into, and it is deliberately provider-independent:
+ *   - database: payments, payment_events (unique per provider + event id), commission_ledger, host_settlements, refunds, and
+ *     record_payment_event() — callable by the server only — which is idempotent and can never mark an unconfirmed booking paid;
+ *   - this module: the PaymentProvider interface and getPaymentProvider();
+ *   - src/lib/payments/webhook.ts + /api/payments/webhook/[provider]: verifies the signature, then records the event once.
  *
- * To enable payments you will need (none of these exist yet):
- *   1. A Razorpay (or similar) merchant account with KYC completed.
- *   2. RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET (server-only) + a webhook secret.
- *   3. A `payments` table, a server action that creates an order for a CONFIRMED booking, and a
- *      webhook route that verifies the provider signature before marking anything paid.
- *   4. Updated refund logic and policy text that follow the cancellation policy automatically.
- *
- * Until then `getPaymentProvider()` returns null and nothing may report a payment as successful.
+ * To go live with a provider (e.g. Razorpay for INR) the business needs: a merchant account with KYC, API keys and a webhook
+ * secret in server-only environment variables, an adapter implementing PaymentProvider (createOrder + verifyWebhook), and a test
+ * of real success, failure and refund events in the provider's test environment. Until then getPaymentProvider() is null, the
+ * webhook route answers 503, and nothing may report a payment as successful.
  */
 export interface PaymentOrder {
   id: string;
@@ -21,18 +19,30 @@ export interface PaymentOrder {
   currency: "INR";
 }
 
+/** What a provider adapter must turn a verified webhook into. Amounts are rupees (the database stores INR). */
+export interface PaymentEvent {
+  /** The provider's unique id for this event: the idempotency key. */
+  eventId: string;
+  type: "payment.captured" | "payment.failed" | "refund.processed";
+  bookingId: string | null;
+  /** The provider's payment / order reference. */
+  reference: string;
+  amountInr: number;
+}
+
 export interface PaymentProvider {
   readonly name: string;
   createOrder(input: { bookingId: string; amountPaise: number }): Promise<PaymentOrder>;
-  /** Must verify the provider's cryptographic signature; never trust a client-supplied "paid" flag. */
-  verifyWebhook(rawBody: string, signature: string): Promise<{ bookingId: string; paid: boolean }>;
+  /** Must verify the provider's cryptographic signature and return null when it does not match. Never trust a client-supplied "paid" flag. */
+  verifyWebhook(rawBody: string, signature: string): Promise<PaymentEvent | null>;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- the name is the argument a real adapter lookup will use
+export function getPaymentProvider(_name?: string): PaymentProvider | null {
+  // No provider is implemented. Returning null makes every caller fall back to "pay the host directly".
+  return null;
 }
 
 export function isPaymentsEnabled(): boolean {
-  return Boolean(process.env.RAZORPAY_KEY_ID?.trim() && process.env.RAZORPAY_KEY_SECRET?.trim()) && false;
-}
-
-export function getPaymentProvider(): PaymentProvider | null {
-  // No provider is implemented. Returning null makes every caller fall back to "pay the host directly".
-  return null;
+  return getPaymentProvider() !== null;
 }

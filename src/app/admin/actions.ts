@@ -187,3 +187,112 @@ export async function moderateReview(reviewId: string, hidden: boolean): Promise
   revalidatePath("/admin/reviews");
   revalidatePath("/stays", "layout");
 }
+
+/* ---------------------------------------------------------------- finance: payments, commission, settlements */
+// Every function below goes through a SECURITY DEFINER database function that re-checks the admin role, validates the
+// amounts and writes the audit entry. Nothing here marks a payment as received unless an administrator states that it was.
+const FINANCE_PATHS = ["/admin/payments", "/admin/commission", "/admin/settlements", "/admin/bookings"];
+const revalidateFinance = () => FINANCE_PATHS.forEach((p) => revalidatePath(p));
+const money = z.coerce.number("Enter an amount").positive("Enter an amount above zero").max(10_000_000, "That amount is too large");
+
+const paymentSchema = z.object({
+  booking_id: z.uuid(),
+  amount: money,
+  reference: z.string().trim().min(2, "Enter the bank / UPI reference").max(120),
+  note: z.string().trim().max(500).optional(),
+});
+
+export async function recordPayment(_prev: FormState, formData: FormData): Promise<FormState> {
+  const session = await adminSession();
+  if (!session) return DENIED;
+  const values = formValues(formData);
+  const parsed = paymentSchema.safeParse(values);
+  if (!parsed.success) return { ok: false, fieldErrors: zodFieldErrors(parsed.error), message: "Please fix the highlighted fields.", values };
+  const { error } = await session.supabase.rpc("admin_record_payment", {
+    p_booking: parsed.data.booking_id, p_amount: parsed.data.amount, p_reference: parsed.data.reference, p_note: parsed.data.note || null, p_provider: "manual",
+  });
+  if (error) return { ok: false, message: friendlyDbError(error), values };
+  revalidateFinance();
+  return { ok: true, message: "Payment recorded." };
+}
+
+const refundSchema = z.object({
+  payment_id: z.uuid(),
+  amount: money,
+  reason: z.string().trim().min(3, "Enter a reason").max(300),
+});
+
+export async function recordRefund(_prev: FormState, formData: FormData): Promise<FormState> {
+  const session = await adminSession();
+  if (!session) return DENIED;
+  const values = formValues(formData);
+  const parsed = refundSchema.safeParse(values);
+  if (!parsed.success) return { ok: false, fieldErrors: zodFieldErrors(parsed.error), message: "Please fix the highlighted fields.", values };
+  const { error } = await session.supabase.rpc("admin_record_refund", { p_payment: parsed.data.payment_id, p_amount: parsed.data.amount, p_reason: parsed.data.reason });
+  if (error) return { ok: false, message: friendlyDbError(error), values };
+  revalidateFinance();
+  return { ok: true, message: "Refund recorded." };
+}
+
+const commissionSchema = z.object({
+  rate: z.coerce.number("Enter a percentage").min(0, "Minimum 0").max(50, "Maximum 50"),
+  basis: z.enum(["accommodation", "accommodation_and_cleaning"]),
+});
+
+export async function setCommission(_prev: FormState, formData: FormData): Promise<FormState> {
+  const session = await adminSession();
+  if (!session) return DENIED;
+  const values = formValues(formData);
+  const parsed = commissionSchema.safeParse(values);
+  if (!parsed.success) return { ok: false, fieldErrors: zodFieldErrors(parsed.error), message: "Please fix the highlighted fields.", values };
+  const { error } = await session.supabase.rpc("admin_set_commission", {
+    p_rate: parsed.data.rate, p_basis: parsed.data.basis,
+    p_reverse_on_cancellation: values.reverse_on_cancellation === "on", p_refund_reverses: values.refund_reverses === "on", p_settlement_requires_payment: values.settlement_requires_payment === "on",
+  });
+  if (error) return { ok: false, message: friendlyDbError(error), values };
+  revalidateFinance();
+  return { ok: true, message: "Commission settings saved. They apply to new bookings only." };
+}
+
+export async function createSettlement(_prev: FormState, formData: FormData): Promise<FormState> {
+  const session = await adminSession();
+  if (!session) return DENIED;
+  const host = z.uuid().safeParse(formData.get("host_id"));
+  if (!host.success) return { ok: false, message: "Invalid request." };
+  const note = String(formData.get("note") ?? "").slice(0, 500);
+  const { error } = await session.supabase.rpc("admin_create_settlement", { p_host: host.data, p_note: note || null });
+  if (error) return { ok: false, message: friendlyDbError(error) };
+  revalidateFinance();
+  return { ok: true, message: "Settlement created." };
+}
+
+const settlementSchema = z.object({
+  settlement_id: z.uuid(),
+  status: z.enum(["pending", "processing", "paid", "on_hold", "failed"]),
+  reference: z.string().trim().max(120).optional(),
+  note: z.string().trim().max(500).optional(),
+});
+
+export async function updateSettlement(_prev: FormState, formData: FormData): Promise<FormState> {
+  const session = await adminSession();
+  if (!session) return DENIED;
+  const parsed = settlementSchema.safeParse(formValues(formData));
+  if (!parsed.success) return { ok: false, message: "Invalid request." };
+  const { error } = await session.supabase.rpc("admin_update_settlement", {
+    p_settlement: parsed.data.settlement_id, p_status: parsed.data.status, p_reference: parsed.data.reference || null, p_note: parsed.data.note || null,
+  });
+  if (error) return { ok: false, message: friendlyDbError(error) };
+  revalidateFinance();
+  return { ok: true, message: "Settlement updated." };
+}
+
+export async function adminCompleteBooking(_prev: FormState, formData: FormData): Promise<FormState> {
+  const session = await adminSession();
+  if (!session) return DENIED;
+  const id = z.uuid().safeParse(formData.get("booking_id"));
+  if (!id.success) return { ok: false, message: "Invalid request." };
+  const { error } = await session.supabase.rpc("complete_booking", { p_booking: id.data });
+  if (error) return { ok: false, message: friendlyDbError(error) };
+  revalidateFinance();
+  return { ok: true, message: "Stay marked completed." };
+}

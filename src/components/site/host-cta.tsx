@@ -34,8 +34,8 @@ export async function HostCta({ becomeNotice, className }: { becomeNotice?: bool
         )}
         {!session ? (
           <>
-            <Link href={`/sign-up?type=host&next=${encodeURIComponent(NEW_PROPERTY)}`} className={secondary}><UserPlus className="h-4 w-4" aria-hidden="true" /> Create Host Account</Link>
-            <Link href={`/sign-in?next=${encodeURIComponent("/host")}`} className={secondary}><LogIn className="h-4 w-4" aria-hidden="true" /> Host Login</Link>
+            <Link href={`/host/register?next=${encodeURIComponent(NEW_PROPERTY)}`} className={secondary}><UserPlus className="h-4 w-4" aria-hidden="true" /> Create Host Account</Link>
+            <Link href="/host/login" className={secondary}><LogIn className="h-4 w-4" aria-hidden="true" /> Host Login</Link>
           </>
         ) : null}
         {role === "host" || !session ? <Link href="/host/properties" className={secondary}><Building2 className="h-4 w-4" aria-hidden="true" /> Manage My Properties</Link> : null}

@@ -31,7 +31,7 @@ export default function BecomeAHostPage() {
         image={images.cabinMisty}
         crumb="Become a Host"
         primaryCta={{ label: "Start Listing Your Property", href: "/host/properties/new" }}
-        secondaryCta={{ label: "Create Host Account", href: "/sign-up?type=host&next=%2Fhost%2Fproperties%2Fnew" }}
+        secondaryCta={{ label: "Create Host Account", href: "/host/register?next=%2Fhost%2Fproperties%2Fnew" }}
       />
       <section className="bg-cream py-24">
         <div className="container-nidhi">
@@ -65,7 +65,7 @@ export default function BecomeAHostPage() {
           </Reveal>
         </div>
       </section>
-      <CtaBand title="Ready to list your property?" description="Apply in a few minutes. You can save a draft and come back later." primaryLabel="Start Listing Your Property" primaryHref="/host/properties/new" secondaryLabel="Create a host account" secondaryHref="/sign-up?type=host&next=%2Fhost%2Fproperties%2Fnew" />
+      <CtaBand title="Ready to list your property?" description="Apply in a few minutes. You can save a draft and come back later." primaryLabel="Start Listing Your Property" primaryHref="/host/properties/new" secondaryLabel="Create a host account" secondaryHref="/host/register?next=%2Fhost%2Fproperties%2Fnew" />
     </>
   );
 }

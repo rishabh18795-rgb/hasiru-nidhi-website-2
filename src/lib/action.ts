@@ -39,6 +39,15 @@ const FRIENDLY: Array<[RegExp, string]> = [
   [/too_many_photos/, "A listing can have at most 20 photographs."],
   [/violates check constraint/, "One of the values is outside the allowed range. Please check the highlighted fields."],
   [/not_found/, "We could not find that record."],
+  [/invalid_setting/, "That value is not allowed. The commission must be between 0 and 50 %."],
+  [/overpayment/, "That would be more than the booking total. Please check the amount."],
+  [/invalid_payment/, "Enter a positive amount and the bank / UPI reference of the payment."],
+  [/invalid_refund_amount/, "The refund is larger than what remains of that payment."],
+  [/nothing_to_settle/, "There is nothing to settle for this host yet. Only completed, paid bookings can be settled."],
+  [/invalid_transition/, "That settlement can't move to that status from where it is."],
+  [/reference_required/, "Enter the bank transfer reference to mark a settlement as paid."],
+  [/stay_not_finished/, "A stay can be marked completed only after its check-out date."],
+  [/commission_snapshot_immutable/, "The commission on an existing booking can't be changed."],
 ];
 
 const LABELS: Record<string, string> = {
@@ -50,6 +59,7 @@ const LABELS: Record<string, string> = {
   terms: "acceptance of the host terms",
   photos: "at least one photograph",
   contact_and_address: "a contact phone number and street address",
+  pin_code: "a valid 6-digit PIN code",
 };
 
 /** Translate database / RPC errors into messages that are safe and useful to show users. */

@@ -37,6 +37,7 @@ function BookingCard({ b, today, reviewed }: { b: Row; today: string; reviewed: 
         <div><dt className="uppercase tracking-wide">Cancellation</dt><dd className="mt-0.5 text-ink/80">{b.cancellation_policy}</dd></div>
       </dl>
       {b.cancelled_at ? <p className="text-xs text-ink/55">Cancelled {formatDateTime(b.cancelled_at)}{b.cancellation_note ? ` — ${b.cancellation_note}` : ""}</p> : null}
+      <Link href={`/dashboard/bookings/${b.id}`} className="inline-flex text-sm font-medium text-forest-700 underline underline-offset-2 hover:text-forest-900">View booking details</Link>
       {cancellable ? <CancelBookingForm bookingId={b.id} policyText={policy} /> : null}
       {finished && !reviewed ? <ReviewForm bookingId={b.id} /> : null}
     </Card>

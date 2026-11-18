@@ -373,3 +373,17 @@ export async function cancelAsHost(_prev: FormState, formData: FormData): Promis
   revalidatePath("/dashboard/bookings");
   return { ok: true, message: "Booking cancelled and the guest notified." };
 }
+
+/** Marks a finished stay as completed (the database refuses before the check-out date and for anyone but the owning host). */
+export async function completeStay(_prev: FormState, formData: FormData): Promise<FormState> {
+  const session = await hostSession();
+  if (!session) return DENIED;
+  const id = String(formData.get("booking_id") ?? "");
+  if (!/^[0-9a-f-]{36}$/.test(id)) return { ok: false, message: "Invalid request." };
+  const { error } = await session.supabase.rpc("complete_booking", { p_booking: id });
+  if (error) return { ok: false, message: friendlyDbError(error) };
+  revalidatePath("/host/bookings");
+  revalidatePath("/host/earnings");
+  revalidatePath("/dashboard/bookings");
+  return { ok: true, message: "Stay marked completed." };
+}

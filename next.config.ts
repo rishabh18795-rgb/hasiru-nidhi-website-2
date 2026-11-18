@@ -53,16 +53,12 @@ const nextConfig: NextConfig = {
   },
   reactStrictMode: true,
   poweredByHeader: false,
-  // Friendly aliases for the portal entry points. These run before routing, so they can never loop through the
-  // protected /host and /admin layouts.
+  // Friendly aliases. (The host and admin login/registration pages are real pages outside the guarded route groups.)
   async redirects() {
     return [
-      { source: "/host/register", destination: "/sign-up?type=host", permanent: false },
-      { source: "/host/login", destination: "/sign-in?next=%2Fhost", permanent: false },
       { source: "/login", destination: "/sign-in", permanent: false },
       { source: "/register", destination: "/sign-up", permanent: false },
       { source: "/host/profile", destination: "/host/settings", permanent: false },
-      { source: "/admin/login", destination: "/sign-in?next=%2Fadmin", permanent: false },
       { source: "/admin/dashboard", destination: "/admin", permanent: false },
       { source: "/admin/properties/pending", destination: "/admin/properties?status=pending_review", permanent: false },
       { source: "/admin/experiences", destination: "/admin/catalog", permanent: false },

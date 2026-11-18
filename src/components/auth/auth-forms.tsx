@@ -4,15 +4,16 @@ import { useActionState } from "react";
 import Link from "next/link";
 
 import type { FormState } from "@/lib/action";
-import { requestPasswordReset, resetPassword, signIn, signUpCustomer, signUpHost } from "@/app/auth/actions";
+import { adminSignIn, hostSignIn, requestPasswordReset, resetPassword, signIn, signUpCustomer, signUpHost } from "@/app/auth/actions";
 import { CheckboxField, Field, PasswordInput, TextInput } from "@/components/forms/fields";
 import { FormMessage } from "@/components/forms/form-message";
 import { SubmitButton } from "@/components/forms/submit-button";
 
 const initial: FormState = {};
 
-export function SignInForm({ next }: { next?: string }) {
-  const [state, action] = useActionState(signIn, initial);
+/** `portal` selects the host or admin sign-in action (which also checks the account's role); omitted = customer sign-in. */
+export function SignInForm({ next, portal }: { next?: string; portal?: "host" | "admin" }) {
+  const [state, action] = useActionState(portal === "admin" ? adminSignIn : portal === "host" ? hostSignIn : signIn, initial);
   return (
     <form action={action} className="flex flex-col gap-5" noValidate>
       {next ? <input type="hidden" name="next" value={next} /> : null}

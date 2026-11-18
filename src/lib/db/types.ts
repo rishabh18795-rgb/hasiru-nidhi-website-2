@@ -151,6 +151,11 @@ export interface Booking {
   guest_phone: string | null;
   indicative_total_inr: number | null;
   price_breakdown: import("@/lib/pricing").Quote | null;
+  /** Commission snapshot frozen when the request was made (null for bookings that predate commissions). */
+  commission_rate_percent: number | null;
+  commissionable_amount_inr: number | null;
+  commission_amount_inr: number | null;
+  host_share_inr: number | null;
   created_at: string;
   cancelled_at: string | null;
   cancellation_note: string | null;
@@ -164,6 +169,7 @@ export interface SearchResult {
   city: string | null;
   state: string | null;
   region: string | null;
+  postal_code: string | null;
   category_slug: string | null;
   category_name: string | null;
   price_inr: number | null;
@@ -189,4 +195,62 @@ export interface Notification {
   link: string | null;
   is_read: boolean;
   created_at: string;
+}
+
+/** One row per booking with its money (view booking_financials; RLS decides who sees which rows). */
+export interface BookingFinancial {
+  booking_id: string;
+  property_id: string;
+  host_id: string | null;
+  traveller_id: string | null;
+  property_name: string;
+  guest_name: string;
+  status: BookingStatus;
+  check_in: string;
+  check_out: string;
+  gross_inr: number | null;
+  commission_rate_percent: number | null;
+  commissionable_amount_inr: number | null;
+  commission_amount_inr: number | null;
+  host_share_inr: number | null;
+  net_commission_inr: number;
+  net_host_share_inr: number;
+  payment_status: "unpaid" | "initiated" | "paid" | "failed" | "partially_refunded" | "refunded";
+  settlement_status: "not_due" | "pending" | "processing" | "paid" | "on_hold" | "failed";
+}
+
+export interface PaymentRow {
+  id: string;
+  booking_id: string;
+  provider: string;
+  provider_reference: string;
+  amount_inr: number;
+  refunded_inr: number;
+  status: string;
+  note: string | null;
+  created_at: string;
+}
+
+export interface LedgerEntry {
+  id: number;
+  booking_id: string;
+  host_id: string | null;
+  kind: "accrual" | "reversal";
+  commissionable_inr: number;
+  commission_rate_percent: number;
+  commission_inr: number;
+  host_share_inr: number;
+  note: string | null;
+  created_at: string;
+}
+
+export interface HostSettlement {
+  id: string;
+  host_id: string;
+  amount_inr: number;
+  status: "not_due" | "pending" | "processing" | "paid" | "on_hold" | "failed";
+  reference: string | null;
+  note: string | null;
+  created_at: string;
+  paid_at: string | null;
 }

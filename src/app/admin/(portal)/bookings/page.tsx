@@ -3,13 +3,14 @@ import Link from "next/link";
 
 import { Card, EmptyState, StatusBadge } from "@/components/app/ui";
 import { AdminCancelForm } from "@/components/admin/admin-forms";
+import { AdminCompleteForm } from "@/components/admin/finance-forms";
 import { requireRole } from "@/lib/auth";
-import { formatDate, formatDateTime, formatINR } from "@/lib/format";
-import type { Booking } from "@/lib/db/types";
+import { formatDate, formatDateTime, formatINR, todayIST } from "@/lib/format";
+import type { Booking, BookingFinancial } from "@/lib/db/types";
 
 export const metadata: Metadata = { title: "Bookings" };
 
-const FILTERS = ["all", "requested", "confirmed", "rejected", "cancelled_by_traveller", "cancelled_by_host"] as const;
+const FILTERS = ["all", "requested", "confirmed", "completed", "rejected", "cancelled_by_traveller", "cancelled_by_host"] as const;
 
 export default async function AdminBookings({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
   const sp = await searchParams;
@@ -19,6 +20,9 @@ export default async function AdminBookings({ searchParams }: { searchParams: Pr
   if (status !== "all") q = q.eq("status", status);
   const { data } = await q;
   const list = (data ?? []) as Booking[];
+  const { data: fin } = list.length ? await supabase.from("booking_financials").select("booking_id, payment_status, settlement_status, net_commission_inr, net_host_share_inr").in("booking_id", list.map((b) => b.id)) : { data: [] };
+  const money = new Map(((fin ?? []) as Pick<BookingFinancial, "booking_id" | "payment_status" | "settlement_status" | "net_commission_inr" | "net_host_share_inr">[]).map((m) => [m.booking_id, m]));
+  const today = todayIST();
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-medium tracking-tight text-forest-950">Bookings</h1>
@@ -35,7 +39,11 @@ export default async function AdminBookings({ searchParams }: { searchParams: Pr
                   <StatusBadge status={b.status} />
                 </div>
                 <p className="text-sm text-ink/70">{formatDate(b.check_in)} → {formatDate(b.check_out)} · {b.guest_name} · {b.adults + b.children} guest(s) · {b.indicative_total_inr !== null ? formatINR(b.indicative_total_inr) : "no price"}</p>
+                {money.get(b.id) && b.commission_amount_inr !== null ? (
+                  <p className="text-xs text-ink/60">Commission {formatINR(money.get(b.id)!.net_commission_inr)} ({Number(b.commission_rate_percent)}%) · host share {formatINR(money.get(b.id)!.net_host_share_inr)} · payment: {money.get(b.id)!.payment_status.replace("_", " ")} · settlement: {money.get(b.id)!.settlement_status.replace("_", " ")}</p>
+                ) : null}
                 <p className="text-xs text-ink/45">Requested {formatDateTime(b.created_at)}</p>
+                {b.status === "confirmed" && b.check_out <= today ? <AdminCompleteForm bookingId={b.id} /> : null}
                 {b.status === "requested" || b.status === "confirmed" ? <AdminCancelForm bookingId={b.id} /> : null}
               </Card>
             </li>

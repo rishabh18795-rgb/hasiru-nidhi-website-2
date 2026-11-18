@@ -6,6 +6,15 @@ import { fetchWithTimeout } from "@/lib/supabase/fetch";
 
 const PROTECTED_PREFIXES = ["/dashboard", "/host", "/admin"];
 const AUTH_PAGES = ["/sign-in", "/sign-up"];
+/** Entry pages of the host and admin portals: public by design (they are where signed-out visitors sign in). */
+const PORTAL_ENTRY_PAGES = ["/host/login", "/host/register", "/admin/login"];
+
+/** Where a signed-out visitor to `path` should sign in: each portal has its own login page. */
+export function signInPathFor(path: string): string {
+  if (path === "/admin" || path.startsWith("/admin/")) return "/admin/login";
+  if (path === "/host" || path.startsWith("/host/")) return "/host/login";
+  return "/sign-in";
+}
 
 /**
  * Refreshes the Supabase session cookie on every matched request and performs an OPTIMISTIC
@@ -17,10 +26,10 @@ export async function updateSession(request: NextRequest) {
   const { url, anonKey, configured } = getSupabaseConfig();
   let response = NextResponse.next({ request });
   const path = request.nextUrl.pathname;
-  const isProtected = PROTECTED_PREFIXES.some((p) => path === p || path.startsWith(`${p}/`));
+  const isProtected = !PORTAL_ENTRY_PAGES.includes(path) && PROTECTED_PREFIXES.some((p) => path === p || path.startsWith(`${p}/`));
   const toSignIn = () => {
     const redirect = request.nextUrl.clone();
-    redirect.pathname = "/sign-in";
+    redirect.pathname = signInPathFor(path);
     redirect.search = `?next=${encodeURIComponent(path + request.nextUrl.search)}`;
     return NextResponse.redirect(redirect);
   };

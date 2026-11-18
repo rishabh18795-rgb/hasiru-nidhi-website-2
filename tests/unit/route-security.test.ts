@@ -26,13 +26,17 @@ describe("protected route segments", () => {
   for (const segment of PROTECTED) {
     const dir = path.join(APP, segment);
 
-    it(`${segment}/layout.tsx authorizes and is never prerendered`, () => {
-      const layout = read(path.join(dir, "layout.tsx"));
+    // Host and admin keep their guarded layout in a (portal) route group so that their login/register pages can sit
+    // outside it, in the same URL space but without the guard.
+    const guarded = fs.existsSync(path.join(dir, "(portal)")) ? path.join(dir, "(portal)") : dir;
+
+    it(`${segment} guarded layout authorizes and is never prerendered`, () => {
+      const layout = read(path.join(guarded, "layout.tsx"));
       expect(layout).toMatch(AUTH_CALL);
       expect(layout).toMatch(/export const dynamic = "force-dynamic"/);
     });
 
-    const pages = walk(dir, (f) => f.endsWith("page.tsx"));
+    const pages = walk(guarded, (f) => f.endsWith("page.tsx"));
     it(`${segment} has pages to check`, () => expect(pages.length).toBeGreaterThan(0));
     for (const page of pages) {
       it(`${rel(page)} performs its OWN server-side auth check (layouts do not re-run on client navigation)`, () => {
@@ -42,15 +46,35 @@ describe("protected route segments", () => {
   }
 
   it("admin pages require the admin role specifically", () => {
-    for (const page of walk(path.join(APP, "admin"), (f) => f.endsWith("page.tsx") || f.endsWith("layout.tsx"))) {
+    for (const page of walk(path.join(APP, "admin", "(portal)"), (f) => f.endsWith("page.tsx") || f.endsWith("layout.tsx"))) {
       expect(read(page), rel(page)).toMatch(/requireRole\(\["admin"\]/);
     }
   });
 
   it("host pages require the host role specifically", () => {
-    for (const page of walk(path.join(APP, "host"), (f) => f.endsWith("page.tsx") || f.endsWith("layout.tsx"))) {
+    for (const page of walk(path.join(APP, "host", "(portal)"), (f) => f.endsWith("page.tsx") || f.endsWith("layout.tsx"))) {
       expect(read(page), rel(page)).toMatch(/requireRole\(\["host"\]/);
     }
+  });
+});
+
+describe("portal entry pages (login / register) are the only public pages inside /host and /admin", () => {
+  it("only the three known entry pages sit outside the guarded route groups", () => {
+    const outside = [
+      ...walk(path.join(APP, "host"), (f) => f.endsWith("page.tsx")).filter((f) => !f.includes("(portal)")),
+      ...walk(path.join(APP, "admin"), (f) => f.endsWith("page.tsx")).filter((f) => !f.includes("(portal)")),
+    ].map(rel).sort();
+    expect(outside).toEqual(["admin/login/page.tsx", "host/login/page.tsx", "host/register/page.tsx"]);
+  });
+  it("the admin login page has no sign-up or Google sign-in", () => {
+    const src = read(path.join(APP, "admin/login/page.tsx"));
+    expect(src).not.toMatch(/GoogleButton|sign-up|signUp/);
+    expect(src).toMatch(/portal="admin"/);
+  });
+  it("the portal sign-in actions verify the role after authenticating", () => {
+    const src = read(path.join(APP, "auth/actions.ts"));
+    expect(src).toMatch(/profile\.role !== role/);
+    expect(src).toMatch(/signOut\(\)/);
   });
 });
 

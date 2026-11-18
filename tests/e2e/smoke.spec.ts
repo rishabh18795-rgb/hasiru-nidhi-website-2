@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 import { visit } from "./helpers";
 
-const PUBLIC_PAGES = ["/", "/stays", "/demo/stays", "/demo/stays/demo-green-valley-farm-stay", "/experiences", "/cycling", "/gardening-landscaping", "/about", "/gallery", "/list-your-property", "/become-a-host", "/contact", "/sign-in", "/sign-up", "/forgot-password", "/privacy", "/terms", "/cancellation-policy"];
+const PUBLIC_PAGES = ["/", "/stays", "/demo/stays", "/demo/stays/demo-green-valley-farm-stay", "/experiences", "/cycling", "/gardening-landscaping", "/about", "/gallery", "/list-your-property", "/become-a-host", "/contact", "/sign-in", "/sign-up", "/host/login", "/host/register", "/admin/login", "/gardening", "/forgot-password", "/privacy", "/terms", "/cancellation-policy"];
 
 test.describe("public site", () => {
   test("home page carries the brand headline, tagline and a working stay search", async ({ page }) => {
@@ -52,20 +52,24 @@ test.describe("backend-unavailable states are honest", () => {
 });
 
 test.describe("protected areas", () => {
-  for (const path of ["/dashboard", "/dashboard/bookings", "/host", "/host/properties/new", "/admin", "/admin/audit-logs", "/admin/reviews"]) {
-    test(`${path} sends signed-out visitors to sign-in`, async ({ page }) => {
+  // Each portal has its own login page; customer pages use the shared sign-in.
+  const loginFor = (path: string) => (path.startsWith("/admin") ? /\/admin\/login\?next=/ : path.startsWith("/host") ? /\/host\/login\?next=/ : /\/sign-in\?next=/);
+  for (const path of ["/dashboard", "/dashboard/bookings", "/dashboard/bookings/11111111-1111-4111-8111-111111111111", "/host", "/host/properties/new", "/host/earnings", "/admin", "/admin/audit-logs", "/admin/reviews", "/admin/payments", "/admin/commission", "/admin/settlements", "/admin/hosts", "/admin/customers", "/admin/gardening"]) {
+    test(`${path} sends signed-out visitors to the right login`, async ({ page }) => {
       await visit(page, path);
-      await expect(page).toHaveURL(/\/sign-in\?next=/);
+      await expect(page).toHaveURL(loginFor(path));
     });
   }
 
-  test("portal entry aliases land on the right page", async ({ page }) => {
+  test("the portal entry pages are real pages, not redirects", async ({ page }) => {
     await visit(page, "/host/register");
-    await expect(page).toHaveURL(/\/sign-up\?type=host/);
+    await expect(page).toHaveURL(/\/host\/register$/);
     await visit(page, "/host/login");
-    await expect(page).toHaveURL(/\/sign-in\?next=(%2F|\/)host/);
+    await expect(page).toHaveURL(/\/host\/login$/);
+    await visit(page, "/admin/login");
+    await expect(page).toHaveURL(/\/admin\/login$/);
     await visit(page, "/admin/dashboard");
-    await expect(page).toHaveURL(/\/sign-in\?next=/);
+    await expect(page).toHaveURL(/\/admin\/login\?next=(%2F|\/)admin/);
   });
 
   test("open redirects through ?next= are refused", async ({ page }) => {
@@ -79,16 +83,16 @@ test.describe("host entry points", () => {
     await visit(page, "/list-your-property");
     const cta = page.locator("#get-started");
     await expect(cta.getByRole("link", { name: "Start Listing Your Property" })).toHaveAttribute("href", "/host/properties/new");
-    await expect(cta.getByRole("link", { name: "Create Host Account" })).toHaveAttribute("href", /\/sign-up\?type=host&next=%2Fhost%2Fproperties%2Fnew/);
-    await expect(cta.getByRole("link", { name: "Host Login" })).toHaveAttribute("href", /\/sign-in\?next=%2Fhost/);
+    await expect(cta.getByRole("link", { name: "Create Host Account" })).toHaveAttribute("href", /\/host\/register\?next=%2Fhost%2Fproperties%2Fnew/);
+    await expect(cta.getByRole("link", { name: "Host Login" })).toHaveAttribute("href", "/host/login");
     await expect(cta.getByRole("link", { name: "Manage My Properties" })).toHaveAttribute("href", "/host/properties");
   });
 
   test("Start Listing sends a signed-out visitor to host sign-in and remembers the destination", async ({ page }) => {
     await visit(page, "/list-your-property");
     await page.locator("#get-started").getByRole("link", { name: "Start Listing Your Property" }).click();
-    await expect(page).toHaveURL(/\/sign-in\?next=(%2F|\/)host(%2F|\/)properties(%2F|\/)new/);
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Host sign in");
+    await expect(page).toHaveURL(/\/host\/login\?next=(%2F|\/)host(%2F|\/)properties(%2F|\/)new/);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Host login");
   });
 
   test("the host sign-up page keeps the destination and speaks to hosts", async ({ page }) => {
@@ -99,7 +103,7 @@ test.describe("host entry points", () => {
   test("every listing-wizard and host page is protected", async ({ page }) => {
     for (const path of ["/host/properties/new", "/host/properties", "/host/notifications", "/host/properties/11111111-1111-1111-1111-111111111111/wizard/pricing", "/host/properties/11111111-1111-1111-1111-111111111111/submitted"]) {
       await visit(page, path);
-      await expect(page, path).toHaveURL(/\/sign-in\?next=/);
+      await expect(page, path).toHaveURL(/\/host\/login\?next=/);
     }
   });
 
@@ -110,23 +114,31 @@ test.describe("host entry points", () => {
 });
 
 test.describe("portal login and calendar routes", () => {
-  test("/host/login, /host/register, /host/profile, /host/calendar and /admin/login all lead somewhere real", async ({ page }) => {
+  test("/host/login, /host/register, /host/profile and /host/calendar all lead somewhere real", async ({ page }) => {
     await visit(page, "/host/login");
-    await expect(page).toHaveURL(/\/sign-in\?next=(%2F|\/)host/);
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Host sign in");
+    await expect(page).toHaveURL(/\/host\/login$/);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Host login");
     await visit(page, "/host/register");
-    await expect(page).toHaveURL(/\/sign-up\?type=host/);
+    await expect(page).toHaveURL(/\/host\/register$/);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Create your host account");
     await visit(page, "/host/calendar");
-    await expect(page).toHaveURL(/\/sign-in\?next=(%2F|\/)host(%2F|\/)calendar/);
+    await expect(page).toHaveURL(/\/host\/login\?next=(%2F|\/)host(%2F|\/)calendar/);
     await visit(page, "/host/profile");
-    await expect(page).toHaveURL(/\/sign-in\?next=(%2F|\/)host(%2F|\/)settings/);
+    await expect(page).toHaveURL(/\/host\/login\?next=(%2F|\/)host(%2F|\/)settings/);
   });
 
   test("the administrator login page is separate and never offers account creation", async ({ page }) => {
     await visit(page, "/admin/login");
-    await expect(page).toHaveURL(/\/sign-in\?next=(%2F|\/)admin/);
+    await expect(page).toHaveURL(/\/admin\/login$/);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Administrator sign in");
     await expect(page.getByRole("link", { name: /create (a|an)/i })).toHaveCount(0);
+  });
+
+  test("the portal pages are not indexed", async ({ page }) => {
+    for (const path of ["/admin/login", "/host/login", "/host/register"]) {
+      await visit(page, path);
+      await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
+    }
   });
 });
 
