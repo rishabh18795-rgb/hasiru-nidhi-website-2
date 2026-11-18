@@ -23,6 +23,7 @@ function Row({ b, today }: { b: Booking; today: string }) {
         <div><dt className="text-xs uppercase tracking-wide text-ink/50">Guest</dt><dd className="mt-0.5">{b.guest_name || "—"}</dd></div>
         <div><dt className="text-xs uppercase tracking-wide text-ink/50">Contact</dt><dd className="mt-0.5">{b.guest_phone || "—"}<br />{b.guest_email || ""}</dd></div>
         <div><dt className="text-xs uppercase tracking-wide text-ink/50">Indicative total</dt><dd className="mt-0.5">{b.indicative_total_inr !== null ? formatINR(b.indicative_total_inr) : "Price on request"}</dd></div>
+        <div className="sm:col-span-3"><dt className="text-xs uppercase tracking-wide text-ink/50">Payment</dt><dd className="mt-0.5 text-ink/70">Online payment is not available yet; nothing is collected by the platform. Payment status is recorded by the Hasiru Nidhi team.</dd></div>
         {b.host_share_inr !== null ? (
           <div className="sm:col-span-3"><dt className="text-xs uppercase tracking-wide text-ink/50">Your earnings on this booking</dt>
             <dd className="mt-0.5">{formatINR(b.host_share_inr)} <span className="text-ink/55">after {Number(b.commission_rate_percent)}% platform commission ({formatINR(b.commission_amount_inr)}) on {formatINR(b.commissionable_amount_inr)}</span></dd></div>

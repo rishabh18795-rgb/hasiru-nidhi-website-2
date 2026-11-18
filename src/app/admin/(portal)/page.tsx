@@ -5,7 +5,7 @@ import { Card, CardTitle, Stat } from "@/components/app/ui";
 import { requireRole } from "@/lib/auth";
 import { isEmailConfigured } from "@/lib/email";
 import { isServiceRoleConfigured } from "@/lib/supabase/admin";
-import { formatDateTime } from "@/lib/format";
+import { formatDateTime, formatINR } from "@/lib/format";
 import { getPublicSettings } from "@/lib/data/catalog";
 
 function tally<T>(rows: T[] | null, key: (r: T) => string): Record<string, number> {
@@ -16,7 +16,7 @@ function tally<T>(rows: T[] | null, key: (r: T) => string): Record<string, numbe
 
 export default async function AdminOverview() {
   const { supabase } = await requireRole(["admin"], "/admin");
-  const [profiles, props, bookings, enq, gard, apps, reps, audit, settings] = await Promise.all([
+  const [profiles, props, bookings, enq, gard, apps, reps, audit, settings, ledger, owing, settling] = await Promise.all([
     supabase.from("profiles").select("role").limit(10000),
     supabase.from("properties").select("status").limit(10000),
     supabase.from("bookings").select("status").limit(10000),
@@ -26,11 +26,16 @@ export default async function AdminOverview() {
     supabase.from("reports").select("status").limit(10000),
     supabase.from("audit_logs").select("id, action, entity_type, created_at").order("created_at", { ascending: false }).limit(8),
     getPublicSettings(),
+    supabase.from("commission_ledger").select("commission_inr, host_share_inr").limit(10000),
+    supabase.from("booking_financials").select("booking_id", { count: "exact", head: true }).in("status", ["confirmed", "completed"]).in("payment_status", ["unpaid", "initiated", "failed"]),
+    supabase.from("host_settlements").select("amount_inr").in("status", ["pending", "processing", "on_hold"]).limit(1000),
   ]);
   const roles = tally(profiles.data, (r) => r.role as string);
   const ps = tally(props.data, (r) => r.status as string);
   const bs = tally(bookings.data, (r) => r.status as string);
-  const newEnq = (tally(enq.data, (r) => r.status as string).new ?? 0) + (tally(gard.data, (r) => r.status as string).new ?? 0);
+  const newContact = tally(enq.data, (r) => r.status as string).new ?? 0;
+  const newGardening = tally(gard.data, (r) => r.status as string).new ?? 0;
+  const sumOf = (rows: Record<string, unknown>[] | null, key: string) => (rows ?? []).reduce((t, r) => t + Number(r[key] ?? 0), 0);
   const newApps = tally(apps.data, (r) => r.status as string).new ?? 0;
   const openReports = tally(reps.data, (r) => r.status as string).open ?? 0;
 
@@ -51,10 +56,16 @@ export default async function AdminOverview() {
         <Stat label="Live listings" value={ps.approved ?? 0} hint={`${ps.suspended ?? 0} suspended`} />
         <Stat label="Users" value={(roles.traveller ?? 0) + (roles.host ?? 0) + (roles.admin ?? 0)} hint={`${roles.host ?? 0} hosts · ${roles.admin ?? 0} admins`} />
         <Stat label="Booking requests" value={bs.requested ?? 0} hint={`${bs.confirmed ?? 0} confirmed`} />
-        <Stat label="New enquiries" value={newEnq} />
+        <Stat label="New enquiries" value={newContact} hint="Contact and booking-experience forms" />
+        <Stat label="New gardening enquiries" value={newGardening} hint="Separate queue: /admin/gardening" />
         <Stat label="New partner applications" value={newApps} />
         <Stat label="Open reports" value={openReports} />
+      </div>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" aria-label="Money">
         <Stat label="Total bookings" value={Object.values(bs).reduce((a, b) => a + b, 0)} />
+        <Stat label="Platform commission (net)" value={formatINR(sumOf(ledger.data as Record<string, unknown>[] | null, "commission_inr"))} hint="From confirmed bookings, after reversals" />
+        <Stat label="Confirmed bookings without a recorded payment" value={owing.count ?? 0} hint="Online payment is not enabled; record payments in Admin → Payments" />
+        <Stat label="Settlements in progress" value={formatINR(sumOf(settling.data as Record<string, unknown>[] | null, "amount_inr"))} hint="Pending, processing or on hold" />
       </div>
 
       <Card>

@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { isComplete, listingChecklist } from "@/lib/wizard/checklist";
 
 const complete = {
-  name: "Coorg Coffee Cottage", category_id: 2, city: "Madikeri", state: "Karnataka", country: "India",
+  name: "Coorg Coffee Cottage", category_id: 2, city: "Madikeri", region: "Kodagu", postal_code: "571201", state: "Karnataka", country: "India",
   description: "x".repeat(80), max_guests: 6, rooms_count: 3, bedrooms: 3, beds: 4, bathrooms: 2,
   accommodation_arrangement: "entire_property" as const, price_inr: 4500, cancellation_policy: "moderate" as const,
   terms_accepted_at: "2026-10-21T00:00:00Z", photo_rights_confirmed_at: "2026-10-21T00:00:00Z",
@@ -24,6 +24,9 @@ describe("listing checklist", () => {
     ["terms not accepted", { ...complete, terms_accepted_at: null }, priv, 3, "terms"],
     ["rights not confirmed", { ...complete, photo_rights_confirmed_at: null }, priv, 3, "rights"],
     ["no bedrooms recorded", { ...complete, bedrooms: null }, priv, 3, "rooms"],
+    ["no district", { ...complete, region: " " }, priv, 3, "district"],
+    ["no PIN code", { ...complete, postal_code: null }, priv, 3, "pin"],
+    ["a PIN code that is not six digits", { ...complete, postal_code: "5712" }, priv, 3, "pin"],
   ])("flags %s and points at the step that fixes it", (_n, p, pv, images, key) => {
     const items = listingChecklist(p, pv, images);
     expect(isComplete(items)).toBe(false);
@@ -31,7 +34,15 @@ describe("listing checklist", () => {
   });
 
   it("a brand-new draft has everything outstanding", () => {
-    const blank = { ...complete, name: "x", category_id: null, city: null, state: null, description: "", bedrooms: null, beds: null, bathrooms: null, accommodation_arrangement: null, price_inr: null, terms_accepted_at: null, photo_rights_confirmed_at: null };
+    const blank = { ...complete, name: "x", category_id: null, region: null, postal_code: null, city: null, state: null, description: "", bedrooms: null, beds: null, bathrooms: null, accommodation_arrangement: null, price_inr: null, terms_accepted_at: null, photo_rights_confirmed_at: null };
     expect(listingChecklist(blank, null, 0).every((i) => !i.ok)).toBe(true);
   });
 });
+
+describe("PIN code rule", () => {
+  it("is only the six-digit rule for India; another country needs just a postal code", () => {
+    expect(isComplete(listingChecklist({ ...complete, country: "Sri Lanka", postal_code: "10100" }, priv, 3))).toBe(true);
+    expect(isComplete(listingChecklist({ ...complete, country: "India", postal_code: "10100" }, priv, 3))).toBe(false);
+  });
+});
+

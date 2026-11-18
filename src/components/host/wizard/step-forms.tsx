@@ -128,8 +128,8 @@ export function LocationStep({ propertyId, initial }: { propertyId: string; init
         <Field label="Country" htmlFor="country" error={e.country} required><TextInput id="country" name="country" defaultValue={v("country", "India")} required minLength={2} maxLength={80} error={!!e.country} /></Field>
         <Field label="State" htmlFor="state" error={e.state} required><TextInput id="state" name="state" defaultValue={v("state", "Karnataka")} required minLength={2} maxLength={120} error={!!e.state} /></Field>
         <Field label="City or town" htmlFor="city" error={e.city} required><TextInput id="city" name="city" defaultValue={v("city")} required minLength={2} maxLength={120} error={!!e.city} /></Field>
-        <Field label="Region / district (optional)" htmlFor="region" error={e.region}><TextInput id="region" name="region" defaultValue={v("region")} maxLength={120} /></Field>
-        <Field label="Postal code" htmlFor="postal_code" error={e.postal_code} required hint="For India, the 6-digit PIN code."><TextInput id="postal_code" name="postal_code" defaultValue={v("postal_code")} required inputMode="numeric" minLength={3} maxLength={10} error={!!e.postal_code} /></Field>
+        <Field label="District" htmlFor="region" error={e.region} required><TextInput id="region" name="region" defaultValue={v("region")} required minLength={2} maxLength={120} error={!!e.region} /></Field>
+        <Field label="PIN code" htmlFor="postal_code" error={e.postal_code} required hint="Six digits for India. Guests can find your property by this PIN code."><TextInput id="postal_code" name="postal_code" defaultValue={v("postal_code")} required inputMode="numeric" minLength={3} maxLength={10} error={!!e.postal_code} /></Field>
         <Field label="Full address (private)" htmlFor="address_line" error={e.address_line} required className="sm:col-span-2" hint="Visible only to you and Hasiru Nidhi administrators.">
           <TextInput id="address_line" name="address_line" defaultValue={v("address_line")} required minLength={5} maxLength={300} autoComplete="street-address" error={!!e.address_line} />
         </Field>

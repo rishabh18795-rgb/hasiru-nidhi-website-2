@@ -11,7 +11,7 @@ export interface ChecklistItem {
 
 type PropertyFields = Pick<
   Property,
-  | "name" | "category_id" | "city" | "state" | "country" | "description" | "max_guests" | "rooms_count"
+  | "name" | "category_id" | "city" | "region" | "postal_code" | "state" | "country" | "description" | "max_guests" | "rooms_count"
   | "bedrooms" | "beds" | "bathrooms" | "accommodation_arrangement" | "price_inr" | "cancellation_policy"
   | "terms_accepted_at" | "photo_rights_confirmed_at"
 >;
@@ -26,6 +26,9 @@ export function listingChecklist(p: PropertyFields, priv: Partial<PropertyPrivat
     { key: "name", label: "Property name", ok: p.name.trim().length >= 3, step: "type" },
     { key: "category", label: "Property type", ok: p.category_id !== null, step: "type" },
     { key: "place", label: "City, state and country", ok: filled(p.city) && filled(p.state) && filled(p.country), step: "location" },
+    { key: "district", label: "District", ok: filled(p.region), step: "location" },
+    // Guests search by PIN code, so an Indian listing needs a valid six-digit one (the database enforces the same rule on submit).
+    { key: "pin", label: "PIN code (six digits for India)", ok: p.country.trim().toLowerCase() === "india" ? /^\d{6}$/.test((p.postal_code ?? "").trim()) : filled(p.postal_code), step: "location" },
     { key: "address", label: "Full address (kept private)", ok: filled(priv?.address_line), step: "location" },
     { key: "description", label: "Description of at least 50 characters", ok: p.description.trim().length >= 50, step: "details" },
     { key: "rooms", label: "Rooms, beds, bathrooms and arrangement", ok: p.bedrooms !== null && p.beds !== null && p.bathrooms !== null && p.accommodation_arrangement !== null, step: "details" },

@@ -21,7 +21,7 @@ describe("strict (Continue) vs lenient (Save draft)", () => {
   it("Continue demands every required field with a message per field", () => {
     const r = strict("location", {});
     expect(r.ok).toBe(false);
-    if (!r.ok) expect(Object.keys(r.errors).sort()).toEqual(["address_line", "city", "country", "location_precision", "postal_code", "state"]);
+    if (!r.ok) expect(Object.keys(r.errors).sort()).toEqual(["address_line", "city", "country", "location_precision", "postal_code", "region", "state"]);
   });
 
   it("Save draft accepts blanks but still rejects malformed values", () => {

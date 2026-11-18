@@ -42,6 +42,13 @@ export default async function HostOverview() {
         <Stat label="Unread notifications" value={unread ?? 0} />
       </div>
 
+      {profile.phone && profile.full_name ? null : (
+        <p role="note" className="rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          Complete your host profile: add your {profile.full_name ? "" : "name and "}phone number so the Hasiru Nidhi team and guests with confirmed bookings can reach you.{" "}
+          <Link href="/host/settings" className="font-medium underline">Open host settings</Link>
+        </p>
+      )}
+
       {profile.host_verified ? null : (
         <p className="rounded-xl bg-sand-50 px-4 py-3 text-sm text-earth-800">Your host account isn&apos;t verified yet. An administrator verifies hosts after reviewing their first listing.</p>
       )}
