@@ -72,3 +72,15 @@ Use throw-away e-mail addresses you control.
 
 ## F. Deployment smoke test
 * Deep-link and refresh `/stays/<slug>`, `/host/properties/<id>`; `/sitemap.xml` lists only live non-sample stays; `/robots.txt` disallows private areas; 404 page works.
+
+## G. Commercial flow (after installing the 17 Nov 2026 migration)
+1. **Admin → Commission:** confirm the rate shows 20 %. Save a different rate, request a booking, then restore 20 %. Old bookings keep their rate.
+2. Host registers at `/host/register`, verifies the email, completes the wizard **with a six-digit PIN**, uploads photos, sets pricing and submits.
+3. Admin signs in at `/admin/login`, opens the listing in **Admin → Listings**, approves it.
+4. Customer searches the homepage by that **PIN code**: the property appears; a different PIN shows "No properties found". A pending/draft property never appears.
+5. Customer requests dates; host accepts at `/host/bookings`. Host sees "your earnings … after 20 % platform commission"; **Admin → Commission** shows an accrual (₹10,000 → ₹2,000 + ₹8,000).
+6. **Admin → Payments:** record the payment received (with its bank/UPI reference). Recording the same reference twice creates one payment.
+7. After check-out the host (or admin) uses **Mark stay completed**; **Admin → Settlements** then lists the host; create a settlement, move it to Processing, then Paid with the bank reference. The host sees it at **Host → Earnings**.
+8. Record a partial refund on the payment: the commission is reversed in proportion (ledger shows a reversal entry).
+9. Gardening: homepage section → **Enquire Now** → submit at `/gardening#enquire`; it appears in **Admin → Gardening** and creates no booking.
+10. Security: a second host cannot open the first host's property/booking; a customer cannot open another customer's `/dashboard/bookings/<id>`; a customer account refused at `/admin/login` and `/host/login`.

@@ -27,7 +27,8 @@ Legend: ✅ implemented and covered by automated tests · 🟢 implemented, veri
 | Content-Security-Policy + security headers | 🟢 | verified in a real browser; scripts keep `'unsafe-inline'` (see README) |
 | CAPTCHA on public forms | ❌ | honeypot only; add Turnstile / Vercel WAF if spam appears |
 | Admin: audit log, review moderation, experiences/catalogue, pending queue | ✅ | `/admin/audit-logs`, `/admin/reviews`, `/admin/catalog`, `/admin/properties?status=pending_review` |
-| Portal aliases `/host/login`, `/host/register`, `/admin/dashboard`, `/admin/experiences`, `/admin/properties/pending` | 🟢 | redirects (verified by browser tests) |
+| Portal entry pages `/host/login`, `/host/register`, `/admin/login` (real pages outside the guarded route groups) | ✅ | role re-checked after sign-in; browser + structural tests |
+| Aliases `/admin/dashboard`, `/admin/experiences`, `/admin/properties/pending` | 🟢 | redirects (verified by browser tests) |
 | Host listing wizard (8 steps, draft saved per step, preview, success page with reference) | 🟢⏳ | validation unit-tested; live save needs Supabase |
 | Photo upload (drag-drop, previews, progress, retry, reorder, cover, delete) | 🟢⏳ | validation/error states browser-checked; storage upload needs Supabase |
 | Structured pricing (weekend, extra guests, cleaning, tax, min/max stay) + guest price preview | ✅ | SQL and TypeScript maths proven identical on 300 random cases |
@@ -46,3 +47,22 @@ Legend: ✅ implemented and covered by automated tests · 🟢 implemented, veri
   statistics (“12 acres”, “45 minutes”) carry over from the earlier marketing site and have **not** been verified.
 * Photography is illustrative stock, not photographs of the real property. Replace with genuine images.
 * Cancellation-policy wording is a starting framework and should be reviewed by legal counsel before commercial launch.
+
+## Marketplace PRD build (17 Nov 2026)
+
+| Area | Status | Notes |
+|---|---|---|
+| PIN-code search (exact PIN, six-digit location treated as PIN, approved listings only) | ✅ | database + demo + unit + browser tests; live data ⏳ (database not installed in production) |
+| PIN required to submit an Indian listing | ✅ | `submit_property` refuses a missing/invalid PIN |
+| Homepage: "45 minutes" section/claims removed; Gardening Services section; trust + host sections | ✅ | regression test scans all of `src/` |
+| Gardening Services page + enquiry form (PIN, preferred date/time), separate admin queue `/admin/gardening` | ✅ ⏳ | never creates a booking; stored/visible once the database exists |
+| 20 % commission engine (configurable, snapshot per booking, immutable) | ✅ | 32 database tests incl. rate change, base policy, rounding |
+| Commission ledger (append-only), reversal on cancellation / refund | ✅ | tests incl. no negative balances |
+| Payments records, admin-recorded payments, refunds | ✅ | **not** a gateway; amounts validated, audited, idempotent on reference |
+| Webhook foundation (signature check, idempotent events, 503 until a provider exists) | ✅ | unit + database tests; live provider ❌ |
+| Host earnings page, settlements, admin settlement workflow | ✅ ⏳ | settles completed, paid bookings once; transfers happen outside the site |
+| Stay completion (host/admin after check-out) | ✅ | closes the previous "no automatic completion" gap (manual, not scheduled) |
+| Admin: hosts, host detail/verification, customers, payments, commission, settlements, gardening | ✅ ⏳ | role-protected; live data needs the database |
+| Customer booking details page with price breakdown, payment state, status history | ✅ ⏳ | |
+| Online payment collection, invoices/receipts, GST, payouts by gateway | ❌ | needs merchant account, accountant decisions and an adapter |
+| Property status `archived`, separate `published` flag | ⏳ | approved = published today; archive not built |

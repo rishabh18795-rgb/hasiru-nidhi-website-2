@@ -20,6 +20,7 @@ Nothing here requires code changes. Secrets go only into Vercel / your local `.e
 5. `supabase/migrations/20261021000200_listing_wizard_pricing.sql` (listing-wizard fields, structured pricing, stay-length rules, "become a host", photo limits and ordering)
 6. `supabase/migrations/20261030000100_server_decided_signup_role.sql` (the account role is decided by the server, never by sign-up metadata)
 7. `supabase/migrations/20261031000100_stay_card_details.sql` (Explore Stays cards show bedrooms, bathrooms and amenities)
+8. `supabase/migrations/20261117000100_marketplace_commercial.sql` (PIN-code search, the 20 % commission engine and append-only ledger, payments/refunds records, host settlements, booking status history, stay completion, gardening PIN/date)
 
 Verify: **Table editor** shows tables with the 🔒 RLS badge; **Storage** shows the two buckets
 (`property-images` public, `enquiry-photos` private).
@@ -34,6 +35,11 @@ Verify: **Table editor** shows tables with the 🔒 RLS badge; **Storage** shows
 > **Fastest path via Vercel:** in your Vercel project → **Storage → Create / Connect → Supabase** can create the project and fill in
 > `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` and `SUPABASE_SERVICE_ROLE_KEY` for you (those are exactly the names this app reads).
 > You still need to run the SQL above in that new project and set the Auth URLs in step 3, then **redeploy**.
+
+### Commission and money settings (after the migrations)
+The platform commission defaults to **20 %** of the *accommodation* base (stay + extra-guest charges; taxes are never commissionable). An administrator changes it, the commission base and the reversal / settlement policies in **Admin → Commission**; every change is audited with the old and new values and applies to **new bookings only** (each booking stores its own commission snapshot). Confirm the commission base, cleaning-fee and tax treatment, cancellation/refund rules and payout schedule with your accountant before launch.
+
+**No payment gateway is integrated.** Today an administrator records payments that were really received (bank transfer, UPI, cash) in **Admin → Payments**, and records host payouts in **Admin → Settlements**. To enable online payments you need a merchant account (e.g. Razorpay), server-only keys and a webhook secret, and an adapter implementing `PaymentProvider` (see `src/lib/payments/index.ts`); the webhook route `/api/payments/webhook/[provider]` already verifies, de-duplicates and records events, and answers 503 until a provider exists.
 
 ## 3. Configure Authentication
 **Authentication → URL Configuration**
@@ -54,6 +60,8 @@ The site shows **Continue with Google** on the customer and host sign-up and sig
 4. Same-email accounts are linked automatically by Supabase (one `auth.users` row, one profile). The database ignores any role in sign-up metadata, so Google can never make someone a host or admin by itself.
 
 How roles work with Google: the host page sets a short-lived, server-only (httpOnly) cookie saying "host intent". On return, a **brand-new** account is upgraded with the audited `become_host()` function; an **existing traveller** account is sent to *List your property* to switch explicitly; an administrator is never changed. Nothing about roles travels in the URL.
+
+The host and administrator sign-in pages are `/host/login`, `/host/register` and `/admin/login` (separate from the customer sign-in; the administrator page has no sign-up and refuses every non-admin account).
 
 ## 4. Create the first administrator
 1. Sign up on the website with an e-mail address **you control** and click the verification link. (No password is ever put in Git, logs or chat; use *Forgot password* if you lose it.)
