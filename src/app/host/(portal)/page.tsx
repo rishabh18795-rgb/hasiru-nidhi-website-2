@@ -3,20 +3,24 @@ import { Plus } from "lucide-react";
 
 import { Card, CardTitle, EmptyState, Stat, StatusBadge } from "@/components/app/ui";
 import { requireRole } from "@/lib/auth";
-import { todayIST } from "@/lib/format";
+import { formatINR, todayIST } from "@/lib/format";
+import { summarizeWallet } from "@/lib/wallet";
 import type { Property } from "@/lib/db/types";
 import { wizardPath } from "@/lib/wizard/steps";
 
 export default async function HostOverview() {
   const { supabase, user, profile } = await requireRole(["host"], "/host");
   const today = todayIST();
-  const [{ data: props }, { count: requested }, { count: upcoming }, { count: enquiries }, { count: unread }] = await Promise.all([
+  const [{ data: props }, { count: requested }, { count: upcoming }, { count: enquiries }, { count: unread }, { data: money }, { data: setl }] = await Promise.all([
     supabase.from("properties").select("id, name, status, rejection_reason, review_kind, wizard_step, updated_at").eq("host_id", user.id).order("updated_at", { ascending: false }),
     supabase.from("bookings").select("id", { count: "exact", head: true }).eq("status", "requested"),
     supabase.from("bookings").select("id", { count: "exact", head: true }).eq("status", "confirmed").gt("check_out", today),
     supabase.from("contact_enquiries").select("id", { count: "exact", head: true }).not("property_id", "is", null).eq("status", "new"),
     supabase.from("notifications").select("id", { count: "exact", head: true }).eq("user_id", user.id).eq("is_read", false),
+    supabase.from("booking_financials").select("status, payment_status, settlement_status, net_host_share_inr, net_commission_inr").limit(500),
+    supabase.from("host_settlements").select("status, amount_inr").limit(200),
   ]);
+  const wallet = summarizeWallet((money ?? []) as Parameters<typeof summarizeWallet>[0], (setl ?? []) as Parameters<typeof summarizeWallet>[1]);
   const list = (props ?? []) as Pick<Property, "id" | "name" | "status" | "rejection_reason" | "review_kind" | "wizard_step" | "updated_at">[];
   const by = (s: string) => list.filter((p) => p.status === s).length;
   const attention = list.filter((p) => p.status === "rejected" || p.status === "suspended");
@@ -32,15 +36,30 @@ export default async function HostOverview() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <Stat label="Total properties" value={list.length} />
         <Stat label="Drafts" value={by("draft")} />
         <Stat label="Pending review" value={by("pending_review")} />
         <Stat label="Live listings" value={by("approved")} />
         <Stat label="Need changes" value={by("rejected") + by("suspended")} />
         <Stat label="Requests to answer" value={requested ?? 0} />
+        <Stat label="Confirmed bookings" value={wallet.confirmedBookings} />
         <Stat label="Upcoming stays" value={upcoming ?? 0} />
+        <Stat label="Completed stays" value={wallet.completedStays} />
         <Stat label="New enquiries" value={enquiries ?? 0} />
         <Stat label="Unread notifications" value={unread ?? 0} />
       </div>
+
+      <section aria-label="Wallet" className="rounded-3xl bg-gradient-to-br from-forest-950 via-forest-900 to-forest-700 p-4 sm:p-5">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {[["Total earnings", wallet.totalEarnings], ["Pending earnings", wallet.pendingEarnings], ["Ready for settlement", wallet.readyForSettlement], ["Platform commission", wallet.commission]].map(([label, value]) => (
+            <div key={String(label)} className="glass-dark rounded-2xl p-4">
+              <p className="text-xs uppercase tracking-wide text-cream/70">{label}</p>
+              <p className="mt-1 font-display text-2xl">{formatINR(value as number)}</p>
+            </div>
+          ))}
+        </div>
+        <p className="mt-3 text-xs text-cream/75">Figures come from your booking ledger. Online payments and automatic payouts are not available yet. <Link href="/host/earnings" className="underline">Open your wallet</Link></p>
+      </section>
 
       {profile.phone && profile.full_name ? null : (
         <p role="note" className="rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-900">

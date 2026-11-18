@@ -1,56 +1,93 @@
 import type { Metadata } from "next";
 
-import { Card, EmptyState, Stat } from "@/components/app/ui";
+import { Card, EmptyState } from "@/components/app/ui";
 import { requireRole } from "@/lib/auth";
 import { formatDate, formatDateTime, formatINR } from "@/lib/format";
+import { summarizeWallet } from "@/lib/wallet";
 import type { BookingFinancial, HostSettlement } from "@/lib/db/types";
 
-export const metadata: Metadata = { title: "Earnings" };
+export const metadata: Metadata = { title: "Wallet & earnings" };
 
 const PAYMENT_LABEL: Record<string, string> = {
-  unpaid: "Not paid yet", initiated: "Payment started", paid: "Paid", failed: "Payment failed", partially_refunded: "Partly refunded", refunded: "Refunded",
+  unpaid: "Payment not recorded", initiated: "Payment started", paid: "Paid", failed: "Payment failed", partially_refunded: "Partly refunded", refunded: "Refunded",
 };
 const SETTLEMENT_LABEL: Record<string, string> = {
-  not_due: "Not due", pending: "Pending", processing: "Processing", paid: "Paid to you", on_hold: "On hold", failed: "Failed",
+  not_due: "Not in a settlement", pending: "Settlement pending", processing: "Processing", paid: "Paid to you", on_hold: "On hold", failed: "Failed",
 };
 
-export default async function HostEarnings() {
+interface LedgerRow {
+  id: number; booking_id: string; kind: "accrual" | "reversal"; commissionable_inr: number; commission_rate_percent: number;
+  commission_inr: number; host_share_inr: number; note: string | null; created_at: string;
+  bookings: { property_name: string; check_in: string; check_out: string } | null;
+}
+
+const n = (v: unknown) => Number(v ?? 0);
+
+/**
+ * Host wallet. Every figure is derived from real records the host can read under Row Level Security: booking_financials (one row per
+ * booking), the append-only commission_ledger and host_settlements. Nothing here is a stored balance that could drift, and no amount is
+ * called "available" unless the booking is completed and its payment has been recorded.
+ */
+export default async function HostWallet() {
   const { supabase } = await requireRole(["host"], "/host/earnings");
-  // Row Level Security limits both queries to this host's own bookings and settlements.
-  const [{ data: money }, { data: settlements }] = await Promise.all([
-    supabase.from("booking_financials").select("*").in("status", ["confirmed", "completed", "cancelled_by_traveller", "cancelled_by_host"]).order("check_in", { ascending: false }).limit(200),
-    supabase.from("host_settlements").select("*").order("created_at", { ascending: false }).limit(50),
+  const [{ data: money }, { data: ledger }, { data: settlements }] = await Promise.all([
+    supabase.from("booking_financials").select("*").in("status", ["confirmed", "completed", "cancelled_by_traveller", "cancelled_by_host"]).order("check_in", { ascending: false }).limit(300),
+    supabase.from("commission_ledger").select("*, bookings(property_name, check_in, check_out)").order("id", { ascending: false }).limit(300),
+    supabase.from("host_settlements").select("*").order("created_at", { ascending: false }).limit(100),
   ]);
-  const rows = ((money ?? []) as BookingFinancial[]).filter((b) => Number(b.net_host_share_inr) > 0 || b.status === "confirmed" || b.status === "completed");
+  const all = (money ?? []) as BookingFinancial[];
+  const entries = (ledger ?? []) as unknown as LedgerRow[];
   const sets = (settlements ?? []) as HostSettlement[];
-  const sum = (f: (b: BookingFinancial) => number) => rows.reduce((t, b) => t + f(b), 0);
-  const settled = sets.filter((s) => s.status === "paid").reduce((t, s) => t + Number(s.amount_inr), 0);
-  const inProgress = sets.filter((s) => ["pending", "processing", "on_hold"].includes(s.status)).reduce((t, s) => t + Number(s.amount_inr), 0);
+
+  const earning = all.filter((b) => b.status === "confirmed" || b.status === "completed");
+  const w = summarizeWallet(all, sets);
+  const adjustments = entries.filter((e) => e.kind === "reversal").reduce((t, e) => t + n(e.host_share_inr), 0); // negative or zero
+  const totalEarnings = w.totalEarnings, pendingEarnings = w.pendingEarnings, readyAmount = w.readyForSettlement;
+  const inSettlement = w.inSettlement, paidOut = w.paidOut, commission = w.commission;
+
+  const cards: { label: string; value: string; hint: string }[] = [
+    { label: "Total earnings", value: formatINR(totalEarnings), hint: "Your 80% share of confirmed and completed bookings, after reversals" },
+    { label: "Pending earnings", value: formatINR(pendingEarnings), hint: "Confirmed stays not yet completed, or completed with no payment recorded" },
+    { label: "Ready for settlement", value: formatINR(readyAmount), hint: "Completed and paid. Not yet in a settlement; not withdrawable by you" },
+    { label: "In settlement", value: formatINR(inSettlement), hint: "Prepared by the Hasiru Nidhi team: pending, processing or on hold" },
+    { label: "Paid to you", value: formatINR(paidOut), hint: "Settlements the team has marked as paid, with a bank reference" },
+    { label: "Platform commission", value: formatINR(commission), hint: "Deducted from the commissionable base of each booking" },
+  ];
 
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-medium tracking-tight text-forest-950">Earnings</h1>
-        <p className="mt-1 max-w-2xl text-sm text-ink/60">Each booking shows the guest total, the platform commission and your share. The commission rate is fixed on each booking when it is requested. Settlements are prepared by the Hasiru Nidhi team for completed, paid stays and transferred to you outside this website.</p>
-      </div>
-      <div className="grid gap-4 sm:grid-cols-3">
-        <Stat label="Your share on confirmed and completed stays" value={formatINR(sum((b) => (b.status === "confirmed" || b.status === "completed" ? Number(b.net_host_share_inr) : 0)))} hint="After platform commission" />
-        <Stat label="Settlement in progress" value={formatINR(inProgress)} />
-        <Stat label="Paid out to you" value={formatINR(settled)} />
+        <h1 className="text-3xl font-medium tracking-tight text-forest-950">Wallet &amp; earnings</h1>
+        <p role="note" className="mt-3 max-w-3xl rounded-xl bg-sand-50 px-4 py-3 text-sm text-earth-800">
+          <strong>Online payments and automatic payouts are not available yet.</strong> Guests and hosts settle payment as described in the booking confirmation. The Hasiru Nidhi team records payments that were actually received and prepares your settlements; nothing here can be withdrawn by you from this page. Tax, cleaning-fee and refund treatment follow the company&apos;s confirmed policy.
+        </p>
       </div>
 
+      <section aria-label="Wallet summary" className="rounded-3xl bg-gradient-to-br from-forest-950 via-forest-900 to-forest-700 p-4 sm:p-6">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {cards.map((c) => (
+            <div key={c.label} className="glass-dark rounded-2xl p-5">
+              <p className="text-xs uppercase tracking-wide text-cream/70">{c.label}</p>
+              <p className="mt-1.5 font-display text-3xl">{c.value}</p>
+              <p className="mt-1 text-xs leading-snug text-cream/70">{c.hint}</p>
+            </div>
+          ))}
+        </div>
+        {adjustments < 0 ? <p className="mt-4 text-sm text-cream/85">Refund and cancellation adjustments included above: <strong>{formatINR(adjustments)}</strong> of your share.</p> : null}
+      </section>
+
       <section aria-labelledby="bk-h" className="space-y-3">
-        <h2 id="bk-h" className="text-lg font-medium text-forest-950">Bookings</h2>
-        {rows.length === 0 ? <EmptyState title="No earnings yet" description="Earnings appear here once you confirm a booking." /> : (
+        <h2 id="bk-h" className="text-lg font-medium text-forest-950">Booking-wise earnings</h2>
+        {earning.length === 0 ? <EmptyState title="No earnings yet" description="Earnings appear here once you confirm a booking request." /> : (
           <div className="overflow-x-auto rounded-2xl bg-white ring-1 ring-forest-900/10">
             <table className="w-full min-w-[46rem] text-left text-sm">
               <thead className="text-xs uppercase tracking-wide text-ink/55">
                 <tr><th className="p-3">Stay</th><th className="p-3 text-right">Guest total</th><th className="p-3 text-right">Commission</th><th className="p-3 text-right">Your share</th><th className="p-3">Payment</th><th className="p-3">Settlement</th></tr>
               </thead>
               <tbody>
-                {rows.map((b) => (
+                {earning.map((b) => (
                   <tr key={b.booking_id} className="border-t border-forest-900/8 align-top">
-                    <td className="p-3"><span className="font-medium text-forest-950">{b.property_name}</span><span className="block text-xs text-ink/55">{b.guest_name} · {formatDate(b.check_in)} → {formatDate(b.check_out)} · {b.status.replace(/_/g, " ")}</span></td>
+                    <td className="p-3"><span className="font-medium text-forest-950">{b.property_name}</span><span className="block text-xs text-ink/55">{b.guest_name} · {formatDate(b.check_in)} → {formatDate(b.check_out)} · {b.status}</span></td>
                     <td className="p-3 text-right">{b.gross_inr !== null ? formatINR(b.gross_inr) : "—"}</td>
                     <td className="p-3 text-right">{formatINR(b.net_commission_inr)}{b.commission_rate_percent !== null ? <span className="block text-xs text-ink/50">{Number(b.commission_rate_percent)}%</span> : null}</td>
                     <td className="p-3 text-right font-medium">{formatINR(b.net_host_share_inr)}</td>
@@ -64,14 +101,40 @@ export default async function HostEarnings() {
         )}
       </section>
 
+      <section aria-labelledby="led-h" className="space-y-3">
+        <h2 id="led-h" className="text-lg font-medium text-forest-950">Transaction history</h2>
+        <p className="text-sm text-ink/60">Each line is an immutable ledger entry tied to a booking. Reversals appear as negative lines when a confirmed booking is cancelled or a refund is recorded.</p>
+        {entries.length === 0 ? <EmptyState title="No transactions yet" description="A ledger entry is created when you confirm a booking." /> : (
+          <div className="overflow-x-auto rounded-2xl bg-white ring-1 ring-forest-900/10">
+            <table className="w-full min-w-[44rem] text-left text-sm">
+              <thead className="text-xs uppercase tracking-wide text-ink/55">
+                <tr><th className="p-3">Date</th><th className="p-3">Entry</th><th className="p-3">Booking</th><th className="p-3 text-right">Base</th><th className="p-3 text-right">Commission</th><th className="p-3 text-right">Your share</th></tr>
+              </thead>
+              <tbody>
+                {entries.map((e) => (
+                  <tr key={e.id} className="border-t border-forest-900/8 align-top">
+                    <td className="p-3 text-ink/60">{formatDateTime(e.created_at)}</td>
+                    <td className="p-3 capitalize">{e.kind}{e.note ? <span className="block text-xs normal-case text-ink/50">{e.note}</span> : null}</td>
+                    <td className="p-3">{e.bookings ? <>{e.bookings.property_name}<span className="block text-xs text-ink/50">{formatDate(e.bookings.check_in)} → {formatDate(e.bookings.check_out)}</span></> : "—"}</td>
+                    <td className="p-3 text-right">{formatINR(e.commissionable_inr)}</td>
+                    <td className="p-3 text-right">{formatINR(e.commission_inr)}<span className="block text-xs text-ink/50">{Number(e.commission_rate_percent)}%</span></td>
+                    <td className="p-3 text-right font-medium">{formatINR(e.host_share_inr)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
+
       <section aria-labelledby="st-h" className="space-y-3">
-        <h2 id="st-h" className="text-lg font-medium text-forest-950">Settlements</h2>
-        {sets.length === 0 ? <EmptyState title="No settlements yet" description="A settlement is prepared after a stay is completed and its payment is recorded." /> : (
+        <h2 id="st-h" className="text-lg font-medium text-forest-950">Settlement history</h2>
+        {sets.length === 0 ? <EmptyState title="No settlements yet" description="A settlement is prepared by the Hasiru Nidhi team after a stay is completed and its payment is recorded. Timing and eligibility follow the company's confirmed policy." /> : (
           <ul className="space-y-2">
             {sets.map((s) => (
               <li key={s.id}>
                 <Card className="flex flex-wrap items-center justify-between gap-2 p-4">
-                  <span>{formatINR(s.amount_inr)} · {formatDateTime(s.created_at)}{s.reference ? ` · ref ${s.reference}` : ""}</span>
+                  <span>{formatINR(s.amount_inr)} · prepared {formatDateTime(s.created_at)}{s.paid_at ? ` · paid ${formatDateTime(s.paid_at)}` : ""}{s.reference ? ` · bank ref ${s.reference}` : ""}</span>
                   <span className="rounded-full bg-forest-50 px-2.5 py-0.5 text-xs text-forest-800">{SETTLEMENT_LABEL[s.status] ?? s.status}</span>
                 </Card>
               </li>

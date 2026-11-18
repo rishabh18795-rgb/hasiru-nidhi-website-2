@@ -52,10 +52,14 @@ export default async function AdminOverview() {
     <div className="space-y-8">
       <h1 className="text-3xl font-medium tracking-tight text-forest-950">Administration</h1>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Stat label="Listings awaiting review" value={ps.pending_review ?? 0} />
-        <Stat label="Live listings" value={ps.approved ?? 0} hint={`${ps.suspended ?? 0} suspended`} />
-        <Stat label="Users" value={(roles.traveller ?? 0) + (roles.host ?? 0) + (roles.admin ?? 0)} hint={`${roles.host ?? 0} hosts · ${roles.admin ?? 0} admins`} />
-        <Stat label="Booking requests" value={bs.requested ?? 0} hint={`${bs.confirmed ?? 0} confirmed`} />
+        <Stat label="Registered customers" value={roles.traveller ?? 0} />
+        <Stat label="Hosts" value={roles.host ?? 0} hint={`${roles.admin ?? 0} administrator${(roles.admin ?? 0) === 1 ? "" : "s"}`} />
+        <Stat label="Total properties" value={Object.values(ps).reduce((a, b) => a + b, 0)} />
+        <Stat label="Awaiting approval" value={ps.pending_review ?? 0} hint="Review queue: Listings" />
+        <Stat label="Published properties" value={ps.approved ?? 0} />
+        <Stat label="Rejected or suspended" value={(ps.rejected ?? 0) + (ps.suspended ?? 0)} hint={`${ps.rejected ?? 0} rejected / returned · ${ps.suspended ?? 0} suspended`} />
+        <Stat label="Pending booking requests" value={bs.requested ?? 0} />
+        <Stat label="Confirmed bookings" value={bs.confirmed ?? 0} hint={`${bs.completed ?? 0} completed`} />
         <Stat label="New enquiries" value={newContact} hint="Contact and booking-experience forms" />
         <Stat label="New gardening enquiries" value={newGardening} hint="Separate queue: /admin/gardening" />
         <Stat label="New partner applications" value={newApps} />
@@ -63,6 +67,7 @@ export default async function AdminOverview() {
       </div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" aria-label="Money">
         <Stat label="Total bookings" value={Object.values(bs).reduce((a, b) => a + b, 0)} />
+        <Stat label="Host earnings (net share)" value={formatINR(sumOf(ledger.data as Record<string, unknown>[] | null, "host_share_inr"))} hint="Host 80% share on confirmed bookings, after reversals" />
         <Stat label="Platform commission (net)" value={formatINR(sumOf(ledger.data as Record<string, unknown>[] | null, "commission_inr"))} hint="From confirmed bookings, after reversals" />
         <Stat label="Confirmed bookings without a recorded payment" value={owing.count ?? 0} hint="Online payment is not enabled; record payments in Admin → Payments" />
         <Stat label="Settlements in progress" value={formatINR(sumOf(settling.data as Record<string, unknown>[] | null, "amount_inr"))} hint="Pending, processing or on hold" />
