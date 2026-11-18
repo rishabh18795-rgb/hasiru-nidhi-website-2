@@ -14,7 +14,9 @@ concurrency:
 
 jobs:
   verify:
-    runs-on: ubuntu-latest
+    # Pinned on purpose: `ubuntu-latest` moved to Ubuntu 26.04, which this Playwright version cannot install Chromium on
+    # ("Playwright does not support chromium on ubuntu26.04-x64"). Move to a newer image together with a Playwright upgrade.
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
