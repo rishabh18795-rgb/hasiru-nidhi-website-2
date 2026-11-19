@@ -317,3 +317,103 @@ export interface VendorDocument {
   reviewer_note: string | null;
   created_at: string;
 }
+
+/* ---------------------------------------------------------------- marketplace: product catalogue (M3) */
+export type ProductStatus = "draft" | "pending_review" | "approved" | "rejected" | "suspended" | "archived";
+export type InventoryReason = "initial" | "restock" | "correction" | "damaged" | "returned_to_stock" | "other";
+
+export interface ProductCategory {
+  id: number;
+  slug: string;
+  name: string;
+  description: string | null;
+  sort_order: number;
+  is_active: boolean;
+}
+
+export interface ProductAttribute { label: string; value: string }
+
+export interface Product {
+  id: string;
+  vendor_id: string;
+  category_id: number;
+  slug: string;
+  name: string;
+  summary: string | null;
+  description: string;
+  brand: string | null;
+  attributes: ProductAttribute[];
+  status: ProductStatus;
+  rejection_reason: string | null;
+  is_available: boolean;
+  is_featured: boolean;
+  submitted_at: string | null;
+  published_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ProductVariant {
+  id: string;
+  product_id: string;
+  sku: string;
+  name: string;
+  options: Record<string, string>;
+  price_inr: number | string;
+  track_inventory: boolean;
+  stock_on_hand: number;
+  weight_grams: number | null;
+  is_active: boolean;
+  sort_order: number;
+}
+
+export interface ProductImage { id: string; product_id: string; path: string; alt: string | null; sort_order: number }
+
+export interface InventoryMovement {
+  id: number;
+  variant_id: string;
+  delta: number;
+  balance_after: number;
+  reason: InventoryReason;
+  note: string | null;
+  created_at: string;
+}
+
+/** One row of search_products(): everything a shopper card needs, never stock counts. */
+export interface ProductCardData {
+  id: string;
+  slug: string;
+  name: string;
+  summary: string | null;
+  category_slug: string;
+  category_name: string;
+  vendor_slug: string;
+  vendor_name: string;
+  min_price: number | string;
+  max_price: number | string;
+  in_stock: boolean;
+  is_available: boolean;
+  is_featured: boolean;
+  cover_path: string | null;
+  cover_alt: string | null;
+  total_count: number | string;
+}
+
+/** get_product_public(): the shopper's view of one product. */
+export interface PublicProduct {
+  id: string;
+  slug: string;
+  name: string;
+  summary: string | null;
+  description: string;
+  brand: string | null;
+  attributes: ProductAttribute[];
+  is_available: boolean;
+  published_at: string | null;
+  category: { slug: string; name: string };
+  vendor: { slug: string; business_name: string; description: string | null; city: string | null; state: string | null };
+  images: { path: string; alt: string | null }[];
+  variants: { id: string; sku: string; name: string; options: Record<string, string>; price_inr: number | string; weight_grams: number | null; in_stock: boolean }[];
+}
+
+export interface VendorStore { slug: string; business_name: string; description: string | null; city: string | null; state: string | null; product_count: number }

@@ -3,13 +3,14 @@ import type { NextConfig } from "next";
 
 // Full-stack deployment (Vercel). The previous GitHub Pages static export was removed because
 // authentication, server actions and booking transactions need a server runtime.
-const supabaseHost = (() => {
+const supabaseUrl = (() => {
   try {
-    return new URL(process.env.NEXT_PUBLIC_SUPABASE_URL ?? "").hostname || null;
+    return new URL(process.env.NEXT_PUBLIC_SUPABASE_URL ?? "");
   } catch {
     return null;
   }
 })();
+const supabaseHost = supabaseUrl?.hostname || null;
 
 const isDev = process.env.NODE_ENV !== "production";
 
@@ -47,9 +48,12 @@ const nextConfig: NextConfig = {
   },
   images: {
     // Property photographs uploaded by hosts live in a public Supabase Storage bucket.
+    // Production Supabase is https on the default port, which is what this resolves to. (A local test backend can use http and a port.)
     remotePatterns: supabaseHost
-      ? [{ protocol: "https", hostname: supabaseHost, pathname: "/storage/v1/object/public/**" }]
+      ? [{ protocol: supabaseUrl?.protocol === "http:" ? "http" : "https", hostname: supabaseHost, ...(supabaseUrl?.port ? { port: supabaseUrl.port } : {}), pathname: "/storage/v1/object/public/**" }]
       : [],
+    // Only ever set by the local verification harness (tests/harness), never in deployment.
+    dangerouslyAllowLocalIP: process.env.HN_ALLOW_LOCAL_IMAGES === "1",
   },
   reactStrictMode: true,
   poweredByHeader: false,

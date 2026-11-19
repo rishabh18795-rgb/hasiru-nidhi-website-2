@@ -59,6 +59,25 @@ const FRIENDLY: Array<[RegExp, string]> = [
   [/too_many_documents/, "You can upload at most 30 documents."],
   [/too_many_areas/, "You can list at most 500 PIN codes or areas."],
   [/invalid_scope/, "Unknown coverage type."],
+  [/capability_not_approved/, "Selling products needs approval first. Our team approves each part of the marketplace separately."],
+  [/product_locked_in_review/, "This product is being reviewed, so it can't be edited right now."],
+  [/product_locked/, "This product can't be changed in its current state."],
+  [/name_required/, "Enter a name of at least 3 characters."],
+  [/invalid_category/, "Choose a category from the list."],
+  [/invalid_attributes/, "Specifications must be short label and value pairs (up to 20)."],
+  [/invalid_sku/, "The SKU can use letters, numbers, dots, dashes and underscores (up to 40 characters)."],
+  [/duplicate_sku/, "This product already has a variant with that SKU."],
+  [/variant_name_required/, "Give the variant a name shoppers will see, for example \"250 g pack\"."],
+  [/invalid_price/, "Enter a price in rupees, at least 0.01."],
+  [/invalid_weight/, "Enter the weight in grams as a positive whole number."],
+  [/invalid_options/, "Options must be short name and value pairs (up to 5)."],
+  [/invalid_quantity/, "Enter a valid quantity. Stock can't go below zero."],
+  [/inventory_not_tracked/, "Stock isn't tracked for this variant."],
+  [/too_many_variants/, "A product can have at most 30 variants."],
+  [/too_many_images/, "A product can have at most 10 photos."],
+  [/last_image/, "A live product must keep at least one photo. Add the new photo first, then remove the old one."],
+  [/invalid_order/, "That order isn't valid. Please refresh and try again."],
+  [/slug_immutable/, "A category's web address can't be changed."],
 ];
 
 const LABELS: Record<string, string> = {
@@ -80,6 +99,11 @@ export function friendlyDbError(error: { message?: string; code?: string } | nul
   if (incomplete) {
     const missing = incomplete[1].split(",").map((k) => LABELS[k] ?? k);
     return `Before submitting, please add: ${missing.join("; ")}.`;
+  }
+  const product = raw.match(/incomplete_product: ?(.*)/);
+  if (product) {
+    const names: Record<string, string> = { name: "a name", description: "a description of at least 30 characters", images: "at least one photo", variants: "at least one variant with a price", delivery_areas: "your delivery PIN codes (Delivery & service areas)" };
+    return `Before submitting, please add: ${product[1].split(",").map((k) => names[k] ?? k).join("; ")}.`;
   }
   const vendor = raw.match(/incomplete_vendor: ?(.*)/);
   if (vendor) {

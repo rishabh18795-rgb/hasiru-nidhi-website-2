@@ -17,6 +17,8 @@ export const LIMITS = {
   bookingRequest: { limit: 10, windowSeconds: 600 },
   upload: { limit: 30, windowSeconds: 600 },
   vendorWrite: { limit: 40, windowSeconds: 600 },
+  catalogueWrite: { limit: 120, windowSeconds: 600 },
+  deliveryCheck: { limit: 60, windowSeconds: 600 },
 } satisfies Record<string, Limit>;
 
 export const RATE_LIMITED_MESSAGE = "You're sending requests too quickly. Please wait a few minutes and try again.";

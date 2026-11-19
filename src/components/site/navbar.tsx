@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -13,6 +13,7 @@ import { basePath } from "@/lib/base-path";
 import { Button } from "@/components/ui/button";
 import { LinkButton } from "@/components/site/link-button";
 import { AccountMenu } from "@/components/site/account-menu";
+import { createBrowserSupabase } from "@/lib/supabase/browser";
 import {
   Sheet,
   SheetContent,
@@ -20,7 +21,26 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 
+/** The Shop link appears only while an administrator has switched the Shop ON. Read in the browser so marketing pages stay static. */
+function useShopOpen(): boolean {
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    const supabase = createBrowserSupabase();
+    if (!supabase) return;
+    let cancelled = false;
+    void supabase.from("platform_settings").select("value").eq("key", "marketplace_products_enabled").maybeSingle().then(({ data }) => {
+      if (!cancelled) setOpen(data?.value === true);
+    });
+    return () => { cancelled = true; };
+  }, []);
+  return open;
+}
+
+type NavEntry = (typeof navLinks)[number] | { label: string; href: string };
+
 export function Navbar({ announcement }: { announcement?: string }) {
+  const shopOpen = useShopOpen();
+  const links = useMemo<NavEntry[]>(() => (shopOpen ? [navLinks[0], navLinks[1], { label: "Shop", href: "/shop" }, ...navLinks.slice(2)] : [...navLinks]), [shopOpen]);
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -71,7 +91,7 @@ export function Navbar({ announcement }: { announcement?: string }) {
         </Link>
 
         <div className="hidden items-center gap-1 lg:flex">
-          {navLinks.map((link) => (
+          {links.map((link) => (
             <div
               key={link.href}
               className="relative"
@@ -150,7 +170,7 @@ export function Navbar({ announcement }: { announcement?: string }) {
               </SheetTitle>
             </SheetHeader>
             <div className="flex flex-col gap-1 overflow-y-auto p-4">
-              {navLinks.map((link) => (
+              {links.map((link) => (
                 <div key={link.href}>
                   <Link
                     href={link.href}

@@ -48,6 +48,12 @@ export default async function VendorLayout({ children }: { children: React.React
           { href: "/vendor/coverage", label: "Delivery & service areas", icon: "coverage" },
         ]
       : []),
+    ...(isCapabilityActive(ctx, "products")
+      ? [
+          { href: "/vendor/products", label: "Products", icon: "catalog" },
+          { href: "/vendor/inventory", label: "Inventory", icon: "earnings" },
+        ]
+      : []),
     ...(isCapabilityActive(ctx, "stays") && profile.role === "host" ? [{ href: "/host", label: "Stays (host portal)", icon: "properties" }] : []),
     { href: "/dashboard/notifications", label: "Notifications", icon: "notifications", badge: unread ?? 0 },
     { href: "/dashboard", label: "My account", icon: "saved" },
