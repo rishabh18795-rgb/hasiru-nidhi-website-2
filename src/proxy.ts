@@ -11,6 +11,7 @@ export const config = {
   matcher: [
     "/dashboard/:path*",
     "/host/:path*",
+    "/vendor/:path*",
     "/admin/:path*",
     "/sign-in",
     "/sign-up",

@@ -48,6 +48,17 @@ const FRIENDLY: Array<[RegExp, string]> = [
   [/reference_required/, "Enter the bank transfer reference to mark a settlement as paid."],
   [/stay_not_finished/, "A stay can be marked completed only after its check-out date."],
   [/commission_snapshot_immutable/, "The commission on an existing booking can't be changed."],
+  [/vendor_registration_closed/, "Vendor registration is not open yet."],
+  [/vendor_locked_in_review/, "Your application is being reviewed, so it can't be edited right now."],
+  [/business_name_required/, "Enter your business name."],
+  [/invalid_pin: ?(\S+)/, "Enter PIN codes as 6 digits (or a 3-digit prefix for a whole area)."],
+  [/invalid_pin/, "Enter a valid 6-digit PIN code."],
+  [/invalid_business_type/, "Choose a business type from the list."],
+  [/capability_required/, "Choose at least one thing you want to do on Hasiru Nidhi."],
+  [/vendor_not_approved/, "Approve the vendor's business first; capabilities are approved separately."],
+  [/too_many_documents/, "You can upload at most 30 documents."],
+  [/too_many_areas/, "You can list at most 500 PIN codes or areas."],
+  [/invalid_scope/, "Unknown coverage type."],
 ];
 
 const LABELS: Record<string, string> = {
@@ -69,6 +80,12 @@ export function friendlyDbError(error: { message?: string; code?: string } | nul
   if (incomplete) {
     const missing = incomplete[1].split(",").map((k) => LABELS[k] ?? k);
     return `Before submitting, please add: ${missing.join("; ")}.`;
+  }
+  const vendor = raw.match(/incomplete_vendor: ?(.*)/);
+  if (vendor) {
+    const names: Record<string, string> = { contact_name: "a contact name", contact_phone: "a contact phone number", contact_email: "a contact email", address_line: "a business address", city: "a city", postal_code: "a 6-digit PIN code", business_type: "a business type" };
+    const items = vendor[1].split(",").map((k) => (k.startsWith("document:") ? `the document "${k.slice(9)}"` : names[k] ?? k));
+    return `Before submitting, please add: ${items.join("; ")}.`;
   }
   const stay = raw.match(/invalid_stay_length:(\d+)-(\d+)/);
   if (stay) return `This property accepts stays of ${stay[1]} to ${stay[2]} nights. Please adjust your dates.`;

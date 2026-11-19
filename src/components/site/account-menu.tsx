@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { LayoutDashboard, LogOut, ShieldCheck, Store, User } from "lucide-react";
+import { Boxes, LayoutDashboard, LogOut, ShieldCheck, Store, User } from "lucide-react";
 
 import { createBrowserSupabase } from "@/lib/supabase/browser";
 import { signOut } from "@/app/auth/actions";
@@ -12,6 +12,9 @@ type Role = "traveller" | "host" | "admin";
 interface Me {
   name: string;
   role: Role;
+  /** Marketplace vendor registration is switched on. */
+  vendorOpen: boolean;
+  hasVendor: boolean;
 }
 
 /**
@@ -37,8 +40,12 @@ export function AccountMenu({ solid, onNavigate }: { solid: boolean; onNavigate?
         if (!cancelled) setLoaded(null);
         return;
       }
-      const { data } = await supabase!.from("profiles").select("full_name, role").eq("id", user.id).maybeSingle();
-      if (!cancelled) setLoaded({ name: data?.full_name || user.email || "Account", role: (data?.role as Role) ?? "traveller" });
+      const [{ data }, { data: flag }, { data: vendor }] = await Promise.all([
+        supabase!.from("profiles").select("full_name, role").eq("id", user.id).maybeSingle(),
+        supabase!.from("platform_settings").select("value").eq("key", "marketplace_vendor_registration_enabled").maybeSingle(),
+        supabase!.from("vendors").select("id").eq("owner_id", user.id).maybeSingle(),
+      ]);
+      if (!cancelled) setLoaded({ name: data?.full_name || user.email || "Account", role: (data?.role as Role) ?? "traveller", vendorOpen: flag?.value === true, hasVendor: Boolean(vendor) });
     }
     void load();
     const { data: sub } = supabase.auth.onAuthStateChange(() => void load());
@@ -84,6 +91,7 @@ export function AccountMenu({ solid, onNavigate }: { solid: boolean; onNavigate?
   const links = [
     { href: "/dashboard", label: "My trips & account", icon: LayoutDashboard, show: true },
     { href: "/host", label: "Host portal", icon: Store, show: me.role === "host" },
+    { href: "/vendor", label: me.hasVendor || me.role === "host" ? "Vendor dashboard" : "Become a vendor", icon: Boxes, show: me.vendorOpen && me.role !== "admin" },
     { href: "/admin", label: "Admin", icon: ShieldCheck, show: me.role === "admin" },
   ].filter((l) => l.show);
 

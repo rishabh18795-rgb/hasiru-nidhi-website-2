@@ -13,11 +13,16 @@ export const metadata: Metadata = {
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const { supabase } = await requireRole(["admin"], "/admin");
-  const { count } = await supabase.from("properties").select("id", { count: "exact", head: true }).eq("status", "pending_review");
+  const [{ count }, { count: vendorQueue }] = await Promise.all([
+    supabase.from("properties").select("id", { count: "exact", head: true }).eq("status", "pending_review"),
+    supabase.from("vendors").select("id", { count: "exact", head: true }).in("status", ["submitted", "under_review"]),
+  ]);
   const items = [
     { href: "/admin", label: "Overview", icon: "overview", exact: true },
     { href: "/admin/properties", label: "Listings", icon: "queue", badge: count ?? 0 },
     { href: "/admin/hosts", label: "Hosts", icon: "hosts" },
+    { href: "/admin/vendors", label: "Vendors", icon: "vendors", badge: vendorQueue ?? 0 },
+    { href: "/admin/marketplace", label: "Marketplace", icon: "marketplace" },
     { href: "/admin/customers", label: "Customers", icon: "users" },
     { href: "/admin/bookings", label: "Bookings", icon: "bookings" },
     { href: "/admin/payments", label: "Payments", icon: "payments" },

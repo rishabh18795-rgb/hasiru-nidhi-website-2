@@ -254,3 +254,66 @@ export interface HostSettlement {
   created_at: string;
   paid_at: string | null;
 }
+
+/* ---------------------------------------------------------------- marketplace: vendors (M1) */
+export type VendorStatus = "draft" | "submitted" | "under_review" | "approved" | "rejected" | "suspended";
+export type VendorCapabilityKind = "products" | "services" | "stays";
+export type CapabilityStatus = "pending" | "approved" | "rejected" | "suspended";
+export type DocumentStatus = "submitted" | "accepted" | "rejected";
+
+export interface Vendor {
+  id: string;
+  owner_id: string;
+  slug: string;
+  business_name: string;
+  business_type: string | null;
+  description: string | null;
+  contact_name: string | null;
+  contact_email: string | null;
+  contact_phone: string | null;
+  address_line: string | null;
+  city: string | null;
+  state: string | null;
+  postal_code: string | null;
+  tax_identifier: string | null;
+  status: VendorStatus;
+  rejection_reason: string | null;
+  reviewed_at: string | null;
+  submitted_at: string | null;
+  is_legacy_host: boolean;
+  created_at: string;
+}
+
+export interface VendorCapability {
+  vendor_id: string;
+  capability: VendorCapabilityKind;
+  status: CapabilityStatus;
+  reason: string | null;
+  requested_at: string;
+  reviewed_at: string | null;
+}
+
+export interface VendorDocumentRequirement {
+  id: number;
+  slug: string;
+  name: string;
+  description: string | null;
+  capability: VendorCapabilityKind;
+  category_kind: "product_category" | "service_category" | null;
+  category_id: number | null;
+  is_required: boolean;
+  is_active: boolean;
+  sort_order: number;
+}
+
+export interface VendorDocument {
+  id: string;
+  vendor_id: string;
+  requirement_id: number | null;
+  label: string;
+  storage_path: string;
+  original_name: string | null;
+  status: DocumentStatus;
+  reviewer_note: string | null;
+  created_at: string;
+}

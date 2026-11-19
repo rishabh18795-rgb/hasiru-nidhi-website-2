@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Banknote, Bell, Building2, CalendarCheck, CalendarDays, ClipboardList, Heart, Inbox, LayoutDashboard, Leaf, Percent, Receipt,
-  ScrollText, Settings, ShieldAlert, Star, Tags, UserRound, Users, Wallet, type LucideIcon,
+  MapPin, ScrollText, Settings, ShieldAlert, ShieldCheck, Star, Store, Tags, ToggleRight, UserRound, Users, Wallet, type LucideIcon,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -13,6 +13,7 @@ const ICONS: Record<string, LucideIcon> = {
   overview: LayoutDashboard, bookings: CalendarCheck, saved: Heart, profile: UserRound, notifications: Bell,
   properties: Building2, calendar: CalendarDays, enquiries: Inbox, settings: Settings, users: Users,
   catalog: Tags, reports: ShieldAlert, queue: ClipboardList, reviews: Star, audit: ScrollText,
+  verification: ShieldCheck, coverage: MapPin, vendors: Store, marketplace: ToggleRight,
   hosts: Building2, payments: Banknote, commission: Percent, settlements: Wallet, gardening: Leaf, earnings: Receipt,
 };
 
