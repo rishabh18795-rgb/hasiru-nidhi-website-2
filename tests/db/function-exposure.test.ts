@@ -19,11 +19,12 @@ async function callable(role: string): Promise<string[]> {
 }
 
 // Read-only helpers that are safe for anyone (they only return what RLS already lets the caller see, or public data).
-const PUBLIC_HELPERS = ["is_admin", "is_host", "owns_property", "today_ist", "is_property_available", "property_unavailable_ranges", "search_properties", "quote_stay"];
+const PUBLIC_HELPERS = ["is_admin", "is_host", "owns_property", "today_ist", "is_property_available", "property_unavailable_ranges", "search_properties", "quote_stay", "vendor_can", "owns_vendor", "vendor_covers_pin"];
 // Actions a signed-in user may invoke; each re-checks its own authorization inside the function.
 const SIGNED_IN_ACTIONS = ["request_booking", "respond_to_booking", "cancel_booking", "submit_property", "review_property", "admin_update_user", "moderate_review", "become_host", "reorder_property_images",
   // commercial layer: every admin_* function checks is_admin() itself; booking_payment_status runs as the caller (RLS applies)
-  "admin_record_payment", "admin_record_refund", "admin_settleable_bookings", "admin_create_settlement", "admin_update_settlement", "admin_set_commission", "complete_booking", "booking_payment_status"];
+  "admin_record_payment", "admin_record_refund", "admin_settleable_bookings", "admin_create_settlement", "admin_update_settlement", "admin_set_commission", "complete_booking", "booking_payment_status", // vendor foundation: each authorizes internally (owner, admin, or open flag)
+  "is_vendor_member", "save_vendor_profile", "submit_vendor_application", "ensure_legacy_vendor", "request_vendor_capability", "admin_review_vendor", "admin_review_capability", "register_vendor_document", "delete_vendor_document", "admin_review_vendor_document", "set_vendor_service_areas"];
 
 describe("who can call which function", () => {
   it("anonymous visitors can call only the public read helpers", async () => {
