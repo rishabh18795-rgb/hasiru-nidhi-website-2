@@ -31,6 +31,7 @@ An administrator switches them at `/admin/marketplace`. Deploying code never exp
 | File | Status |
 |---|---|
 | `20261120000100_vendors_foundation.sql` (M1) | Written and tested in-process. NOT applied to any database. |
+| `20261121000100_product_catalogue.sql` (M3) | Written and tested in-process. NOT applied to any database. |
 
 Every migration is applied to production only after: tests green, rehearsal on the non-production database, a backup, and the owner's approval.
 
@@ -39,8 +40,13 @@ Every migration is applied to production only after: tests green, rehearsal on t
 | Phase | State |
 |---|---|
 | 2. Design finalisation | Done (decisions above, Phase 1 audit) |
-| 3. Vendor foundation and registration | Built and tested locally (see progress summary) |
-| 4 to 9 | Not started |
+| 3. Vendor foundation and registration | Built, tested, CI green on the branch |
+| 4. Product catalogue | Built and tested (see progress summary). Flags OFF. |
+| 5 to 9 | Not started |
+
+## Verification harness
+
+`node tests/harness/shop-harness.mjs` runs the real migrations in-process, loads clearly labelled FIXTURE rows through the real database functions, and exposes a minimal PostgREST-compatible front, so the real Shop pages can be rendered and clicked through against real SQL (build and start Next with `NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321 NEXT_PUBLIC_SUPABASE_ANON_KEY=x HN_ALLOW_LOCAL_IMAGES=1`). It proves rendering and the app/SQL contract only. It is not a Supabase environment and never touches a real database.
 
 ## Tests
 

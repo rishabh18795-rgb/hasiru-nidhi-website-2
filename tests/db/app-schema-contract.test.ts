@@ -153,7 +153,8 @@ describe("app ↔ schema contract", () => {
     const missing: string[] = [];
     for (const { file, text } of sources) {
       for (const m of text.matchAll(/\.select\(\s*"([^"]+)"/g)) {
-        for (const e of m[1].matchAll(/\b([a-z_]+)\(/g)) {
+        // "table(cols)" and PostgREST join hints such as "table!inner(cols)": the table name is what must exist.
+        for (const e of m[1].matchAll(/\b([a-z_]+)(?:![a-z_]+)?\(/g)) {
           if (["count"].includes(e[1])) continue;
           if (!columns.has(e[1])) missing.push(`${file}: embeds ${e[1]}`);
         }
