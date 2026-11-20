@@ -19,13 +19,14 @@ async function callable(role: string): Promise<string[]> {
 }
 
 // Read-only helpers that are safe for anyone (they only return what RLS already lets the caller see, or public data).
-const PUBLIC_HELPERS = ["is_admin", "is_host", "owns_property", "today_ist", "is_property_available", "property_unavailable_ranges", "search_properties", "quote_stay", "vendor_can", "owns_vendor", "vendor_covers_pin", "products_enabled", "product_is_public", "search_products", "get_product_public", "check_product_delivery", "get_vendor_store"];
+const PUBLIC_HELPERS = ["is_admin", "is_host", "owns_property", "today_ist", "is_property_available", "property_unavailable_ranges", "search_properties", "quote_stay", "vendor_can", "owns_vendor", "vendor_covers_pin", "products_enabled", "product_is_public", "search_products", "get_product_public", "check_product_delivery", "get_vendor_store", "orders_enabled"];
 // Actions a signed-in user may invoke; each re-checks its own authorization inside the function.
 const SIGNED_IN_ACTIONS = ["request_booking", "respond_to_booking", "cancel_booking", "submit_property", "review_property", "admin_update_user", "moderate_review", "become_host", "reorder_property_images",
   // commercial layer: every admin_* function checks is_admin() itself; booking_payment_status runs as the caller (RLS applies)
   "admin_record_payment", "admin_record_refund", "admin_settleable_bookings", "admin_create_settlement", "admin_update_settlement", "admin_set_commission", "complete_booking", "booking_payment_status", // vendor foundation: each authorizes internally (owner, admin, or open flag)
   "is_vendor_member", "save_vendor_profile", "submit_vendor_application", "ensure_legacy_vendor", "request_vendor_capability", "admin_review_vendor", "admin_review_capability", "register_vendor_document", "delete_vendor_document", "admin_review_vendor_document", "set_vendor_service_areas", // product catalogue: each authorizes internally (owner with the products capability, or admin)
-  "save_product", "save_product_variant", "adjust_inventory", "register_product_image", "delete_product_image", "reorder_product_images", "set_product_availability", "submit_product", "archive_product", "restore_product", "admin_review_product", "admin_set_product_featured", "admin_reorder_product_categories"];
+  "save_product", "save_product_variant", "adjust_inventory", "register_product_image", "delete_product_image", "reorder_product_images", "set_product_availability", "submit_product", "archive_product", "restore_product", "admin_review_product", "admin_set_product_featured", "admin_reorder_product_categories", // cart, checkout and product orders: each authorizes internally (own cart/orders, own vendor, or admin)
+  "save_address", "delete_address", "set_default_address", "cart_set_item", "cart_clear", "get_cart", "place_order", "vendor_respond_order", "vendor_mark_packed", "vendor_ship_order", "vendor_update_shipment", "cancel_order", "request_return", "open_dispute", "decide_order_request", "admin_cancel_order", "admin_resolve_dispute"];
 
 describe("who can call which function", () => {
   it("anonymous visitors can call only the public read helpers", async () => {

@@ -11,7 +11,8 @@
 --  * No cart, checkout, order, price rule, tax or shipping fee exists here (Phase 5 and policy decisions).
 
 create type public.product_status as enum ('draft', 'pending_review', 'approved', 'rejected', 'suspended', 'archived');
-create type public.inventory_reason as enum ('initial', 'restock', 'correction', 'damaged', 'returned_to_stock', 'other');
+-- 'order_placed', 'order_cancelled' are written only by the order functions (M4); vendors can never choose them (see adjust_inventory).
+create type public.inventory_reason as enum ('initial', 'restock', 'correction', 'damaged', 'returned_to_stock', 'other', 'order_placed', 'order_cancelled');
 
 -- ---------------------------------------------------------------- categories (admin managed)
 create table public.product_categories (
@@ -123,6 +124,7 @@ create table public.inventory_movements (
   reason public.inventory_reason not null,
   note text check (note is null or char_length(note) <= 300),
   actor_id uuid,
+  order_id uuid,                                         -- set when the movement was caused by an order (foreign key added with the orders table)
   created_at timestamptz not null default now()
 );
 create index inventory_movements_variant_idx on public.inventory_movements (variant_id, id desc);
@@ -329,7 +331,8 @@ declare
   v_new int;
 begin
   if p_mode not in ('set', 'add') or p_quantity is null then raise exception 'invalid_quantity' using errcode = 'P0001'; end if;
-  if p_reason = 'initial' then raise exception 'invalid_quantity' using errcode = 'P0001'; end if;
+  -- Vendors record only their own reasons; 'initial' and the order reasons are written by the database itself.
+  if p_reason not in ('restock', 'correction', 'damaged', 'returned_to_stock', 'other') then raise exception 'invalid_quantity' using errcode = 'P0001'; end if;
   select v.* into cur from public.product_variants v join public.products p on p.id = v.product_id where v.id = p_variant and p.vendor_id = v_vendor for update of v;
   if not found then raise exception 'not_found' using errcode = 'P0001'; end if;
   if not cur.track_inventory then raise exception 'inventory_not_tracked' using errcode = 'P0001'; end if;

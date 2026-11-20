@@ -39,6 +39,7 @@ describe("feature flags", () => {
   it("are all OFF by default and public, and accept only booleans", async () => {
     const rows = (await db.query<{ key: string; value: unknown; is_public: boolean }>("select key, value, is_public from public.platform_settings where key like 'marketplace_%' order by key")).rows;
     expect(rows.map((r) => [r.key, r.value, r.is_public])).toEqual([
+      ["marketplace_orders_enabled", false, true],
       ["marketplace_products_enabled", false, true],
       ["marketplace_services_enabled", false, true],
       ["marketplace_vendor_registration_enabled", false, true],
