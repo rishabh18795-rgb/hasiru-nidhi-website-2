@@ -16,7 +16,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const { count } = await supabase.from("notifications").select("id", { count: "exact", head: true }).eq("user_id", user.id).eq("is_read", false);
   const items = [
     { href: "/dashboard", label: "Overview", icon: "overview", exact: true },
-    { href: "/dashboard/bookings", label: "My bookings", icon: "bookings" },
+    { href: "/dashboard/bookings", label: "Stay bookings", icon: "bookings" },
+    { href: "/dashboard/orders", label: "Shop orders", icon: "earnings" },
+    { href: "/dashboard/addresses", label: "Addresses", icon: "coverage" },
     { href: "/dashboard/saved", label: "Favourites", icon: "saved" },
     { href: "/dashboard/notifications", label: "Notifications", icon: "notifications", badge: count ?? 0 },
     { href: "/dashboard/profile", label: "Profile", icon: "profile" },

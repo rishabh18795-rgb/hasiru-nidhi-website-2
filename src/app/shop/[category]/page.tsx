@@ -56,7 +56,7 @@ export default async function ShopCategoryPage({ params, searchParams }: { param
           ))}
         </nav>
 
-        <div className="mt-8 grid gap-8 lg:grid-cols-[16rem_1fr]">
+        <div className="mt-8 grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[16rem_minmax(0,1fr)]">
           <aside>
             <details className="rounded-2xl border border-forest-900/10 bg-white lg:hidden" open={filterCount > 0}>
               <summary className="flex cursor-pointer list-none items-center gap-2 px-5 py-3.5 text-sm font-medium text-forest-950"><SlidersHorizontal className="h-4 w-4" aria-hidden="true" /> Filters{filterCount ? ` (${filterCount})` : ""}</summary>

@@ -12,6 +12,8 @@ export const config = {
     "/dashboard/:path*",
     "/host/:path*",
     "/vendor/:path*",
+    "/cart",
+    "/checkout/:path*",
     "/admin/:path*",
     "/sign-in",
     "/sign-up",

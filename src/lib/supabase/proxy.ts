@@ -4,7 +4,7 @@ import { createServerClient } from "@supabase/ssr";
 import { getSupabaseConfig } from "@/lib/supabase/config";
 import { fetchWithTimeout } from "@/lib/supabase/fetch";
 
-const PROTECTED_PREFIXES = ["/dashboard", "/host", "/admin", "/vendor"];
+const PROTECTED_PREFIXES = ["/dashboard", "/host", "/admin", "/vendor", "/cart", "/checkout"];
 const AUTH_PAGES = ["/sign-in", "/sign-up"];
 /** Entry pages of the host and admin portals: public by design (they are where signed-out visitors sign in). */
 const PORTAL_ENTRY_PAGES = ["/host/login", "/host/register", "/admin/login"];

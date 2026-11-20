@@ -27,11 +27,12 @@ const reviewSchema = z.object({
 export async function reviewProduct(_prev: FormState, formData: FormData): Promise<FormState> {
   const session = await adminSession();
   if (!session) return DENIED;
-  const parsed = reviewSchema.safeParse(formValues(formData));
-  if (!parsed.success) return { ok: false, fieldErrors: zodFieldErrors(parsed.error), message: "Choose a decision." };
+  const raw = formValues(formData);
+  const parsed = reviewSchema.safeParse(raw);
+  if (!parsed.success) return { ok: false, fieldErrors: zodFieldErrors(parsed.error), message: "Choose a decision.", values: raw };
   const { product_id, decision, reason } = parsed.data;
   const { error } = await session.supabase.rpc("admin_review_product", { p_product: product_id, p_decision: decision, p_reason: reason ?? null });
-  if (error) return { ok: false, message: friendlyDbError(error) };
+  if (error) return { ok: false, message: friendlyDbError(error), values: raw };
   revalidatePath("/admin/products");
   revalidatePath(`/admin/products/${product_id}`);
   revalidatePath("/shop", "layout");

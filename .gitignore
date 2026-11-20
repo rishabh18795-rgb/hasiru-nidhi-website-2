@@ -46,3 +46,7 @@ next-env.d.ts
 # Playwright
 /test-results/
 /playwright-report/
+
+# staging test build and generated fixtures
+/.next-staging
+/tests/staging/.fixtures.json

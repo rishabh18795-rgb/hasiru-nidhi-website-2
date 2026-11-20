@@ -31,7 +31,8 @@ An administrator switches them at `/admin/marketplace`. Deploying code never exp
 | File | Status |
 |---|---|
 | `20261120000100_vendors_foundation.sql` (M1) | Written and tested in-process. NOT applied to any database. |
-| `20261121000100_product_catalogue.sql` (M3) | Written and tested in-process. NOT applied to any database. |
+| `20261121000100_product_catalogue.sql` (M3) | Applied to STAGING only. Not applied to production. |
+| `20261122000100_cart_and_orders.sql` (M4) | Applied to STAGING only. Not applied to production. |
 
 Every migration is applied to production only after: tests green, rehearsal on the non-production database, a backup, and the owner's approval.
 
@@ -41,8 +42,9 @@ Every migration is applied to production only after: tests green, rehearsal on t
 |---|---|
 | 2. Design finalisation | Done (decisions above, Phase 1 audit) |
 | 3. Vendor foundation and registration | Built, tested, CI green on the branch |
-| 4. Product catalogue | Built and tested (see progress summary). Flags OFF. |
-| 5 to 9 | Not started |
+| 4. Product catalogue | Built, tested, CI green on the branch. Flags OFF. |
+| 5. Cart, checkout, orders | Built; verified in-process, against the real staging backend, and in real browsers (desktop and mobile). Flags OFF. |
+| 6 to 9 | Not started |
 
 ## Verification harness
 
@@ -51,4 +53,4 @@ Every migration is applied to production only after: tests green, rehearsal on t
 ## Tests
 
 `npm run typecheck`, `npm run lint`, `npm test` (unit and database), `npx playwright test` (browser, no backend).
-Signed-in browser flows need a Supabase backend; until the non-production project exists (D12) they are verified at database level only.
+Signed-in browser flows and the full order workflow are verified against the staging project: see `docs/STAGING.md` (`npm run test:staging`, `npm run test:staging:e2e`).

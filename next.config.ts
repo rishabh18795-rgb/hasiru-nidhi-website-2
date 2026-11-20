@@ -43,6 +43,8 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // Lets the staging browser tests build separately without disturbing the normal build (set only by the test scripts).
+  distDir: process.env.HN_DIST_DIR || ".next",
   turbopack: {
     root: path.resolve(__dirname),
   },

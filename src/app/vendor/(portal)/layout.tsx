@@ -37,6 +37,9 @@ export default async function VendorLayout({ children }: { children: React.React
     if (!existing) await supabase.rpc("ensure_legacy_vendor");
   }
   const ctx = await getVendorContext(supabase, user.id);
+  const { count: newOrders } = isCapabilityActive(ctx, "products")
+    ? await supabase.from("orders").select("id", { count: "exact", head: true }).eq("status", "placed")
+    : { count: 0 };
   const { count: unread } = await supabase.from("notifications").select("id", { count: "exact", head: true }).eq("is_read", false);
 
   const items = [
@@ -51,6 +54,7 @@ export default async function VendorLayout({ children }: { children: React.React
     ...(isCapabilityActive(ctx, "products")
       ? [
           { href: "/vendor/products", label: "Products", icon: "catalog" },
+          { href: "/vendor/orders", label: "Shop orders", icon: "bookings", badge: newOrders ?? 0 },
           { href: "/vendor/inventory", label: "Inventory", icon: "earnings" },
         ]
       : []),

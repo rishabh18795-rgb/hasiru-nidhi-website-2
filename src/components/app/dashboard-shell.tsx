@@ -14,8 +14,8 @@ export function DashboardShell({
 }) {
   return (
     <section className="bg-cream pb-24 pt-28">
-      <div className="container-nidhi grid gap-8 lg:grid-cols-[15rem_1fr]">
-        <aside>
+      <div className="container-nidhi grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[15rem_minmax(0,1fr)]">
+        <aside className="min-w-0">
           <p className="text-eyebrow mb-3 hidden lg:block">{area}</p>
           <NavLinks items={items} label={`${area} navigation`} />
         </aside>

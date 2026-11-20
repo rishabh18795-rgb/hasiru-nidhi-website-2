@@ -4,15 +4,16 @@ import { useMemo, useState, useTransition } from "react";
 import { CheckCircle2, Info, MapPin, XCircle } from "lucide-react";
 
 import { checkDelivery, type DeliveryResult } from "@/app/shop/actions";
+import { AddToCart } from "@/components/shop/add-to-cart";
 import { formatPrice } from "@/lib/format";
 import type { PublicProduct } from "@/lib/db/types";
 import { cn } from "@/lib/utils";
 
 /**
- * Variant choice, price, stock status and the PIN-code delivery check. There is deliberately NO add-to-cart or buy button:
- * cart and checkout are a later release, and this panel says so instead of pretending.
+ * Variant choice, price, stock status, the PIN-code delivery check and, while ordering is open, "Add to cart".
+ * There is no payment step anywhere: an order is an UNPAID request, and the panel says so.
  */
-export function PurchasePanel({ productId, variants, isAvailable }: { productId: string; variants: PublicProduct["variants"]; isAvailable: boolean }) {
+export function PurchasePanel({ productId, variants, isAvailable, ordersOpen, slug }: { productId: string; variants: PublicProduct["variants"]; isAvailable: boolean; ordersOpen: boolean; slug: string }) {
   const firstInStock = variants.find((v) => v.in_stock) ?? variants[0];
   const [selected, setSelected] = useState(firstInStock?.id);
   const variant = useMemo(() => variants.find((v) => v.id === selected) ?? variants[0], [variants, selected]);
@@ -68,7 +69,14 @@ export function PurchasePanel({ productId, variants, isAvailable }: { productId:
         ) : null}
       </form>
 
-      <p className="flex items-start gap-2 rounded-xl bg-sand-50 px-4 py-3 text-sm text-ink/70"><Info className="mt-0.5 h-4 w-4 shrink-0 text-earth-700" aria-hidden="true" /> Ordering opens in the next release. You can browse and check delivery now; nothing can be bought or paid for yet.</p>
+      {ordersOpen ? (
+        <>
+          <AddToCart variantId={variant.id} disabled={!isAvailable || !variant.in_stock} reason={!isAvailable ? "This product is currently unavailable." : !variant.in_stock ? "This option is out of stock." : undefined} signInHref={`/sign-in?next=${encodeURIComponent(`/shop/p/${slug}`)}`} />
+          <p className="flex items-start gap-2 rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-950"><Info className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" /> Orders are <strong className="mx-1">unpaid requests</strong>: payment is not configured yet, and nothing is charged. The seller confirms your order and how payment is arranged.</p>
+        </>
+      ) : (
+        <p className="flex items-start gap-2 rounded-xl bg-sand-50 px-4 py-3 text-sm text-ink/70"><Info className="mt-0.5 h-4 w-4 shrink-0 text-earth-700" aria-hidden="true" /> Ordering is not open yet. You can browse and check delivery now; nothing can be bought or paid for yet.</p>
+      )}
     </div>
   );
 }

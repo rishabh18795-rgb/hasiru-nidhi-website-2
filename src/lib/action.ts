@@ -78,6 +78,25 @@ const FRIENDLY: Array<[RegExp, string]> = [
   [/last_image/, "A live product must keep at least one photo. Add the new photo first, then remove the old one."],
   [/invalid_order/, "That order isn't valid. Please refresh and try again."],
   [/slug_immutable/, "A category's web address can't be changed."],
+  [/orders_closed/, "Ordering is not open yet."],
+  [/insufficient_stock: ?(\d+)/, "That is more than the seller has in stock."],
+  [/out_of_stock: ?(.*)/, "One item is out of stock. Please review your cart."],
+  [/not_deliverable: ?(.*)/, "One seller does not deliver to this PIN code. Choose another address or remove that seller's items."],
+  [/product_unavailable/, "That product is no longer available."],
+  [/product_paused/, "That product is currently unavailable."],
+  [/own_product/, "You can't buy your own product."],
+  [/cart_full/, "Your cart can hold at most 50 different items."],
+  [/cart_empty/, "Your cart is empty."],
+  [/address_required/, "Choose a delivery address."],
+  [/address_incomplete/, "Please fill in the name, phone, address line, city and state."],
+  [/too_many_addresses/, "You can save at most 10 addresses."],
+  [/invalid_key/, "Please reload the page and try again."],
+  [/tracking_required/, "Enter the carrier and a tracking number."],
+  [/not_delivered/, "Returns and replacements can be requested after the order is delivered."],
+  [/cannot_cancel/, "This order can no longer be cancelled."],
+  [/not_allowed_by_policy: ?(.*)/, "This type of request isn't allowed for the product category."],
+  [/window_expired: ?(.*)/, "The request window for this product category has passed."],
+  [/duplicate key|unique constraint/, "You already have an open request of that kind for this order."],
 ];
 
 const LABELS: Record<string, string> = {
@@ -100,6 +119,16 @@ export function friendlyDbError(error: { message?: string; code?: string } | nul
     const missing = incomplete[1].split(",").map((k) => LABELS[k] ?? k);
     return `Before submitting, please add: ${missing.join("; ")}.`;
   }
+  const stockN = raw.match(/insufficient_stock: ?(\d+)/);
+  if (stockN) return `Only ${stockN[1]} available.`;
+  const oos = raw.match(/out_of_stock: ?(.*)/);
+  if (oos) return `${oos[1]} is out of stock. Please update your cart.`;
+  const nd = raw.match(/not_deliverable: ?(.*)/);
+  if (nd) return `${nd[1]} does not deliver to this PIN code. Choose another address or remove that seller's items.`;
+  const pol = raw.match(/not_allowed_by_policy: ?(.*)/);
+  if (pol) return `Our policy for ${pol[1]} does not allow this request.`;
+  const win = raw.match(/window_expired: ?(.*)/);
+  if (win) return `The request window for ${win[1]} has passed.`;
   const product = raw.match(/incomplete_product: ?(.*)/);
   if (product) {
     const names: Record<string, string> = { name: "a name", description: "a description of at least 30 characters", images: "at least one photo", variants: "at least one variant with a price", delivery_areas: "your delivery PIN codes (Delivery & service areas)" };

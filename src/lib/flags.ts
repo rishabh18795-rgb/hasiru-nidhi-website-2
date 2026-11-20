@@ -11,15 +11,17 @@ export interface MarketplaceFlags {
   vendorRegistration: boolean;
   products: boolean;
   services: boolean;
+  orders: boolean;
 }
 
 export const FLAG_KEYS = {
   vendorRegistration: "marketplace_vendor_registration_enabled",
   products: "marketplace_products_enabled",
   services: "marketplace_services_enabled",
+  orders: "marketplace_orders_enabled",
 } as const satisfies Record<keyof MarketplaceFlags, string>;
 
-export const ALL_OFF: MarketplaceFlags = { vendorRegistration: false, products: false, services: false };
+export const ALL_OFF: MarketplaceFlags = { vendorRegistration: false, products: false, services: false, orders: false };
 
 export async function getMarketplaceFlags(): Promise<MarketplaceFlags> {
   if (!isSupabaseConfigured()) return ALL_OFF;
@@ -27,7 +29,7 @@ export async function getMarketplaceFlags(): Promise<MarketplaceFlags> {
     const { data, error } = await createPublicSupabase(15).from("platform_settings").select("key, value").in("key", Object.values(FLAG_KEYS));
     if (error || !data) return ALL_OFF;
     const on = (key: string) => data.find((r) => r.key === key)?.value === true;
-    return { vendorRegistration: on(FLAG_KEYS.vendorRegistration), products: on(FLAG_KEYS.products), services: on(FLAG_KEYS.services) };
+    return { vendorRegistration: on(FLAG_KEYS.vendorRegistration), products: on(FLAG_KEYS.products), services: on(FLAG_KEYS.services), orders: on(FLAG_KEYS.orders) && on(FLAG_KEYS.products) };
   } catch {
     return ALL_OFF;
   }

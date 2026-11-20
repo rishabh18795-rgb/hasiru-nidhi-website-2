@@ -24,8 +24,8 @@ export function VendorDecisionForm({ vendorId, status }: { vendorId: string; sta
     <form action={action} className="flex flex-col gap-4">
       <input type="hidden" name="vendor_id" value={vendorId} />
       <FormMessage state={state} />
-      <Field label="Decision" htmlFor="vendor-decision"><NativeSelect id="vendor-decision" name="decision" defaultValue={options[0].value}>{options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}</NativeSelect></Field>
-      <Field label="Reason / note to the vendor" htmlFor="vendor-reason" hint={reasonHint}><TextArea id="vendor-reason" name="reason" rows={3} maxLength={1000} /></Field>
+      <Field label="Decision" htmlFor="vendor-decision"><NativeSelect id="vendor-decision" name="decision" key={String(state.values?.decision ?? "")} defaultValue={state.values?.decision ?? options[0].value}>{options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}</NativeSelect></Field>
+      <Field label="Reason / note to the vendor" htmlFor="vendor-reason" hint={reasonHint}><TextArea id="vendor-reason" name="reason" rows={3} maxLength={1000} defaultValue={state.values?.reason} /></Field>
       <SubmitButton pendingLabel="Saving…" className="self-start">Apply decision</SubmitButton>
     </form>
   );
@@ -43,8 +43,8 @@ export function CapabilityDecisionForm({ vendorId, capability, status, vendorApp
     <form action={action} className="flex flex-wrap items-end gap-2">
       <input type="hidden" name="vendor_id" value={vendorId} />
       <input type="hidden" name="capability" value={capability} />
-      <select name="decision" aria-label={`Decision for ${capability}`} defaultValue={options[0].value} className="h-9 rounded-lg border border-forest-900/15 bg-white px-2 text-sm">{options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}</select>
-      <input name="reason" aria-label={`Reason for ${capability}`} placeholder="Reason (if needed)" maxLength={1000} className="h-9 min-w-40 flex-1 rounded-lg border border-forest-900/15 bg-white px-3 text-sm" />
+      <select name="decision" aria-label={`Decision for ${capability}`} key={String(state.values?.decision ?? "")} defaultValue={state.values?.decision ?? options[0].value} className="h-9 rounded-lg border border-forest-900/15 bg-white px-2 text-sm">{options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}</select>
+      <input name="reason" aria-label={`Reason for ${capability}`} placeholder="Reason (if needed)" maxLength={1000} defaultValue={state.values?.reason} className="h-9 min-w-40 flex-1 rounded-lg border border-forest-900/15 bg-white px-3 text-sm" />
       <SubmitButton variant="outline" pendingLabel="…" className="h-9 px-4" disabled={!vendorApproved && status === "pending"}>Apply</SubmitButton>
       {!vendorApproved && status === "pending" ? <span className="w-full text-xs text-ink/55">Approve the business first.</span> : null}
       {state?.message ? <span role={state.ok ? "status" : "alert"} className={`w-full text-xs ${state.ok ? "text-forest-700" : "text-red-700"}`}>{state.message}</span> : null}
@@ -58,8 +58,8 @@ export function DocumentDecisionForm({ vendorId, documentId }: { vendorId: strin
     <form action={action} className="flex flex-wrap items-center gap-2">
       <input type="hidden" name="vendor_id" value={vendorId} />
       <input type="hidden" name="document_id" value={documentId} />
-      <select name="decision" aria-label="Document decision" defaultValue="accept" className="h-9 rounded-lg border border-forest-900/15 bg-white px-2 text-sm"><option value="accept">Accept</option><option value="reject">Reject (note)</option></select>
-      <input name="note" aria-label="Note to the vendor" placeholder="Note (required to reject)" maxLength={1000} className="h-9 min-w-40 flex-1 rounded-lg border border-forest-900/15 bg-white px-3 text-sm" />
+      <select name="decision" aria-label="Document decision" key={String(state.values?.decision ?? "")} defaultValue={state.values?.decision ?? "accept"} className="h-9 rounded-lg border border-forest-900/15 bg-white px-2 text-sm"><option value="accept">Accept</option><option value="reject">Reject (note)</option></select>
+      <input name="note" aria-label="Note to the vendor" placeholder="Note (required to reject)" maxLength={1000} defaultValue={state.values?.note} className="h-9 min-w-40 flex-1 rounded-lg border border-forest-900/15 bg-white px-3 text-sm" />
       <SubmitButton variant="outline" pendingLabel="…" className="h-9 px-4">Apply</SubmitButton>
       {state?.message ? <span role={state.ok ? "status" : "alert"} className={`w-full text-xs ${state.ok ? "text-forest-700" : "text-red-700"}`}>{state.message}</span> : null}
     </form>

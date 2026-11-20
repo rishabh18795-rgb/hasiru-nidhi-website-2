@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, Menu } from "lucide-react";
+import { ChevronDown, Menu, ShoppingBag } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { navLinks, siteConfig } from "@/lib/site";
@@ -21,26 +21,51 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 
-/** The Shop link appears only while an administrator has switched the Shop ON. Read in the browser so marketing pages stay static. */
-function useShopOpen(): boolean {
-  const [open, setOpen] = useState(false);
+/** The Shop link and cart appear only while an administrator has switched them ON. Read in the browser so marketing pages stay static. */
+function useShop(): { open: boolean; ordersOpen: boolean; count: number } {
+  const [state, setState] = useState({ open: false, ordersOpen: false, count: 0 });
   useEffect(() => {
     const supabase = createBrowserSupabase();
     if (!supabase) return;
     let cancelled = false;
-    void supabase.from("platform_settings").select("value").eq("key", "marketplace_products_enabled").maybeSingle().then(({ data }) => {
-      if (!cancelled) setOpen(data?.value === true);
-    });
-    return () => { cancelled = true; };
+    async function load() {
+      const { data } = await supabase!.from("platform_settings").select("key, value").in("key", ["marketplace_products_enabled", "marketplace_orders_enabled"]);
+      const on = (k: string) => data?.find((r) => r.key === k)?.value === true;
+      const open = on("marketplace_products_enabled");
+      const ordersOpen = open && on("marketplace_orders_enabled");
+      let count = 0;
+      if (ordersOpen) {
+        const { data: sessionData } = await supabase!.auth.getUser();
+        if (sessionData.user) {
+          const { data: rows } = await supabase!.from("cart_items").select("quantity");
+          count = (rows ?? []).reduce((t, r) => t + Number(r.quantity), 0);
+        }
+      }
+      if (!cancelled) setState({ open, ordersOpen, count });
+    }
+    void load();
+    const { data: sub } = supabase.auth.onAuthStateChange(() => void load());
+    const onCart = () => void load();
+    window.addEventListener("hn-cart-changed", onCart);
+    return () => { cancelled = true; sub.subscription.unsubscribe(); window.removeEventListener("hn-cart-changed", onCart); };
   }, []);
-  return open;
+  return state;
+}
+
+function CartLink({ count, solid, onNavigate }: { count: number; solid: boolean; onNavigate?: () => void }) {
+  return (
+    <Link href="/cart" onClick={onNavigate} aria-label={count ? `Cart, ${count} item${count === 1 ? "" : "s"}` : "Cart"} className={cn("relative flex h-10 w-10 items-center justify-center rounded-full transition-colors", solid ? "text-forest-900 hover:bg-forest-900/5" : "text-cream hover:bg-white/10")}>
+      <ShoppingBag className="h-5 w-5" aria-hidden="true" />
+      {count > 0 ? <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-sand-400 px-1 text-[11px] font-bold text-forest-950" data-testid="cart-count">{count}</span> : null}
+    </Link>
+  );
 }
 
 type NavEntry = (typeof navLinks)[number] | { label: string; href: string };
 
 export function Navbar({ announcement }: { announcement?: string }) {
-  const shopOpen = useShopOpen();
-  const links = useMemo<NavEntry[]>(() => (shopOpen ? [navLinks[0], navLinks[1], { label: "Shop", href: "/shop" }, ...navLinks.slice(2)] : [...navLinks]), [shopOpen]);
+  const shop = useShop();
+  const links = useMemo<NavEntry[]>(() => (shop.open ? [navLinks[0], navLinks[1], { label: "Shop", href: "/shop" }, ...navLinks.slice(2)] : [...navLinks]), [shop.open]);
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -143,6 +168,7 @@ export function Navbar({ announcement }: { announcement?: string }) {
         </div>
 
         <div className="hidden items-center gap-2 lg:flex">
+          {shop.ordersOpen ? <CartLink count={shop.count} solid={solid} /> : null}
           <AccountMenu solid={solid} />
           <LinkButton
             href="/list-your-property"
@@ -197,6 +223,7 @@ export function Navbar({ announcement }: { announcement?: string }) {
               ))}
             </div>
             <div className="mt-auto flex flex-col gap-3 p-6">
+              {shop.ordersOpen ? <Link href="/cart" onClick={() => setMobileOpen(false)} className="flex items-center justify-between rounded-xl bg-forest-900/5 px-4 py-3 text-sm font-medium text-forest-900"><span className="flex items-center gap-2"><ShoppingBag className="h-4 w-4" aria-hidden="true" />Cart</span><span>{shop.count || ""}</span></Link> : null}
               <div className="flex items-center justify-between">
                 <span className="text-sm text-forest-900/70">Account</span>
                 <AccountMenu solid onNavigate={() => setMobileOpen(false)} />

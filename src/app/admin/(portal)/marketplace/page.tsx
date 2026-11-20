@@ -12,6 +12,7 @@ export const metadata: Metadata = { title: "Marketplace controls" };
 const FLAGS = [
   { key: FLAG_KEYS.vendorRegistration, title: "Vendor registration", help: "Lets customers apply as vendors and gives existing hosts the vendor dashboard. Turn on when you are ready to review applications." },
   { key: FLAG_KEYS.products, title: "Products (Shop)", help: "Not built yet. Leave OFF until the Products module has passed its launch checks." },
+  { key: FLAG_KEYS.orders, title: "Cart, checkout and orders", help: "Lets signed-in customers add to a cart and submit UNPAID order requests. Also needs Products ON. There is no payment gateway: every order shows UNPAID, PAYMENT NOT CONFIGURED." },
   { key: FLAG_KEYS.services, title: "Services", help: "Not built yet. Leave OFF until the Services module has passed its launch checks." },
 ] as const;
 

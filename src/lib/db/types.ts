@@ -414,6 +414,48 @@ export interface PublicProduct {
   vendor: { slug: string; business_name: string; description: string | null; city: string | null; state: string | null };
   images: { path: string; alt: string | null }[];
   variants: { id: string; sku: string; name: string; options: Record<string, string>; price_inr: number | string; weight_grams: number | null; in_stock: boolean }[];
+  return_policy?: { configured: boolean; returns_allowed: boolean | null; return_window_days: number | null; replacements_allowed: boolean | null; replacement_window_days: number | null; notes: string | null } | null;
+  orders_enabled?: boolean;
 }
 
 export interface VendorStore { slug: string; business_name: string; description: string | null; city: string | null; state: string | null; product_count: number }
+
+/* ---------------------------------------------------------------- marketplace: cart and orders (M4) */
+export type OrderStatus = "placed" | "confirmed" | "rejected" | "packed" | "shipped" | "delivered" | "cancelled";
+export type ShipmentStatus = "shipped" | "in_transit" | "out_for_delivery" | "delivered" | "failed";
+export type OrderRequestKind = "cancel" | "return" | "replacement";
+export type OrderRequestStatus = "requested" | "approved" | "rejected" | "completed";
+export type DisputeStatus = "open" | "in_review" | "resolved" | "dismissed";
+
+export interface CustomerAddress {
+  id: string; user_id: string; label: string | null; full_name: string; phone: string; line1: string; line2: string | null; landmark: string | null;
+  city: string; state: string; postal_code: string; is_default: boolean;
+}
+
+export interface CartLine {
+  variant_id: string; quantity: number; variant_name: string; sku: string; options: Record<string, string>; unit_price_inr: number | string; line_total_inr: number | string;
+  product_id: string; product_slug: string; product_name: string; vendor_id: string; vendor_name: string; vendor_slug: string; category_id: number; image_path: string | null;
+  max_qty: number; issue: "unavailable" | "paused" | "out_of_stock" | "limited_stock" | null;
+}
+export interface CartVendorGroup { vendor_id: string; vendor_name: string; subtotal_inr: number | string; delivery: "yes" | "no" | "unknown" | null }
+export interface Cart { lines: CartLine[]; vendors: CartVendorGroup[]; pin: string | null; item_count: number; subtotal_inr: number | string; orders_enabled: boolean }
+
+export interface Checkout {
+  id: string; reference: string; user_id: string; ship_name: string; ship_phone: string; ship_line1: string; ship_line2: string | null; ship_landmark: string | null;
+  ship_city: string; ship_state: string; ship_postal_code: string; items_total_inr: number | string; order_count: number; payment_status: string; created_at: string;
+}
+
+export interface Order {
+  id: string; order_number: string; checkout_id: string; customer_id: string; vendor_id: string; vendor_name: string; status: OrderStatus; payment_status: string;
+  items_total_inr: number | string; shipping_fee_inr: number | string | null; tax_inr: number | string | null; ship_name: string; ship_city: string; ship_state: string; ship_postal_code: string;
+  rejection_reason: string | null; cancel_reason: string | null; confirmed_at: string | null; shipped_at: string | null; delivered_at: string | null; cancelled_at: string | null; created_at: string;
+}
+export interface OrderItem {
+  id: string; order_id: string; product_id: string; product_name: string; product_slug: string; variant_name: string; sku: string; options: Record<string, string>; image_path: string | null;
+  unit_price_inr: number | string; quantity: number; line_total_inr: number | string; category_id: number;
+}
+export interface OrderHistoryRow { id: number; from_status: OrderStatus | null; to_status: OrderStatus; actor_kind: string; note: string | null; created_at: string }
+export interface Shipment { id: string; order_id: string; carrier: string; tracking_number: string; tracking_url: string | null; status: ShipmentStatus; shipped_at: string; delivered_at: string | null }
+export interface OrderRequest { id: string; order_id: string; kind: OrderRequestKind; status: OrderRequestStatus; reason: string; details: string | null; policy_note: string | null; decision_note: string | null; created_at: string; decided_at: string | null }
+export interface OrderDispute { id: string; order_id: string; description: string; status: DisputeStatus; resolution: string | null; created_at: string }
+export interface CategoryPolicy { category_id: number; returns_allowed: boolean | null; return_window_days: number | null; replacements_allowed: boolean | null; replacement_window_days: number | null; notes: string | null }

@@ -13,10 +13,11 @@ export const metadata: Metadata = {
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const { supabase } = await requireRole(["admin"], "/admin");
-  const [{ count }, { count: vendorQueue }, { count: productQueue }] = await Promise.all([
+  const [{ count }, { count: vendorQueue }, { count: productQueue }, { count: requestQueue }] = await Promise.all([
     supabase.from("properties").select("id", { count: "exact", head: true }).eq("status", "pending_review"),
     supabase.from("vendors").select("id", { count: "exact", head: true }).in("status", ["submitted", "under_review"]),
     supabase.from("products").select("id", { count: "exact", head: true }).eq("status", "pending_review"),
+    supabase.from("order_requests").select("id", { count: "exact", head: true }).eq("status", "requested"),
   ]);
   const items = [
     { href: "/admin", label: "Overview", icon: "overview", exact: true },
@@ -25,6 +26,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     { href: "/admin/vendors", label: "Vendors", icon: "vendors", badge: vendorQueue ?? 0 },
     { href: "/admin/products", label: "Products", icon: "queue", badge: productQueue ?? 0 },
     { href: "/admin/product-categories", label: "Product categories", icon: "catalog" },
+    { href: "/admin/orders", label: "Shop orders", icon: "bookings", badge: requestQueue ?? 0 },
+    { href: "/admin/order-policies", label: "Return policies", icon: "reports" },
     { href: "/admin/marketplace", label: "Marketplace", icon: "marketplace" },
     { href: "/admin/customers", label: "Customers", icon: "users" },
     { href: "/admin/bookings", label: "Bookings", icon: "bookings" },

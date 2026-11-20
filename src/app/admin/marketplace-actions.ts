@@ -28,11 +28,12 @@ const vendorDecision = z.object({
 export async function reviewVendor(_prev: FormState, formData: FormData): Promise<FormState> {
   const session = await adminSession();
   if (!session) return DENIED;
-  const parsed = vendorDecision.safeParse(formValues(formData));
-  if (!parsed.success) return { ok: false, fieldErrors: zodFieldErrors(parsed.error), message: "Choose a decision." };
+  const raw = formValues(formData);
+  const parsed = vendorDecision.safeParse(raw);
+  if (!parsed.success) return { ok: false, fieldErrors: zodFieldErrors(parsed.error), message: "Choose a decision.", values: raw };
   const { vendor_id, decision, reason } = parsed.data;
   const { error } = await session.supabase.rpc("admin_review_vendor", { p_vendor: vendor_id, p_decision: decision, p_reason: reason ?? null });
-  if (error) return { ok: false, message: friendlyDbError(error) };
+  if (error) return { ok: false, message: friendlyDbError(error), values: raw };
   revalidatePath("/admin/vendors");
   revalidatePath(`/admin/vendors/${vendor_id}`);
   return { ok: true, message: "Decision recorded." };
@@ -48,11 +49,12 @@ const capabilityDecision = z.object({
 export async function reviewCapability(_prev: FormState, formData: FormData): Promise<FormState> {
   const session = await adminSession();
   if (!session) return DENIED;
-  const parsed = capabilityDecision.safeParse(formValues(formData));
-  if (!parsed.success) return { ok: false, fieldErrors: zodFieldErrors(parsed.error), message: "Choose a decision." };
+  const raw = formValues(formData);
+  const parsed = capabilityDecision.safeParse(raw);
+  if (!parsed.success) return { ok: false, fieldErrors: zodFieldErrors(parsed.error), message: "Choose a decision.", values: raw };
   const { vendor_id, capability, decision, reason } = parsed.data;
   const { error } = await session.supabase.rpc("admin_review_capability", { p_vendor: vendor_id, p_capability: capability, p_decision: decision, p_reason: reason ?? null });
-  if (error) return { ok: false, message: friendlyDbError(error) };
+  if (error) return { ok: false, message: friendlyDbError(error), values: raw };
   revalidatePath("/admin/vendors");
   revalidatePath(`/admin/vendors/${vendor_id}`);
   return { ok: true, message: "Decision recorded." };
@@ -63,11 +65,12 @@ const documentDecision = z.object({ document_id: z.uuid(), vendor_id: z.uuid(), 
 export async function reviewVendorDocument(_prev: FormState, formData: FormData): Promise<FormState> {
   const session = await adminSession();
   if (!session) return DENIED;
-  const parsed = documentDecision.safeParse(formValues(formData));
-  if (!parsed.success) return { ok: false, message: "Choose a decision." };
+  const raw = formValues(formData);
+  const parsed = documentDecision.safeParse(raw);
+  if (!parsed.success) return { ok: false, message: "Choose a decision.", values: raw };
   const { document_id, vendor_id, decision, note } = parsed.data;
   const { error } = await session.supabase.rpc("admin_review_vendor_document", { p_document: document_id, p_decision: decision, p_note: note ?? null });
-  if (error) return { ok: false, message: friendlyDbError(error) };
+  if (error) return { ok: false, message: friendlyDbError(error), values: raw };
   revalidatePath(`/admin/vendors/${vendor_id}`);
   return { ok: true, message: decision === "accept" ? "Document accepted." : "Document rejected; the vendor has been told why." };
 }

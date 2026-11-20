@@ -14,7 +14,10 @@
     "test:e2e": "playwright test",
     "db:bundle": "node scripts/bundle-sql.mjs",
     "db:seed": "node scripts/gen-seed.mjs",
-    "test:live": "playwright test -c playwright.live.config.ts"
+    "test:live": "playwright test -c playwright.live.config.ts",
+    "test:staging": "node tests/staging/verify-schema.mjs && node tests/staging/workflow.mjs",
+    "test:staging:build": "node --env-file=.env.staging.local -e \"process.env.HN_DIST_DIR='.next-staging'; require('child_process').execSync('npx next build',{stdio:'inherit',env:process.env})\"",
+    "test:staging:e2e": "playwright test -c playwright.staging.config.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",

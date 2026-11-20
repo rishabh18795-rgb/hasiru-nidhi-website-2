@@ -22,8 +22,8 @@ export function ProductDecisionForm({ productId, status }: { productId: string; 
     <form action={action} className="flex flex-col gap-4">
       <input type="hidden" name="product_id" value={productId} />
       <FormMessage state={state} />
-      <Field label="Decision" htmlFor="product-decision"><NativeSelect id="product-decision" name="decision" defaultValue={options[0].value}>{options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}</NativeSelect></Field>
-      <Field label="Reason / note to the seller" htmlFor="product-reason" hint="Required for changes, rejection and suspension. The seller sees this."><TextArea id="product-reason" name="reason" rows={3} maxLength={1000} /></Field>
+      <Field label="Decision" htmlFor="product-decision"><NativeSelect id="product-decision" name="decision" key={String(state.values?.decision ?? "")} defaultValue={state.values?.decision ?? options[0].value}>{options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}</NativeSelect></Field>
+      <Field label="Reason / note to the seller" htmlFor="product-reason" hint="Required for changes, rejection and suspension. The seller sees this."><TextArea id="product-reason" name="reason" rows={3} maxLength={1000} defaultValue={state.values?.reason} /></Field>
       <SubmitButton pendingLabel="Saving…" className="self-start">Apply decision</SubmitButton>
     </form>
   );

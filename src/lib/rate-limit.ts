@@ -19,6 +19,9 @@ export const LIMITS = {
   vendorWrite: { limit: 40, windowSeconds: 600 },
   catalogueWrite: { limit: 120, windowSeconds: 600 },
   deliveryCheck: { limit: 60, windowSeconds: 600 },
+  cartWrite: { limit: 200, windowSeconds: 600 },
+  checkout: { limit: 20, windowSeconds: 600 },
+  orderAction: { limit: 60, windowSeconds: 600 },
 } satisfies Record<string, Limit>;
 
 export const RATE_LIMITED_MESSAGE = "You're sending requests too quickly. Please wait a few minutes and try again.";
