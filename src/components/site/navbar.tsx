@@ -96,8 +96,8 @@ export function Navbar({ announcement }: { announcement?: string }) {
           {announcement}
         </div>
       ) : null}
-      <nav className="container-nidhi flex h-20 items-center justify-between">
-        <Link href="/" className="flex items-center gap-3" aria-label="Hasiru Nidhi home">
+      <nav className="mx-auto flex h-20 w-full max-w-[1400px] items-center justify-between gap-4 px-6 sm:px-8 min-[1360px]:px-6 2xl:px-8">
+        <Link href="/" className="flex shrink-0 items-center gap-3" aria-label="Hasiru Nidhi home">
           <Image
             src={`${basePath}/brand/logo-mark.png`}
             alt=""
@@ -108,7 +108,7 @@ export function Navbar({ announcement }: { announcement?: string }) {
           />
           <span
             className={cn(
-              "font-display text-xl tracking-tight transition-colors",
+              "whitespace-nowrap font-display text-xl tracking-tight transition-colors",
               solid ? "text-forest-900" : "text-cream"
             )}
           >
@@ -116,18 +116,18 @@ export function Navbar({ announcement }: { announcement?: string }) {
           </span>
         </Link>
 
-        <div className="hidden items-center gap-1 lg:flex">
+        <div className="hidden min-w-0 items-center gap-0.5 min-[1360px]:flex">
           {links.map((link) => (
             <div
               key={link.href}
-              className="relative"
+              className="relative shrink-0"
               onMouseEnter={() => "children" in link && setOpenDropdown(link.label)}
               onMouseLeave={() => setOpenDropdown(null)}
             >
               <Link
                 href={link.href}
                 className={cn(
-                  "flex items-center gap-1 rounded-full px-4 py-2 text-sm font-medium transition-colors",
+                  "flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-2 text-sm font-medium transition-colors",
                   solid
                     ? "text-forest-900/80 hover:bg-forest-900/5 hover:text-forest-900"
                     : "text-cream/85 hover:bg-white/10 hover:text-cream"
@@ -135,7 +135,7 @@ export function Navbar({ announcement }: { announcement?: string }) {
               >
                 {link.label}
                 {"children" in link && link.children ? (
-                  <ChevronDown className="h-3.5 w-3.5 opacity-60" />
+                  <ChevronDown className="h-3.5 w-3.5 shrink-0 opacity-60" />
                 ) : null}
               </Link>
 
@@ -168,12 +168,12 @@ export function Navbar({ announcement }: { announcement?: string }) {
           ))}
         </div>
 
-        <div className="hidden items-center gap-2 lg:flex">
+        <div className="hidden shrink-0 items-center gap-2 min-[1360px]:flex">
           {shop.ordersOpen ? <CartLink count={shop.count} solid={solid} /> : null}
           <AccountMenu solid={solid} />
           <LinkButton
             href="/list-your-property"
-            className="rounded-full bg-forest-800 px-5 text-cream hover:bg-forest-700"
+            className="shrink-0 whitespace-nowrap rounded-full bg-forest-800 px-5 text-cream hover:bg-forest-700"
             size="lg"
           >
             List Your Property
@@ -184,19 +184,21 @@ export function Navbar({ announcement }: { announcement?: string }) {
           <Button
             variant="ghost"
             size="icon"
-            className={cn("lg:hidden", solid ? "text-forest-900" : "text-cream")}
+            className={cn("shrink-0 min-[1360px]:hidden", solid ? "text-forest-900" : "text-cream")}
             onClick={() => setMobileOpen(true)}
             aria-label="Open menu"
           >
             <Menu className="h-6 w-6" />
           </Button>
-          <SheetContent side="right" className="w-[85%] bg-cream p-0">
+          <SheetContent side="right" className="w-[85%] gap-0 bg-cream p-0">
             <SheetHeader className="border-b border-forest-900/8 p-6">
               <SheetTitle className="font-display text-lg text-forest-900">
                 {siteConfig.name}
               </SheetTitle>
             </SheetHeader>
-            <div className="flex flex-col gap-1 overflow-y-auto p-4">
+            {/* One scrolling region for the links AND the account/buttons, so nothing is ever cut off or out of reach on a short screen. */}
+            <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+            <div className="flex flex-col gap-1 p-4">
               {links.map((link) => (
                 <div key={link.href}>
                   <Link
@@ -246,6 +248,7 @@ export function Navbar({ announcement }: { announcement?: string }) {
               >
                 List Your Property
               </LinkButton>
+            </div>
             </div>
           </SheetContent>
         </Sheet>
