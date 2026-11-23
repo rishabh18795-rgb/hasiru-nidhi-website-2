@@ -459,3 +459,132 @@ export interface Shipment { id: string; order_id: string; carrier: string; track
 export interface OrderRequest { id: string; order_id: string; kind: OrderRequestKind; status: OrderRequestStatus; reason: string; details: string | null; policy_note: string | null; decision_note: string | null; created_at: string; decided_at: string | null }
 export interface OrderDispute { id: string; order_id: string; description: string; status: DisputeStatus; resolution: string | null; created_at: string }
 export interface CategoryPolicy { category_id: number; returns_allowed: boolean | null; return_window_days: number | null; replacements_allowed: boolean | null; replacement_window_days: number | null; notes: string | null }
+
+/* ---------------------------------------------------------------- marketplace: services (M5) */
+export type ServiceStatus = "draft" | "pending_review" | "approved" | "rejected" | "suspended" | "archived";
+export type ServicePricingModel = "fixed" | "quote";
+export type ServiceRequestStatus = "submitted" | "quoted" | "accepted" | "in_progress" | "completed" | "declined" | "cancelled";
+export type QuotationStatus = "sent" | "accepted" | "declined" | "superseded";
+
+export interface ServiceCategory { id: number; slug: string; name: string; description: string | null; sort_order: number; is_active: boolean }
+
+export interface Service {
+  id: string;
+  vendor_id: string;
+  category_id: number;
+  slug: string;
+  name: string;
+  summary: string | null;
+  description: string;
+  pricing_model: ServicePricingModel;
+  price_inr: number | string | null;
+  price_unit: string | null;
+  duration_minutes: number;
+  attributes: ProductAttribute[];
+  status: ServiceStatus;
+  rejection_reason: string | null;
+  is_available: boolean;
+  is_featured: boolean;
+  submitted_at: string | null;
+  published_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ServiceImage { id: string; service_id: string; path: string; alt: string | null; sort_order: number }
+
+/** One row of search_services(): everything a visitor's card needs. */
+export interface ServiceCardData {
+  id: string;
+  slug: string;
+  name: string;
+  summary: string | null;
+  category_slug: string;
+  category_name: string;
+  vendor_slug: string;
+  vendor_name: string;
+  vendor_city: string | null;
+  pricing_model: ServicePricingModel;
+  price_inr: number | string | null;
+  price_unit: string | null;
+  duration_minutes: number;
+  is_available: boolean;
+  is_featured: boolean;
+  cover_path: string | null;
+  cover_alt: string | null;
+  total_count: number | string;
+}
+
+/** get_service_public(): the visitor's view of one listing. */
+export interface PublicService {
+  id: string;
+  slug: string;
+  name: string;
+  summary: string | null;
+  description: string;
+  pricing_model: ServicePricingModel;
+  price_inr: number | string | null;
+  price_unit: string | null;
+  duration_minutes: number;
+  attributes: ProductAttribute[];
+  is_available: boolean;
+  published_at: string | null;
+  category: { slug: string; name: string };
+  vendor: { slug: string; business_name: string; description: string | null; city: string | null; state: string | null };
+  images: { path: string; alt: string | null }[];
+  has_availability: boolean;
+}
+
+export interface ServiceSlot { slot_start: string; slot_label: string }
+
+export interface ServiceRequest {
+  id: string;
+  request_number: string;
+  customer_id: string;
+  vendor_id: string;
+  service_id: string;
+  vendor_name: string;
+  service_name: string;
+  pricing_model: ServicePricingModel;
+  unit_price_inr: number | string | null;
+  price_unit: string | null;
+  quantity: number;
+  agreed_total_inr: number | string | null;
+  duration_minutes: number;
+  status: ServiceRequestStatus;
+  payment_status: string;
+  customer_name: string;
+  site_city: string;
+  site_pin: string;
+  property_type: string | null;
+  site_size: string | null;
+  details: string | null;
+  preferred_start: string | null;
+  decline_reason: string | null;
+  cancel_reason: string | null;
+  accepted_at: string | null;
+  completed_at: string | null;
+  cancelled_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ServiceQuotation {
+  id: string;
+  request_id: string;
+  version: number;
+  amount_inr: number | string;
+  description: string;
+  valid_until: string;
+  proposed_start: string | null;
+  proposed_duration_minutes: number | null;
+  status: QuotationStatus;
+  decision_note: string | null;
+  decided_at: string | null;
+  created_at: string;
+}
+
+export interface ServiceAppointment { id: string; request_id: string; starts_at: string; ends_at: string; status: "confirmed" | "cancelled" | "completed" }
+export interface ServiceHistoryRow { id: number; from_status: ServiceRequestStatus | null; to_status: ServiceRequestStatus; actor_kind: string; note: string | null; created_at: string }
+export interface AvailabilityRule { id: string; weekday: number; start_time: string; end_time: string }
+export interface TimeOff { id: string; starts_on: string; ends_on: string; note: string | null }

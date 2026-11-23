@@ -96,6 +96,32 @@ const FRIENDLY: Array<[RegExp, string]> = [
   [/cannot_cancel/, "This order can no longer be cancelled."],
   [/not_allowed_by_policy: ?(.*)/, "This type of request isn't allowed for the product category."],
   [/window_expired: ?(.*)/, "The request window for this product category has passed."],
+  [/services_closed/, "Services are not open yet."],
+  [/service_unavailable/, "This provider is not taking new requests for this service right now."],
+  [/own_service/, "You can't request your own service."],
+  [/outside_service_area/, "This provider does not serve that PIN code. Try another provider or a different address."],
+  [/invalid_phone/, "Enter a valid phone number the provider can reach you on."],
+  [/details_required/, "Describe the work you need (at least 10 characters) so the provider can quote for it."],
+  [/slot_unavailable/, "That time is not available. Please choose a different time."],
+  [/invalid_slot/, "Choose a time in the future."],
+  [/too_many_open_requests/, "You have many open requests. Please wait for providers to respond or cancel some first."],
+  [/quotation_required/, "This is a quotation-based service: send a quotation first."],
+  [/not_quotation_based/, "This service has a fixed price: accept it instead of sending a quotation."],
+  [/quotation_expired/, "This quotation has expired. Ask the provider for a new one."],
+  [/provider_unavailable/, "This provider is not available right now."],
+  [/invalid_validity/, "Choose a quotation expiry date between today and 180 days from now."],
+  [/description_required/, "Describe what the quotation covers (at least 10 characters)."],
+  [/invalid_pricing/, "Choose fixed price or quotation on request."],
+  [/invalid_price_unit/, "Choose what the price is per (visit, hour, day, sq ft, plant, session or job)."],
+  [/invalid_duration/, "Enter a duration between 15 minutes and 8 hours."],
+  [/invalid_decision/, "Choose accept or decline."],
+  [/invalid_availability/, "Check your weekly hours: each day needs a start and a later end time."],
+  [/overlapping_availability/, "Two time windows on the same day overlap."],
+  [/invalid_dates/, "Please choose valid dates."],
+  [/too_many_items/, "You have reached the limit for days off."],
+  [/service_locked_in_review/, "This service is being reviewed, so it can't be edited right now."],
+  [/service_locked/, "This service can't be changed in its current state."],
+  [/payment_not_configured/, "Payment is not configured yet."],
   [/duplicate key|unique constraint/, "You already have an open request of that kind for this order."],
 ];
 
@@ -139,6 +165,11 @@ export function friendlyDbError(error: { message?: string; code?: string } | nul
     const names: Record<string, string> = { contact_name: "a contact name", contact_phone: "a contact phone number", contact_email: "a contact email", address_line: "a business address", city: "a city", postal_code: "a 6-digit PIN code", business_type: "a business type" };
     const items = vendor[1].split(",").map((k) => (k.startsWith("document:") ? `the document "${k.slice(9)}"` : names[k] ?? k));
     return `Before submitting, please add: ${items.join("; ")}.`;
+  }
+  const svc = raw.match(/incomplete_service: ?(.*)/);
+  if (svc) {
+    const names: Record<string, string> = { name: "a name", description: "a description of at least 30 characters", images: "at least one photo", service_areas: "your service PIN codes (Delivery & service areas)" };
+    return `Before submitting, please add: ${svc[1].split(",").map((k) => names[k] ?? k).join("; ")}.`;
   }
   const stay = raw.match(/invalid_stay_length:(\d+)-(\d+)/);
   if (stay) return `This property accepts stays of ${stay[1]} to ${stay[2]} nights. Please adjust your dates.`;

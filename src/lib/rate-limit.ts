@@ -22,6 +22,8 @@ export const LIMITS = {
   cartWrite: { limit: 200, windowSeconds: 600 },
   checkout: { limit: 20, windowSeconds: 600 },
   orderAction: { limit: 60, windowSeconds: 600 },
+  serviceRequest: { limit: 10, windowSeconds: 600 },
+  coverageCheck: { limit: 60, windowSeconds: 600 },
 } satisfies Record<string, Limit>;
 
 export const RATE_LIMITED_MESSAGE = "You're sending requests too quickly. Please wait a few minutes and try again.";

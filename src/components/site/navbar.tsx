@@ -22,16 +22,17 @@ import {
 } from "@/components/ui/sheet";
 
 /** The Shop link and cart appear only while an administrator has switched them ON. Read in the browser so marketing pages stay static. */
-function useShop(): { open: boolean; ordersOpen: boolean; count: number } {
-  const [state, setState] = useState({ open: false, ordersOpen: false, count: 0 });
+function useShop(): { open: boolean; servicesOpen: boolean; ordersOpen: boolean; count: number } {
+  const [state, setState] = useState({ open: false, servicesOpen: false, ordersOpen: false, count: 0 });
   useEffect(() => {
     const supabase = createBrowserSupabase();
     if (!supabase) return;
     let cancelled = false;
     async function load() {
-      const { data } = await supabase!.from("platform_settings").select("key, value").in("key", ["marketplace_products_enabled", "marketplace_orders_enabled"]);
+      const { data } = await supabase!.from("platform_settings").select("key, value").in("key", ["marketplace_products_enabled", "marketplace_orders_enabled", "marketplace_services_enabled"]);
       const on = (k: string) => data?.find((r) => r.key === k)?.value === true;
       const open = on("marketplace_products_enabled");
+      const servicesOpen = on("marketplace_services_enabled");
       const ordersOpen = open && on("marketplace_orders_enabled");
       let count = 0;
       if (ordersOpen) {
@@ -41,7 +42,7 @@ function useShop(): { open: boolean; ordersOpen: boolean; count: number } {
           count = (rows ?? []).reduce((t, r) => t + Number(r.quantity), 0);
         }
       }
-      if (!cancelled) setState({ open, ordersOpen, count });
+      if (!cancelled) setState({ open, servicesOpen, ordersOpen, count });
     }
     void load();
     const { data: sub } = supabase.auth.onAuthStateChange(() => void load());
@@ -65,7 +66,7 @@ type NavEntry = (typeof navLinks)[number] | { label: string; href: string };
 
 export function Navbar({ announcement }: { announcement?: string }) {
   const shop = useShop();
-  const links = useMemo<NavEntry[]>(() => (shop.open ? [navLinks[0], navLinks[1], { label: "Shop", href: "/shop" }, ...navLinks.slice(2)] : [...navLinks]), [shop.open]);
+  const links = useMemo<NavEntry[]>(() => [navLinks[0], navLinks[1], ...(shop.open ? [{ label: "Shop", href: "/shop" }] : []), ...(shop.servicesOpen ? [{ label: "Services", href: "/services" }] : []), ...navLinks.slice(2)], [shop.open, shop.servicesOpen]);
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);

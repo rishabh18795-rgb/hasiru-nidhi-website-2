@@ -75,4 +75,9 @@ export const STATUS_LABEL: Record<string, string> = {
   cancelled_by_traveller: "Cancelled by guest",
   cancelled_by_host: "Cancelled by host",
   completed: "Completed",
+  quoted: "Quotation sent",
+  in_progress: "In progress",
+  declined: "Declined",
+  cancelled: "Cancelled",
+  archived: "Archived",
 };

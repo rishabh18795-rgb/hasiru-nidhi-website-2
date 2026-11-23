@@ -21,3 +21,11 @@ export function productImageUrl(path: string | null | undefined): string | null 
 
 /** Shown only where a real photograph is missing. It is plainly a placeholder, never a picture of a product. */
 export const PRODUCT_PLACEHOLDER = "";
+
+/** Public URL of a service photograph in the service-images bucket. */
+export function serviceImageUrl(path: string | null | undefined): string | null {
+  if (!path) return null;
+  const base = process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/\/+$/, "");
+  if (!base) return null;
+  return `${base}/storage/v1/object/public/service-images/${path}`;
+}

@@ -33,6 +33,7 @@ An administrator switches them at `/admin/marketplace`. Deploying code never exp
 | `20261120000100_vendors_foundation.sql` (M1) | Written and tested in-process. NOT applied to any database. |
 | `20261121000100_product_catalogue.sql` (M3) | Applied to STAGING only. Not applied to production. |
 | `20261122000100_cart_and_orders.sql` (M4) | Applied to STAGING only. Not applied to production. |
+| `20261123000100_services.sql` (M5) | Applied to STAGING only. Not applied to production. |
 
 Every migration is applied to production only after: tests green, rehearsal on the non-production database, a backup, and the owner's approval.
 
@@ -44,7 +45,8 @@ Every migration is applied to production only after: tests green, rehearsal on t
 | 3. Vendor foundation and registration | Built, tested, CI green on the branch |
 | 4. Product catalogue | Built, tested, CI green on the branch. Flags OFF. |
 | 5. Cart, checkout, orders | Built; verified in-process, against the real staging backend, and in real browsers (desktop and mobile). Flags OFF. |
-| 6 to 9 | Not started |
+| 6. Services marketplace | Built; database layer verified in-process (39 tests) and applied to staging. Flags OFF in production. |
+| 7 to 9 | In progress |
 
 ## Verification harness
 

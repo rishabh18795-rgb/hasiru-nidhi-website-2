@@ -8,6 +8,7 @@ import { SectionHeading } from "@/components/site/section-heading";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/site/reveal";
 import { CtaBand } from "@/components/site/cta-band";
 import { GardeningQuoteForm } from "@/components/site/gardening-quote-form";
+import { ServicesPromo } from "@/components/site/services-promo";
 import { gardeningServices } from "@/lib/validation/enquiries";
 import { images } from "@/lib/content";
 import { basePath } from "@/lib/base-path";
@@ -91,6 +92,8 @@ export default function GardeningPage() {
           </ol>
         </div>
       </section>
+
+      <ServicesPromo />
 
       <section id="enquire" className="scroll-mt-24 bg-cream py-24">
         <div className="container-nidhi grid gap-10 lg:grid-cols-[1fr_1.4fr]">

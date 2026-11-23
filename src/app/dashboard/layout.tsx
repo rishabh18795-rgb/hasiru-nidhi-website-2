@@ -18,6 +18,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
     { href: "/dashboard", label: "Overview", icon: "overview", exact: true },
     { href: "/dashboard/bookings", label: "Stay bookings", icon: "bookings" },
     { href: "/dashboard/orders", label: "Shop orders", icon: "earnings" },
+    { href: "/dashboard/requests", label: "Service requests", icon: "queue" },
     { href: "/dashboard/addresses", label: "Addresses", icon: "coverage" },
     { href: "/dashboard/saved", label: "Favourites", icon: "saved" },
     { href: "/dashboard/notifications", label: "Notifications", icon: "notifications", badge: count ?? 0 },

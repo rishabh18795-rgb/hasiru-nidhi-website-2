@@ -40,6 +40,9 @@ export default async function VendorLayout({ children }: { children: React.React
   const { count: newOrders } = isCapabilityActive(ctx, "products")
     ? await supabase.from("orders").select("id", { count: "exact", head: true }).eq("status", "placed")
     : { count: 0 };
+  const { count: newRequests } = isCapabilityActive(ctx, "services")
+    ? await supabase.from("service_requests").select("id", { count: "exact", head: true }).eq("status", "submitted")
+    : { count: 0 };
   const { count: unread } = await supabase.from("notifications").select("id", { count: "exact", head: true }).eq("is_read", false);
 
   const items = [
@@ -56,6 +59,13 @@ export default async function VendorLayout({ children }: { children: React.React
           { href: "/vendor/products", label: "Products", icon: "catalog" },
           { href: "/vendor/orders", label: "Shop orders", icon: "bookings", badge: newOrders ?? 0 },
           { href: "/vendor/inventory", label: "Inventory", icon: "earnings" },
+        ]
+      : []),
+    ...(isCapabilityActive(ctx, "services")
+      ? [
+          { href: "/vendor/services", label: "Services", icon: "catalog" },
+          { href: "/vendor/service-requests", label: "Service requests", icon: "queue", badge: newRequests ?? 0 },
+          { href: "/vendor/availability", label: "Availability", icon: "bookings" },
         ]
       : []),
     ...(isCapabilityActive(ctx, "stays") && profile.role === "host" ? [{ href: "/host", label: "Stays (host portal)", icon: "properties" }] : []),
