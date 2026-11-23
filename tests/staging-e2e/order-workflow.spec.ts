@@ -41,8 +41,8 @@ test.beforeAll(async ({ browser }) => {
   const { seedFixtures } = await import("../staging/seed-ui.mjs");
   const { loadEnv, clients } = await import("../staging/lib.mjs");
   fx = await seedFixtures(test.info().project.name);
-  stayBaseline = await stayCounts();
   svc = clients(loadEnv()).service;
+  stayBaseline = await stayCounts();
   customer = await newPage(browser); sellerA = await newPage(browser); sellerB = await newPage(browser); sellerC = await newPage(browser); admin = await newPage(browser);
 });
 test.afterAll(async () => { for (const c of ctxs) await c.close(); });
@@ -183,6 +183,7 @@ test("8. seller A accepts (customer address appears only now), packs, ships with
   await expect(customer.getByTestId("tracking-number")).toHaveText(`TRK${fx.run.slice(-6).toUpperCase()}`);
   // deliver
   await sellerA.goto(`/vendor/orders/${orders.A}`);
+  await sellerA.waitForLoadState("networkidle"); // a choice made before the page has hydrated can be reset
   await sellerA.locator('select[name="status"]').selectOption("delivered");
   await sellerA.getByRole("button", { name: "Update", exact: true }).click();
   await expect.poll(async () => (await one(svc.from("orders").select("status").eq("id", orders.A).single())).status, { timeout: 30_000 }).toBe("delivered");
@@ -266,6 +267,7 @@ test("12. the administrator monitors everything: search by checkout reference, t
   // configure a return policy through the UI and see it on the product page
   await admin.goto("/admin/order-policies");
   await expect(admin.getByText("Not configured").first()).toBeVisible();
+  await admin.waitForLoadState("networkidle"); // choices made before hydration can be reset
   const plantsForm = admin.locator("form").filter({ has: admin.locator('select[aria-label="Returns for Plants, seeds and saplings"]') });
   await plantsForm.locator('select[aria-label="Returns for Plants, seeds and saplings"]').selectOption("true");
   await plantsForm.locator('input[aria-label="Return window for Plants, seeds and saplings"]').fill("7");

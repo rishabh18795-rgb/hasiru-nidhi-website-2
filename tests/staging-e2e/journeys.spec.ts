@@ -50,7 +50,11 @@ test.afterAll(async () => { for (const c of ctxs) await c.close(); });
 
 test("A1. the original Nature Stay: a guest requests a stay through the real booking panel", async () => {
   const prop = await one(svc.from("properties").select("id, slug").eq("slug", "staging-cottage-demo").single());
-  const offset = 200 + Math.floor((Date.now() / 1000) % 120);
+  // unique dates per run, and no open booking left over from an earlier (possibly failed) run: the product refuses overlapping open requests
+  const offset = 200 + (parseInt(tag, 36) % 400);
+  for (const b of (await one(svc.from("bookings").select("id, status").eq("property_id", prop.id).eq("traveller_id", clients.customer.id).in("status", ["requested", "confirmed"])))) {
+    await rpc("customer", "cancel_booking", { p_booking: b.id, p_note: "Journey test cleanup" }).catch(() => undefined);
+  }
   const [ci, co] = [day(offset), day(offset + 2)];
   await signIn(customer, "customer@staging.test", `/stays/${prop.slug}`);
   await customer.goto(`/stays/${prop.slug}`);
@@ -88,7 +92,9 @@ test("B1. a delivered order and a completed service exist (created through the r
   const prod = await one(svc.from("products").select("id, slug, name").like("name", "Neem cake compost (demo)").eq("status", "approved").limit(1).single());
   const variant = (await one(svc.from("product_variants").select("id").eq("product_id", prod.id).eq("is_active", true).order("sort_order").limit(1)))[0].id;
   await rpc("customer", "cart_clear");
-  const addr = await rpc("customer", "save_address", { p: { full_name: "Staging Customer", phone: "9876500000", line1: "12 Rose Street", city: "Bengaluru", state: "Karnataka", postal_code: "560078" } });
+  // reuse the customer's saved address (the product limits an account to 10, and every run would otherwise add one)
+  const saved = (await one(svc.from("customer_addresses").select("id").eq("user_id", clients.customer.id).order("created_at").limit(1)))[0];
+  const addr = saved?.id ?? await rpc("customer", "save_address", { p: { full_name: "Staging Customer", phone: "9876500000", line1: "12 Rose Street", city: "Bengaluru", state: "Karnataka", postal_code: "560078" } });
   await rpc("customer", "cart_set_item", { p_variant: variant, p_quantity: 1 });
   const checkout = await rpc("customer", "place_order", { p_address: addr, p_key: `rv-${tag}` });
   const order = (await one(svc.from("orders").select("id").eq("checkout_id", checkout).single())).id;
@@ -105,14 +111,16 @@ test("B1. a delivered order and a completed service exist (created through the r
 
 test("B2. the customer reviews the delivered product; it is pending and NOT public", async () => {
   const { prod, order } = (globalThis as Any).__rv;
-  await signIn(customer, "customer@staging.test", `/dashboard/orders/${order}`);
-  await customer.goto(`/dashboard/orders/${order}`);
+  await customer.goto(`/dashboard/orders/${order}`); // already signed in from journey A
+  await customer.waitForLoadState("networkidle");
   await customer.getByText("Write a review").first().click();
   await customer.getByLabel(/Rating for/).selectOption("5");
   await customer.getByLabel("Your review").fill(`Healthy compost, arrived well packed. ${tag}`);
   await noSideScroll(customer, "the order page with the review form");
   await customer.getByRole("button", { name: "Submit review" }).click();
   await expect(customer.getByText(/will appear once it has been checked/i)).toBeVisible({ timeout: 20_000 });
+  await customer.reload(); // the next visit shows a persistent status line instead of the form
+  await expect(customer.getByTestId("my-review")).toContainText("waiting for our team to check it");
   expect((await one(svc.from("marketplace_reviews").select("status").eq("product_id", prod.id).like("body", `%${tag}`)))[0].status).toBe("pending");
   await customer.goto(`/shop/p/${prod.slug}`);
   await expect(customer.getByText(tag)).toHaveCount(0);
@@ -125,6 +133,8 @@ test("B3. the customer reviews the completed service the same way", async () => 
   await customer.getByLabel("Your review").fill(`Thorough plant check and good advice. ${tag}`);
   await customer.getByRole("button", { name: "Submit review" }).click();
   await expect(customer.getByText(/will appear once it has been checked/i)).toBeVisible({ timeout: 20_000 });
+  await customer.reload();
+  await expect(customer.getByTestId("my-review")).toContainText("waiting for our team to check it");
   expect((await one(svc.from("marketplace_reviews").select("status").eq("service_id", svcRow.id).like("body", `%${tag}`)))[0].status).toBe("pending");
 });
 
@@ -137,7 +147,8 @@ test("B4. the administrator moderates both reviews; they become public with firs
     const card = admin.locator("li").filter({ hasText: text });
     await expect(card).toBeVisible();
     await card.getByRole("button", { name: "Apply" }).click();
-    await expect(card.getByText(/now public/i)).toBeVisible({ timeout: 20_000 });
+    // the outcome that matters is in the database; the queue then drops the item (or shows the confirmation until the next load)
+    await expect.poll(async () => (await svc.from("marketplace_reviews").select("status").eq("body", text)).data?.[0]?.status, { timeout: 30_000 }).toBe("approved");
   }
   const pub = await customer.context().newPage();
   await pub.goto(`/shop/p/${prod.slug}`);

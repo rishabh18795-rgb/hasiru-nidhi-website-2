@@ -118,7 +118,7 @@ export function Footer() {
       </div>
 
       <div className="border-t border-cream/10">
-        <div className="container-nidhi flex flex-col gap-3 py-6 text-xs text-cream/45 sm:flex-row sm:items-center sm:justify-between">
+        <div className="container-nidhi flex flex-col gap-3 py-6 text-xs text-cream/75 sm:flex-row sm:items-center sm:justify-between">
           <p>
             © {new Date().getFullYear()} {siteConfig.legalName}. All rights reserved.
           </p>

@@ -25,7 +25,7 @@ const sellers = { A: await signedIn(env, c, "seller-a@staging.test", "Staging Se
 const alice = await signedIn(env, c, "customer@staging.test", "Staging Customer");
 const bob = await signedIn(env, c, "customer2@staging.test", "Staging Customer Two");
 await svc.from("platform_settings").update({ value: true }).in("key", ["marketplace_vendor_registration_enabled", "marketplace_products_enabled", "marketplace_orders_enabled"]);
-for (const u of [alice, bob]) await rpc(u, "cart_clear");
+for (const u of [alice, bob]) { await rpc(u, "cart_clear"); await svc.from("customer_addresses").delete().eq("user_id", u.id); } // the product limits an account to 10 saved addresses
 
 const vendorOf = async (u) => (await svc.from("vendors").select("*").eq("owner_id", u.id).maybeSingle()).data;
 const vend = {};

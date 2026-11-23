@@ -1,6 +1,5 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { getSession } from "@/lib/auth";
@@ -27,6 +26,6 @@ export async function submitReview(_prev: FormState, formData: FormData): Promis
   const d = parsed.data;
   const { error } = await session.supabase.rpc("submit_marketplace_review", { p_kind: d.kind, p_ref: d.ref, p_rating: d.rating, p_title: d.title || null, p_body: d.body });
   if (error) return { ok: false, message: friendlyDbError(error), values: raw };
-  revalidatePath(d.back);
+  // No revalidatePath here: the form refreshes the page itself after it has shown the result (re-rendering the form that is waiting for this very answer left it stuck on "Sending…").
   return { ok: true, message: "Thank you. Your review was sent to our team and will appear once it has been checked.", values: {} };
 }

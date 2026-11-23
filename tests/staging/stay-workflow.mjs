@@ -19,6 +19,8 @@ const stranger = await signedIn(env, c, "customer2@staging.test", "Staging Custo
 const admin = await signedIn(env, c, "admin@staging.test", "Staging Admin");
 await svc.from("profiles").update({ role: "admin" }).eq("id", admin.id);
 
+// leave no open booking from an earlier run: the product refuses overlapping open requests by the same guest
+for (const u of [guest, stranger]) for (const b of (await svc.from("bookings").select("id").eq("traveller_id", u.id).in("status", ["requested", "confirmed"])).data ?? []) await u.client.rpc("cancel_booking", { p_booking: b.id, p_note: "cleanup" });
 console.log("Nature Stay on staging (original workflow)");
 let propId, bookingId;
 await check("an existing host can become a host through the original function, and gets the host role", async () => {

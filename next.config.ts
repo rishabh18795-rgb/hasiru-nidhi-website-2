@@ -30,7 +30,9 @@ const csp = [
   "base-uri 'self'",
   "form-action 'self'",
   "frame-ancestors 'none'",
-  ...(isDev ? [] : ["upgrade-insecure-requests"]),
+  // Production is always HTTPS, so every request is upgraded. The staging browser tests serve the built app over plain http://localhost, where an
+  // upgrade would break Next.js's own page-refresh requests; only tests/staging/build.mjs sets HN_LOCAL_HTTP, never Vercel.
+  ...(isDev || process.env.HN_LOCAL_HTTP === "1" ? [] : ["upgrade-insecure-requests"]),
 ].join("; ");
 
 const securityHeaders = [
@@ -39,7 +41,7 @@ const securityHeaders = [
   { key: "X-Frame-Options", value: "DENY" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(self), payment=(self)" },
-  { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
+  ...(process.env.HN_LOCAL_HTTP === "1" ? [] : [{ key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" }]),
 ];
 
 const nextConfig: NextConfig = {

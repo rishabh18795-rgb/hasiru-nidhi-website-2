@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -28,8 +29,16 @@ export interface NavItem {
 
 export function NavLinks({ items, label }: { items: NavItem[]; label: string }) {
   const pathname = usePathname();
+  const ref = useRef<HTMLElement>(null);
+  // On phones the links scroll sideways: bring the current page's tab into view so it is never cut off at the edge.
+  useEffect(() => {
+    const nav = ref.current;
+    const current = nav?.querySelector<HTMLElement>('[aria-current="page"]');
+    if (!nav || !current || nav.scrollWidth <= nav.clientWidth) return;
+    nav.scrollTo({ left: current.getBoundingClientRect().left - nav.getBoundingClientRect().left + nav.scrollLeft - 16 });
+  }, [pathname]);
   return (
-    <nav aria-label={label} className="-mx-1 flex gap-1 overflow-x-auto px-1 pb-1 lg:flex-col lg:overflow-visible lg:pb-0">
+    <nav ref={ref} aria-label={label} className="-mx-1 flex gap-1 overflow-x-auto px-1 pb-1 lg:flex-col lg:overflow-visible lg:pb-0">
       {items.map((item) => {
         const Icon = ICONS[item.icon] ?? LayoutDashboard;
         const active = item.exact ? pathname === item.href : pathname === item.href || pathname.startsWith(`${item.href}/`);

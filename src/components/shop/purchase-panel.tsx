@@ -72,10 +72,10 @@ export function PurchasePanel({ productId, variants, isAvailable, ordersOpen, sl
       {ordersOpen ? (
         <>
           <AddToCart variantId={variant.id} disabled={!isAvailable || !variant.in_stock} reason={!isAvailable ? "This product is currently unavailable." : !variant.in_stock ? "This option is out of stock." : undefined} signInHref={`/sign-in?next=${encodeURIComponent(`/shop/p/${slug}`)}`} />
-          <p className="flex items-start gap-2 rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-950"><Info className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" /> Orders are <strong className="mx-1">unpaid requests</strong>: payment is not configured yet, and nothing is charged. The seller confirms your order and how payment is arranged.</p>
+          <p className="flex items-start gap-2 rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-950"><Info className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" /> <span>Orders are <strong>unpaid requests</strong>: payment is not configured yet, and nothing is charged. The seller confirms your order and how payment is arranged.</span></p>
         </>
       ) : (
-        <p className="flex items-start gap-2 rounded-xl bg-sand-50 px-4 py-3 text-sm text-ink/70"><Info className="mt-0.5 h-4 w-4 shrink-0 text-earth-700" aria-hidden="true" /> Ordering is not open yet. You can browse and check delivery now; nothing can be bought or paid for yet.</p>
+        <p className="flex items-start gap-2 rounded-xl bg-sand-50 px-4 py-3 text-sm text-ink/70"><Info className="mt-0.5 h-4 w-4 shrink-0 text-earth-700" aria-hidden="true" /> <span>Ordering is not open yet. You can browse and check delivery now; nothing can be bought or paid for yet.</span></p>
       )}
     </div>
   );

@@ -46,7 +46,7 @@ export function AvailabilityCalendar({ ranges, months = 3 }: { ranges: Range[]; 
                       key={iso}
                       title={iso < today ? "Past" : unavailable.has(iso) ? "Unavailable" : "Available"}
                       className={`rounded-md py-1.5 ${
-                        iso < today ? "text-ink/25" : unavailable.has(iso) ? "bg-stone-100 text-ink/35 line-through" : "bg-forest-50 text-forest-900"
+                        iso < today ? "text-ink/65 line-through" : unavailable.has(iso) ? "bg-stone-100 text-ink/65 line-through" : "bg-forest-50 text-forest-900"
                       }`}
                     >
                       {Number(iso.slice(8))}

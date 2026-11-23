@@ -37,9 +37,8 @@ await check("provider requests the services capability; an admin approves it; se
   await rpc(prov, "set_vendor_service_areas", { p_scope: "service", p_codes: ["560"] });
   eq((await svc.from("vendor_capabilities").select("status").eq("vendor_id", vendor.id).eq("capability", "services").single()).data.status, "approved");
 });
-await check("a customer or another provider cannot create or touch this provider's listings", async () => {
+await check("a customer cannot create listings", async () => {
   await denied(alice.client.rpc("save_service", { p: { category_id: gardening, name: "Nope", pricing_model: "quote" } }), /not_found|capability_not_approved/);
-  await denied(other.client.rpc("save_service", { p: { category_id: gardening, name: "Nope", pricing_model: "quote" } }), /not_found|capability_not_approved/);
 });
 
 console.log("\nListings: photos, review, public visibility");
@@ -61,6 +60,12 @@ await check("nothing is public before approval; the provider cannot approve thei
   eq((await c.anon.rpc("search_services", { p_query: run })).data.length, 0, "pending listings are hidden");
   await denied(prov.client.rpc("admin_review_service", { p_service: listing.fixed, p_decision: "approve" }), /forbidden/);
   for (const id of [listing.fixed, listing.quote]) await rpc(admin, "admin_review_service", { p_service: id, p_decision: "approve", p_reason: null });
+});
+await check("another provider (even with the services capability) cannot edit, photo, submit or archive this provider's listing", async () => {
+  await denied(other.client.rpc("save_service", { p: { id: listing.fixed, category_id: gardening, name: "Hijack", pricing_model: "quote" } }), /not_found|capability_not_approved/);
+  await denied(other.client.rpc("register_service_image", { p_service: listing.fixed, p_path: `${vendor.id}/${listing.fixed}/x.jpg` }), /not_found|capability_not_approved/);
+  await denied(other.client.rpc("archive_service", { p_service: listing.fixed }), /not_found|capability_not_approved/);
+  await denied(other.client.rpc("set_service_availability_flag", { p_service: listing.fixed, p_available: false }), /not_found|capability_not_approved/);
 });
 await check("anonymous visitors see both listings through the public function only, with the right prices, and cannot read the tables", async () => {
   const rows = must(await c.anon.rpc("search_services", { p_query: run }), "search");
