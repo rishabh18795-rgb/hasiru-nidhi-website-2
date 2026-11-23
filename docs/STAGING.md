@@ -57,3 +57,9 @@ npm run test:staging:e2e    # real browser workflow, desktop and mobile, as the 
 ```
 
 The browser tests seed fresh products each run, reset return policies, and leave nothing configured behind. They need `node tests/staging/workflow.mjs` to have been run once so the three test sellers are onboarded. The app server in the browser tests is started WITHOUT the service-role key.
+
+## Demo catalogue and a staging-backed preview
+
+`node tests/staging/seed-demo.mjs` archives test clutter and creates a small catalogue, every item labelled "(demo)", through the real database functions (5 products, 3 services across three test sellers). Re-run it any time; it never duplicates. The browser tests add their own "UI ..." products on every run, so re-run the seed afterwards if the staging site should look tidy.
+
+The Vercel project's Supabase variables are shared by Production and Preview, so a branch preview talks to PRODUCTION unless it is overridden. To make the `marketplace/develop` preview show the marketplace, add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` (staging values) in Vercel > Settings > Environment Variables, with the environment limited to the Preview branch `marketplace/develop` ONLY (never Production), and set `SUPABASE_SERVICE_ROLE_KEY` on that branch to a placeholder so the production key is never sent to staging. Then redeploy the branch.
