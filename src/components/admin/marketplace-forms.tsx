@@ -1,8 +1,8 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 
-import { addDocumentRequirement, reviewCapability, reviewVendor, reviewVendorDocument } from "@/app/admin/marketplace-actions";
+import { addDocumentRequirement, reviewCapability, reviewVendor, reviewVendorDocument, setMarketplaceCommission } from "@/app/admin/marketplace-actions";
 import type { FormState } from "@/lib/action";
 import { Field, NativeSelect, TextArea, TextInput } from "@/components/forms/fields";
 import { FormMessage } from "@/components/forms/form-message";
@@ -76,6 +76,26 @@ export function AddRequirementForm() {
       <Field label="Instructions for the vendor (optional)" htmlFor="req-desc" className="sm:col-span-2"><TextInput id="req-desc" name="description" maxLength={500} defaultValue={state.values?.description} /></Field>
       <Field label="Needed to submit?" htmlFor="req-required"><NativeSelect id="req-required" name="is_required" defaultValue="true"><option value="true">Required before submitting</option><option value="false">Optional</option></NativeSelect></Field>
       <div className="flex items-end"><SubmitButton pendingLabel="Adding…">Add requirement</SubmitButton></div>
+    </form>
+  );
+}
+
+const commissionInitial: FormState = {};
+
+/** Sets or clears a commission rate. A blank rate records "unconfigured". The note (who approved it, and why) is mandatory. */
+export function CommissionForm({ productCategories, serviceCategories }: { productCategories: { id: number; name: string }[]; serviceCategories: { id: number; name: string }[] }) {
+  const [state, action] = useActionState(setMarketplaceCommission, commissionInitial);
+  const [vertical, setVertical] = useState<string>("products");
+  const cats = vertical === "products" ? productCategories : serviceCategories;
+  const err = (k: string) => state.fieldErrors?.[k];
+  return (
+    <form action={action} className="grid gap-4 sm:grid-cols-2" noValidate>
+      <div className="sm:col-span-2"><FormMessage state={state} /></div>
+      <Field label="Applies to" htmlFor="cm-vertical"><NativeSelect id="cm-vertical" name="vertical" value={vertical} onChange={(e) => setVertical(e.target.value)}><option value="products">Products (Shop)</option><option value="services">Services</option></NativeSelect></Field>
+      <Field label="Category" htmlFor="cm-category" hint="Leave on “whole vertical” to set the default for everything in it."><NativeSelect id="cm-category" name="category_id" key={vertical} defaultValue=""><option value="">Whole vertical</option>{cats.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</NativeSelect></Field>
+      <Field label="Commission rate (%)" htmlFor="cm-rate" error={err("rate")} hint="0 to 50. Leave blank to record that no rate is configured."><TextInput id="cm-rate" name="rate" inputMode="decimal" defaultValue={state.ok ? "" : state.values?.rate} error={Boolean(err("rate"))} /></Field>
+      <Field label="Who approved this, and why" htmlFor="cm-note" required error={err("note")}><TextInput id="cm-note" name="note" maxLength={500} defaultValue={state.ok ? "" : state.values?.note} error={Boolean(err("note"))} /></Field>
+      <div className="sm:col-span-2"><SubmitButton pendingLabel="Recording…">Record rate</SubmitButton></div>
     </form>
   );
 }

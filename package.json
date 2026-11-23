@@ -15,7 +15,7 @@
     "db:bundle": "node scripts/bundle-sql.mjs",
     "db:seed": "node scripts/gen-seed.mjs",
     "test:live": "playwright test -c playwright.live.config.ts",
-    "test:staging": "node tests/staging/verify-schema.mjs && node tests/staging/workflow.mjs",
+    "test:staging": "node tests/staging/verify-schema.mjs && node tests/staging/workflow.mjs && node tests/staging/services-workflow.mjs",
     "test:staging:build": "node tests/staging/build.mjs",
     "test:staging:e2e": "playwright test -c playwright.staging.config.ts"
   },

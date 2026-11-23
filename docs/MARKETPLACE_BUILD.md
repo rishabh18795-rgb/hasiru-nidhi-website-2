@@ -23,7 +23,7 @@ Source of truth for the design is the Phase 1 audit (Sections 7 to 10). This fil
 
 ## Feature flags (`platform_settings`, public, all OFF)
 
-`marketplace_vendor_registration_enabled`, `marketplace_products_enabled`, `marketplace_services_enabled`.
+`marketplace_vendor_registration_enabled`, `marketplace_products_enabled`, `marketplace_services_enabled`, `marketplace_orders_enabled`.
 An administrator switches them at `/admin/marketplace`. Deploying code never exposes a module.
 
 ## Migrations (additive, in order)
@@ -34,6 +34,7 @@ An administrator switches them at `/admin/marketplace`. Deploying code never exp
 | `20261121000100_product_catalogue.sql` (M3) | Applied to STAGING only. Not applied to production. |
 | `20261122000100_cart_and_orders.sql` (M4) | Applied to STAGING only. Not applied to production. |
 | `20261123000100_services.sql` (M5) | Applied to STAGING only. Not applied to production. |
+| `20261124000100_marketplace_commission.sql` (M6) | Applied to STAGING only. Not applied to production. |
 
 Every migration is applied to production only after: tests green, rehearsal on the non-production database, a backup, and the owner's approval.
 
@@ -46,7 +47,9 @@ Every migration is applied to production only after: tests green, rehearsal on t
 | 4. Product catalogue | Built, tested, CI green on the branch. Flags OFF. |
 | 5. Cart, checkout, orders | Built; verified in-process, against the real staging backend, and in real browsers (desktop and mobile). Flags OFF. |
 | 6. Services marketplace | Built; database layer verified in-process (39 tests) and applied to staging. Flags OFF in production. |
-| 7 to 9 | In progress |
+| 7. Admin control centre | Built: live counts and review queues at /admin/marketplace, service and request oversight, categories. Reviews and support tickets not built. |
+| 8. Commission, payment, settlement foundations | Commission rates recorded per vertical and category, append-only, UNCONFIGURED by default and separate from the Stay rate. No payment provider, no accrual, no settlements (D11). |
+| 9. QA, security, launch prep | Done for staging: see `docs/LAUNCH_CHECKLIST.md`. Production rollout awaits the owner. |
 
 ## Verification harness
 

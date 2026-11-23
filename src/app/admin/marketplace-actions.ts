@@ -110,3 +110,23 @@ export async function setRequirementActive(id: number, active: boolean): Promise
   await session.supabase.from("vendor_document_requirements").update({ is_active: active }).eq("id", id);
   revalidatePath("/admin/marketplace");
 }
+
+const commissionSchema = z.object({
+  vertical: z.enum(["products", "services"]),
+  category_id: z.preprocess((v) => (v === "" || v === undefined ? null : v), z.coerce.number().int().positive().nullable()),
+  rate: z.preprocess((v) => (v === "" || v === undefined ? null : v), z.coerce.number().min(0, "At least 0").max(50, "At most 50").nullable()),
+  note: z.string().trim().min(3, "Say who approved this rate and why").max(500),
+});
+
+/** Records a commission rate (or marks it unconfigured when the rate is blank). Append-only: the history is kept. */
+export async function setMarketplaceCommission(_prev: FormState, formData: FormData): Promise<FormState> {
+  const session = await adminSession();
+  if (!session) return DENIED;
+  const raw = formValues(formData);
+  const parsed = commissionSchema.safeParse(raw);
+  if (!parsed.success) return { ok: false, message: "Please fix the highlighted fields.", fieldErrors: zodFieldErrors(parsed.error), values: raw };
+  const { error } = await session.supabase.rpc("admin_set_marketplace_commission", { p_vertical: parsed.data.vertical, p_category: parsed.data.category_id, p_rate: parsed.data.rate, p_note: parsed.data.note });
+  if (error) return { ok: false, message: error.message.includes("invalid_rate") ? "The rate must be between 0 and 50, with at most two decimals." : friendlyDbError(error), values: raw };
+  revalidatePath("/admin/marketplace-commission");
+  return { ok: true, message: parsed.data.rate === null ? "Recorded as unconfigured." : "Rate recorded. Nothing is charged yet: payment is not configured.", values: {} };
+}

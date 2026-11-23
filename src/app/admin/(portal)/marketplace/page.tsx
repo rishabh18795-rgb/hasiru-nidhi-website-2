@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+import Link from "next/link";
+
 import { Card, CardTitle, StatusBadge } from "@/components/app/ui";
 import { AddRequirementForm } from "@/components/admin/marketplace-forms";
 import { requireRole } from "@/lib/auth";
@@ -11,13 +13,26 @@ export const metadata: Metadata = { title: "Marketplace controls" };
 
 const FLAGS = [
   { key: FLAG_KEYS.vendorRegistration, title: "Vendor registration", help: "Lets customers apply as vendors and gives existing hosts the vendor dashboard. Turn on when you are ready to review applications." },
-  { key: FLAG_KEYS.products, title: "Products (Shop)", help: "Not built yet. Leave OFF until the Products module has passed its launch checks." },
+  { key: FLAG_KEYS.products, title: "Products (Shop)", help: "Shows approved products in the Shop for everyone. Turn on only when you have approved sellers and products you are happy to show." },
   { key: FLAG_KEYS.orders, title: "Cart, checkout and orders", help: "Lets signed-in customers add to a cart and submit UNPAID order requests. Also needs Products ON. There is no payment gateway: every order shows UNPAID, PAYMENT NOT CONFIGURED." },
-  { key: FLAG_KEYS.services, title: "Services", help: "Not built yet. Leave OFF until the Services module has passed its launch checks." },
+  { key: FLAG_KEYS.services, title: "Services", help: "Shows approved services and lets signed-in customers send service requests and ask for quotations. Every request is unpaid: there is no payment gateway." },
 ] as const;
 
 export default async function AdminMarketplace() {
   const { supabase } = await requireRole(["admin"], "/admin/marketplace");
+  // Real counts straight from the database. Nothing here is estimated, and no money total is shown: nothing has been paid.
+  const count = async (table: string, column: string, values: string[]) => {
+    const { count: c } = await supabase.from(table).select("id", { count: "exact", head: true }).in(column, values);
+    return c ?? 0;
+  };
+  const [vendorsWaiting, vendorsLive, productsWaiting, productsLive, servicesWaiting, servicesLive, ordersNew, ordersOpen, orderAsks, disputes, reqNew, reqOpen, reqDone] = await Promise.all([
+    count("vendors", "status", ["submitted", "under_review"]), count("vendors", "status", ["approved"]),
+    count("products", "status", ["pending_review"]), count("products", "status", ["approved"]),
+    count("services", "status", ["pending_review"]), count("services", "status", ["approved"]),
+    count("orders", "status", ["placed"]), count("orders", "status", ["placed", "confirmed", "packed", "shipped"]),
+    count("order_requests", "status", ["requested"]), count("order_disputes", "status", ["open"]),
+    count("service_requests", "status", ["submitted"]), count("service_requests", "status", ["submitted", "quoted", "accepted", "in_progress"]), count("service_requests", "status", ["completed"]),
+  ]);
   const [{ data: settings }, { data: reqs }] = await Promise.all([
     supabase.from("platform_settings").select("key, value").in("key", FLAGS.map((f) => f.key)),
     supabase.from("vendor_document_requirements").select("*").order("capability").order("sort_order").order("name"),
@@ -31,6 +46,32 @@ export default async function AdminMarketplace() {
         <h1 className="text-3xl font-medium tracking-tight text-forest-950">Marketplace controls</h1>
         <p className="mt-1 max-w-2xl text-sm text-ink/60">Modules stay OFF until you switch them on. Switching one on exposes it to the public or to vendors immediately; every change is recorded in the audit log.</p>
       </div>
+      <Card>
+        <CardTitle>At a glance</CardTitle>
+        <p className="mb-4 text-sm text-ink/60">Live counts. Items waiting for you are linked. All orders and service requests are unpaid because payment is not configured, so no revenue figure is shown.</p>
+        <dl className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          {[
+            { label: "Vendors waiting for review", value: vendorsWaiting, href: "/admin/vendors", alert: true },
+            { label: "Products waiting for review", value: productsWaiting, href: "/admin/products", alert: true },
+            { label: "Services waiting for review", value: servicesWaiting, href: "/admin/services", alert: true },
+            { label: "Return, replacement or cancel requests", value: orderAsks, href: "/admin/orders", alert: true },
+            { label: "Open order disputes", value: disputes, href: "/admin/orders", alert: true },
+            { label: "New service requests", value: reqNew, href: "/admin/service-requests", alert: false },
+            { label: "Verified vendors", value: vendorsLive, href: "/admin/vendors", alert: false },
+            { label: "Live products", value: productsLive, href: "/admin/products?status=approved", alert: false },
+            { label: "Live services", value: servicesLive, href: "/admin/services?status=approved", alert: false },
+            { label: "Shop orders in progress", value: ordersOpen, href: "/admin/orders", alert: false },
+            { label: "New shop orders", value: ordersNew, href: "/admin/orders", alert: false },
+            { label: "Open service requests", value: reqOpen, href: "/admin/service-requests", alert: false },
+            { label: "Completed services", value: reqDone, href: "/admin/service-requests?status=completed", alert: false },
+          ].map((m) => (
+            <div key={m.label} className="rounded-2xl border border-forest-900/10 p-4">
+              <dt className="text-xs text-ink/60">{m.label}</dt>
+              <dd className={`mt-1 font-display text-3xl ${m.alert && m.value > 0 ? "text-earth-700" : "text-forest-950"}`}><Link href={m.href} className="hover:underline">{m.value}</Link></dd>
+            </div>
+          ))}
+        </dl>
+      </Card>
       <Card>
         <CardTitle>Feature flags</CardTitle>
         <ul className="divide-y divide-forest-900/8">

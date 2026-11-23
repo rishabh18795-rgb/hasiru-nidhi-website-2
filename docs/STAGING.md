@@ -51,7 +51,7 @@ Any request to the API counts as activity, and so does running the staging check
 ## Verifying against staging
 
 ```bash
-npm run test:staging        # schema + policy check, then the full backend workflow (real Auth, REST, Storage, RLS)
+npm run test:staging        # schema + policy check, then the product/order and the services backend workflows (real Auth, REST, Storage, RLS)
 npm run test:staging:build  # builds the app with staging credentials into .next-staging (separate from the normal build)
 npm run test:staging:e2e    # real browser workflow, desktop and mobile, as the synthetic @staging.test users
 ```
