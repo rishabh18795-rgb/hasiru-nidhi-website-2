@@ -93,7 +93,7 @@ export default async function HomePage() {
           </Reveal>
         </div>
 
-        <div className="absolute inset-x-0 bottom-8 flex flex-col items-center gap-2 text-cream/60">
+        <div className="absolute inset-x-0 bottom-8 flex flex-col items-center gap-2 text-cream/75">
           <span className="text-[11px] uppercase tracking-[0.3em]">Scroll</span>
           <ChevronDown className="h-4 w-4 animate-bounce" />
         </div>
@@ -125,7 +125,7 @@ export default async function HomePage() {
               ].map((item) => (
                 <div key={item.label} className="max-w-[10.5rem]">
                   <p className="font-display text-lg text-forest-800">{item.label}</p>
-                  <p className="mt-1.5 text-sm leading-relaxed text-ink/60">{item.copy}</p>
+                  <p className="mt-1.5 text-sm leading-relaxed text-ink/65">{item.copy}</p>
                 </div>
               ))}
             </Reveal>
@@ -370,7 +370,7 @@ export default async function HomePage() {
               </li>
             ))}
           </ul>
-          <p className="mt-10 text-sm text-ink/55">
+          <p className="mt-10 text-sm text-ink/65">
             Hasiru Nidhi is operated by Hasiru Nidhi Horizons Private Limited. Read our{" "}
             <Link href="/terms" className="underline">Terms</Link>,{" "}
             <Link href="/privacy" className="underline">Privacy Policy</Link> and{" "}
@@ -463,7 +463,7 @@ export default async function HomePage() {
                     <h3 className="mt-2 font-display text-lg leading-snug text-forest-950">
                       {post.title}
                     </h3>
-                    <p className="mt-auto pt-4 text-xs text-ink/50">{post.readTime}</p>
+                    <p className="mt-auto pt-4 text-xs text-ink/65">{post.readTime}</p>
                   </div>
                 </Link>
               </StaggerItem>

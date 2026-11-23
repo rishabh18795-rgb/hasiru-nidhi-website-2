@@ -16,7 +16,7 @@ export default async function AddressesPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-medium tracking-tight text-forest-950">Delivery addresses</h1>
-        <p className="mt-1 max-w-2xl text-sm text-ink/60">Saved for checkout. Each order keeps its own copy of the address, so changing or deleting one here never changes an order you already placed.</p>
+        <p className="mt-1 max-w-2xl text-sm text-ink/65">Saved for checkout. Each order keeps its own copy of the address, so changing or deleting one here never changes an order you already placed.</p>
       </div>
       {addresses.length === 0 ? <EmptyState title="No saved addresses" description="Add one below, or during checkout." /> : (
         <ul className="grid gap-4 md:grid-cols-2">

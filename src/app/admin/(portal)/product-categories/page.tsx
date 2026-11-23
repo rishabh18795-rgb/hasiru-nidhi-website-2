@@ -23,7 +23,7 @@ export default async function AdminProductCategories() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-medium tracking-tight text-forest-950">Product categories</h1>
-        <p className="mt-1 max-w-2xl text-sm text-ink/60">The order here is the order in the Shop. A disabled category and all its products are hidden from shoppers (nothing is deleted). A category&apos;s web address is fixed when it is created.</p>
+        <p className="mt-1 max-w-2xl text-sm text-ink/65">The order here is the order in the Shop. A disabled category and all its products are hidden from shoppers (nothing is deleted). A category&apos;s web address is fixed when it is created.</p>
       </div>
       <Card>
         <CardTitle>Categories</CardTitle>
@@ -36,7 +36,7 @@ export default async function AdminProductCategories() {
               </div>
               <div className="min-w-0 flex-1">
                 <EditCategoryForm id={c.id} name={c.name} description={c.description} isActive={c.is_active} />
-                <p className="mt-1.5 text-xs text-ink/50">/shop/{c.slug} · {count.get(c.id) ?? 0} product{(count.get(c.id) ?? 0) === 1 ? "" : "s"}</p>
+                <p className="mt-1.5 text-xs text-ink/65">/shop/{c.slug} · {count.get(c.id) ?? 0} product{(count.get(c.id) ?? 0) === 1 ? "" : "s"}</p>
               </div>
             </li>
           ))}

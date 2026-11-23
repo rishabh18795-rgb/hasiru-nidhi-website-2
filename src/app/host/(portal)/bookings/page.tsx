@@ -20,17 +20,17 @@ function Row({ b, today }: { b: Booking; today: string }) {
         <StatusBadge status={b.status} />
       </div>
       <dl className="grid gap-3 text-sm sm:grid-cols-3">
-        <div><dt className="text-xs uppercase tracking-wide text-ink/50">Guest</dt><dd className="mt-0.5">{b.guest_name || "—"}</dd></div>
-        <div><dt className="text-xs uppercase tracking-wide text-ink/50">Contact</dt><dd className="mt-0.5">{b.guest_phone || "—"}<br />{b.guest_email || ""}</dd></div>
-        <div><dt className="text-xs uppercase tracking-wide text-ink/50">Indicative total</dt><dd className="mt-0.5">{b.indicative_total_inr !== null ? formatINR(b.indicative_total_inr) : "Price on request"}</dd></div>
-        <div className="sm:col-span-3"><dt className="text-xs uppercase tracking-wide text-ink/50">Payment</dt><dd className="mt-0.5 text-ink/70">Online payment is not available yet; nothing is collected by the platform. Payment status is recorded by the Hasiru Nidhi team.</dd></div>
+        <div><dt className="text-xs uppercase tracking-wide text-ink/65">Guest</dt><dd className="mt-0.5">{b.guest_name || "—"}</dd></div>
+        <div><dt className="text-xs uppercase tracking-wide text-ink/65">Contact</dt><dd className="mt-0.5">{b.guest_phone || "—"}<br />{b.guest_email || ""}</dd></div>
+        <div><dt className="text-xs uppercase tracking-wide text-ink/65">Indicative total</dt><dd className="mt-0.5">{b.indicative_total_inr !== null ? formatINR(b.indicative_total_inr) : "Price on request"}</dd></div>
+        <div className="sm:col-span-3"><dt className="text-xs uppercase tracking-wide text-ink/65">Payment</dt><dd className="mt-0.5 text-ink/70">Online payment is not available yet; nothing is collected by the platform. Payment status is recorded by the Hasiru Nidhi team.</dd></div>
         {b.host_share_inr !== null ? (
-          <div className="sm:col-span-3"><dt className="text-xs uppercase tracking-wide text-ink/50">Your earnings on this booking</dt>
-            <dd className="mt-0.5">{formatINR(b.host_share_inr)} <span className="text-ink/55">after {Number(b.commission_rate_percent)}% platform commission ({formatINR(b.commission_amount_inr)}) on {formatINR(b.commissionable_amount_inr)}</span></dd></div>
+          <div className="sm:col-span-3"><dt className="text-xs uppercase tracking-wide text-ink/65">Your earnings on this booking</dt>
+            <dd className="mt-0.5">{formatINR(b.host_share_inr)} <span className="text-ink/65">after {Number(b.commission_rate_percent)}% platform commission ({formatINR(b.commission_amount_inr)}) on {formatINR(b.commissionable_amount_inr)}</span></dd></div>
         ) : null}
       </dl>
       {b.message ? <p className="rounded-xl bg-stone-50 px-4 py-3 text-sm text-ink/80"><span className="font-medium">Guest message:</span> {b.message}</p> : null}
-      <p className="text-xs text-ink/50">Requested {formatDateTime(b.created_at)}</p>
+      <p className="text-xs text-ink/65">Requested {formatDateTime(b.created_at)}</p>
       {b.status === "requested" ? <RespondToBookingForm bookingId={b.id} /> : null}
       {b.status === "confirmed" && b.check_in >= today ? <HostCancelForm bookingId={b.id} /> : null}
       {b.status === "confirmed" && b.check_out <= today ? <CompleteStayForm bookingId={b.id} /> : null}
@@ -69,7 +69,7 @@ export default async function HostBookings({ searchParams }: { searchParams: Pro
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-medium tracking-tight text-forest-950">Bookings</h1>
-        <p className="mt-1 text-sm text-ink/60">Accepting a request confirms the stay and blocks those dates. Two requests for overlapping dates can both wait, but only one can be confirmed.</p>
+        <p className="mt-1 text-sm text-ink/65">Accepting a request confirms the stay and blocks those dates. Two requests for overlapping dates can both wait, but only one can be confirmed.</p>
       </div>
       <nav aria-label="Booking status" className="flex flex-wrap gap-2">
         {TABS.map((t) => (
@@ -82,7 +82,7 @@ export default async function HostBookings({ searchParams }: { searchParams: Pro
       {all.length === 0 ? (
         <EmptyState title="No booking requests yet" description="When a traveller requests one of your live listings, it will appear here." />
       ) : groups[tab].length === 0 ? (
-        <p className="text-sm text-ink/55">{empty[tab]}</p>
+        <p className="text-sm text-ink/65">{empty[tab]}</p>
       ) : (
         <div className="space-y-4">{groups[tab].map((b) => <Row key={b.id} b={b} today={today} />)}</div>
       )}

@@ -102,7 +102,7 @@ export function BookingForm() {
         <h3 className="mt-4 font-display text-2xl text-forest-950">
           Thank you. Your request is with our team.
         </h3>
-        <p className="mt-2 max-w-sm text-sm leading-relaxed text-ink/60">
+        <p className="mt-2 max-w-sm text-sm leading-relaxed text-ink/65">
           Someone from Hasiru Nidhi will contact you shortly to confirm
           availability and next steps.
         </p>

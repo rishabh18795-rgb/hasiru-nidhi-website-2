@@ -127,7 +127,7 @@ export default function LandscapingPage() {
                 <div className="h-full rounded-2xl bg-cream/5 p-6 ring-1 ring-cream/10">
                   <service.icon className="h-6 w-6 text-sand-300" />
                   <h3 className="mt-4 font-display text-lg text-cream">{service.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-cream/60">{service.copy}</p>
+                  <p className="mt-2 text-sm leading-relaxed text-cream/75">{service.copy}</p>
                 </div>
               </StaggerItem>
             ))}

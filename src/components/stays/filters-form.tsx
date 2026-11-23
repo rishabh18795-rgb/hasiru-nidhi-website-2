@@ -43,7 +43,7 @@ export function StayFiltersForm({
           <TextInput id={id("max")} name="max" type="number" min={0} step={500} defaultValue={filters.max ?? ""} className="mt-1.5" />
         </div>
       </div>
-      <p className="-mt-3 text-xs text-ink/50">Budget filters only match listings whose host has published a price.</p>
+      <p className="-mt-3 text-xs text-ink/65">Budget filters only match listings whose host has published a price.</p>
       <div>
         <label htmlFor={id("guests")} className="text-sm font-medium text-forest-950">Guests</label>
         <TextInput id={id("guests")} name="guests" type="number" min={1} max={500} defaultValue={filters.guests ?? ""} className="mt-1.5" />

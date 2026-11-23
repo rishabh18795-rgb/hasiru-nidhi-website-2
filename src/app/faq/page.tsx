@@ -67,7 +67,7 @@ export default function FaqPage() {
           </Reveal>
 
           <Reveal delay={0.1}>
-            <p className="mt-10 text-sm text-ink/55">
+            <p className="mt-10 text-sm text-ink/65">
               Didn&apos;t find your answer? Write to us at{" "}
               <ContactEmailLink />{" "}
              <ContactPhoneSuffix prefix="or call" />.

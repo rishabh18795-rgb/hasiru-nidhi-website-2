@@ -54,7 +54,7 @@ export default function PricingPage() {
               </div>
             ))}
           </dl>
-          <p className="mt-6 text-sm text-ink/60">What appears depends on the host. If a charge is not shown on a listing, it has not been set.</p>
+          <p className="mt-6 text-sm text-ink/65">What appears depends on the host. If a charge is not shown on a listing, it has not been set.</p>
         </div>
       </section>
 
@@ -84,7 +84,7 @@ export default function PricingPage() {
               <li key={p.value} className="rounded-2xl bg-white p-5 ring-1 ring-forest-900/8"><span className="font-medium capitalize text-forest-950">{p.value}</span>: {p.label.split("—")[1]?.trim()}</li>
             ))}
           </ul>
-          <p className="mt-6 text-sm text-ink/60">Read the full <Link href="/cancellation-policy" className="underline">cancellation and refund policy</Link>.</p>
+          <p className="mt-6 text-sm text-ink/65">Read the full <Link href="/cancellation-policy" className="underline">cancellation and refund policy</Link>.</p>
         </div>
       </section>
 

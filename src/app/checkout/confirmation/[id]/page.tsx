@@ -34,7 +34,7 @@ export default async function ConfirmationPage({ params }: { params: Promise<{ i
         <div className="mt-6 space-y-3">
           {orders.map((ord) => (
             <Link key={ord.id} href={`/dashboard/orders/${ord.id}`} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-white p-5 ring-1 ring-forest-900/10 hover:shadow-md" data-testid="confirmation-order">
-              <span><span className="block font-medium text-forest-950">{ord.vendor_name}</span><span className="text-sm text-ink/60">{ord.order_number} · {ORDER_STATUS_LABEL[ord.status]}</span></span>
+              <span><span className="block font-medium text-forest-950">{ord.vendor_name}</span><span className="text-sm text-ink/65">{ord.order_number} · {ORDER_STATUS_LABEL[ord.status]}</span></span>
               <span className="font-display text-lg text-forest-950">{formatPrice(ord.items_total_inr)}</span>
             </Link>
           ))}

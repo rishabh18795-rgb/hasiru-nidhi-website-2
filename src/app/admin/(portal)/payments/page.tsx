@@ -56,10 +56,10 @@ export default async function AdminPayments() {
                 <li key={p.id}>
                   <Card className="space-y-3 p-4">
                     <div className="flex flex-wrap items-center justify-between gap-2">
-                      <p className="font-medium text-forest-950">{formatINR(p.amount_inr)} <span className="text-sm font-normal text-ink/60">· {p.bookings?.property_name ?? "booking"} · {p.bookings?.guest_name ?? ""}</span></p>
+                      <p className="font-medium text-forest-950">{formatINR(p.amount_inr)} <span className="text-sm font-normal text-ink/65">· {p.bookings?.property_name ?? "booking"} · {p.bookings?.guest_name ?? ""}</span></p>
                       <span className="rounded-full bg-forest-50 px-2.5 py-0.5 text-xs capitalize text-forest-800">{p.status.replace("_", " ")}</span>
                     </div>
-                    <p className="text-xs text-ink/55">{p.provider} · ref {p.provider_reference} · {formatDateTime(p.created_at)}{Number(p.refunded_inr) > 0 ? ` · refunded ${formatINR(p.refunded_inr)}` : ""}{p.note ? ` · ${p.note}` : ""}</p>
+                    <p className="text-xs text-ink/65">{p.provider} · ref {p.provider_reference} · {formatDateTime(p.created_at)}{Number(p.refunded_inr) > 0 ? ` · refunded ${formatINR(p.refunded_inr)}` : ""}{p.note ? ` · ${p.note}` : ""}</p>
                     {remaining > 0 && (p.status === "paid" || p.status === "partially_refunded") ? <RefundForm paymentId={p.id} max={remaining} /> : null}
                   </Card>
                 </li>

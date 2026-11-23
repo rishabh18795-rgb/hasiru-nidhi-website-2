@@ -42,7 +42,7 @@ export default async function VendorServiceEditor({ params }: { params: Promise<
       <div>
         <Link href="/vendor/services" className="text-sm text-forest-700 underline">← All services</Link>
         <div className="mt-2 flex flex-wrap items-center gap-3"><h1 className="text-3xl font-medium tracking-tight text-forest-950">{service.name}</h1><StatusBadge status={service.status} /></div>
-        <p className="mt-1 text-sm text-ink/60">{SERVICE_STATUS_COPY[service.status]}</p>
+        <p className="mt-1 text-sm text-ink/65">{SERVICE_STATUS_COPY[service.status]}</p>
       </div>
       {service.rejection_reason && ["draft", "rejected", "suspended"].includes(service.status) ? <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800">Note from our team: {service.rejection_reason}</p> : null}
 

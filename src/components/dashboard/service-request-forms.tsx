@@ -34,7 +34,7 @@ export function QuotationDecisionForm({ quotationId, requestId }: { quotationId:
       </Field>
       <Field label="Note to the provider (optional)" htmlFor={`qn-${quotationId}`}><TextArea id={`qn-${quotationId}`} name="note" rows={2} maxLength={1000} defaultValue={state.values?.note} /></Field>
       <SubmitButton pendingLabel="Saving…" className="h-10">Send my decision</SubmitButton>
-      <p className="text-xs text-ink/55">Accepting agrees the quoted amount and shares your phone and address with the provider. Nothing is charged: payment is not configured yet.</p>
+      <p className="text-xs text-ink/65">Accepting agrees the quoted amount and shares your phone and address with the provider. Nothing is charged: payment is not configured yet.</p>
     </form>
   );
 }

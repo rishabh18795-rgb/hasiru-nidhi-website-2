@@ -24,9 +24,9 @@ export default async function Submitted({ params }: { params: Promise<{ id: stri
         <CheckCircle2 className="mx-auto h-12 w-12 text-forest-700" aria-hidden="true" />
         <h1 className="mt-4 font-display text-3xl text-forest-950">Your listing is submitted</h1>
         <p className="mt-2 text-sm text-ink/70">{p.name} is now waiting for review by the Hasiru Nidhi team.</p>
-        <p className="mt-6 text-xs uppercase tracking-wide text-ink/55">Application reference</p>
+        <p className="mt-6 text-xs uppercase tracking-wide text-ink/65">Application reference</p>
         <p className="mt-1 font-mono text-2xl tracking-wider text-forest-950" data-testid="application-reference">{applicationReference(p.id)}</p>
-        <p className="mt-1 text-xs text-ink/55">Submitted {formatDateTime(p.submitted_at)}</p>
+        <p className="mt-1 text-xs text-ink/65">Submitted {formatDateTime(p.submitted_at)}</p>
       </div>
       <Card>
         <h2 className="font-display text-xl text-forest-950">What happens next</h2>

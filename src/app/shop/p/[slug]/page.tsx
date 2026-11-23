@@ -8,6 +8,8 @@ import { ShopNotOpen } from "@/components/shop/shop-notice";
 import { ProductGallery } from "@/components/shop/product-gallery";
 import { getMarketplaceFlags } from "@/lib/flags";
 import { getPublicProduct } from "@/lib/data/shop";
+import { getPublicReviews } from "@/lib/data/reviews";
+import { ReviewList } from "@/components/reviews/review-list";
 import { productImageUrl } from "@/lib/images";
 import { siteConfig } from "@/lib/site";
 
@@ -30,6 +32,7 @@ export default async function ProductPage({ params }: { params: Params }) {
   const product = await getPublicProduct(slug);
   if (!product) notFound();
 
+  const reviews = await getPublicReviews("product", product.slug);
   const photos = product.images.map((i) => ({ src: productImageUrl(i.path) ?? "", alt: i.alt || product.name })).filter((i) => i.src);
   const prices = product.variants.map((v) => Number(v.price_inr));
   // Structured data only from facts we hold: name, description, photos, and the real price and availability.
@@ -53,7 +56,7 @@ export default async function ProductPage({ params }: { params: Params }) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <section className="bg-cream pb-20 pt-32">
         <div className="container-nidhi">
-          <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1.5 text-sm text-ink/60">
+          <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1.5 text-sm text-ink/65">
             <Link href="/shop" className="hover:underline">Shop</Link><ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
             <Link href={`/shop/${product.category.slug}`} className="hover:underline">{product.category.name}</Link><ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
             <span aria-current="page" className="text-ink/80">{product.name}</span>
@@ -81,10 +84,11 @@ export default async function ProductPage({ params }: { params: Params }) {
                 <>
                   <h2 className="mt-8 font-display text-2xl text-forest-950">Specifications</h2>
                   <dl className="mt-3 divide-y divide-forest-900/10 rounded-2xl border border-forest-900/10 bg-white text-sm">
-                    {product.attributes.map((a) => <div key={a.label} className="grid grid-cols-[10rem_1fr] gap-3 px-4 py-3"><dt className="text-ink/55">{a.label}</dt><dd className="text-ink/85">{a.value}</dd></div>)}
+                    {product.attributes.map((a) => <div key={a.label} className="grid grid-cols-[10rem_1fr] gap-3 px-4 py-3"><dt className="text-ink/65">{a.label}</dt><dd className="text-ink/85">{a.value}</dd></div>)}
                   </dl>
                 </>
               ) : null}
+              <div className="mt-10"><ReviewList reviews={reviews} noun="product" /></div>
             </div>
             <aside className="h-fit space-y-6">
             <div className="rounded-3xl bg-white p-6 ring-1 ring-forest-900/10" data-testid="return-policy">
@@ -100,9 +104,9 @@ export default async function ProductPage({ params }: { params: Params }) {
             <div className="rounded-3xl bg-white p-6 ring-1 ring-forest-900/10">
               <h2 className="flex items-center gap-2 font-display text-xl text-forest-950"><Store className="h-5 w-5" aria-hidden="true" /> About the seller</h2>
               <p className="mt-3 font-medium text-forest-950">{product.vendor.business_name}</p>
-              {product.vendor.city ? <p className="text-sm text-ink/60">{[product.vendor.city, product.vendor.state].filter(Boolean).join(", ")}</p> : null}
+              {product.vendor.city ? <p className="text-sm text-ink/65">{[product.vendor.city, product.vendor.state].filter(Boolean).join(", ")}</p> : null}
               {product.vendor.description ? <p className="mt-3 text-sm leading-relaxed text-ink/70">{product.vendor.description}</p> : null}
-              <p className="mt-3 text-xs text-ink/55">This seller has been verified by Hasiru Nidhi. They ship their own orders.</p>
+              <p className="mt-3 text-xs text-ink/65">This seller has been verified by Hasiru Nidhi. They ship their own orders.</p>
               <Link href={`/vendors/${product.vendor.slug}`} className="mt-4 inline-flex h-10 items-center rounded-full border border-forest-900/20 px-5 text-sm font-medium text-forest-900 hover:bg-forest-50">View all products from this seller</Link>
             </div>
             </aside>

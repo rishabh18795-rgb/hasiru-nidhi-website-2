@@ -24,7 +24,7 @@ export default async function AdminLoginPage({ searchParams }: { searchParams: P
       {isSupabaseConfigured() ? (
         <Card>
           <SignInForm portal="admin" next={next.startsWith("/admin") ? next : undefined} />
-          <p className="mt-6 text-sm text-ink/60">Administrator accounts cannot be created from the website. If you need access, ask the platform owner.</p>
+          <p className="mt-6 text-sm text-ink/65">Administrator accounts cannot be created from the website. If you need access, ask the platform owner.</p>
         </Card>
       ) : (
         <BackendNotice feature="Administrator sign in" />

@@ -36,7 +36,7 @@ export default async function AdminVendorDetail({ params }: { params: Promise<{ 
       <div>
         <Link href="/admin/vendors" className="text-sm text-forest-700 underline">← All vendors</Link>
         <div className="mt-2 flex flex-wrap items-center gap-3"><h1 className="text-3xl font-medium tracking-tight text-forest-950">{vendor.business_name}</h1><StatusBadge status={vendor.status} /></div>
-        <p className="mt-1 text-sm text-ink/60">{vendor.is_legacy_host ? "Existing stay host, carried over without re-verification. " : ""}Applied {vendor.submitted_at ? formatDateTime(vendor.submitted_at) : "(not submitted)"}</p>
+        <p className="mt-1 text-sm text-ink/65">{vendor.is_legacy_host ? "Existing stay host, carried over without re-verification. " : ""}Applied {vendor.submitted_at ? formatDateTime(vendor.submitted_at) : "(not submitted)"}</p>
       </div>
 
       <Card>
@@ -56,17 +56,17 @@ export default async function AdminVendorDetail({ params }: { params: Promise<{ 
       <Card>
         <CardTitle>Decision on the business</CardTitle>
         <VendorDecisionForm vendorId={vendor.id} status={vendor.status} />
-        {vendor.rejection_reason ? <p className="mt-3 text-sm text-ink/60">Last reason recorded: {vendor.rejection_reason}</p> : null}
+        {vendor.rejection_reason ? <p className="mt-3 text-sm text-ink/65">Last reason recorded: {vendor.rejection_reason}</p> : null}
       </Card>
 
       <Card>
         <CardTitle>Capabilities (approved one by one)</CardTitle>
-        {capabilities.length === 0 ? <p className="text-sm text-ink/60">No capability has been requested yet.</p> : (
+        {capabilities.length === 0 ? <p className="text-sm text-ink/65">No capability has been requested yet.</p> : (
           <ul className="divide-y divide-forest-900/8">
             {capabilities.map((c) => (
               <li key={c.capability} className="space-y-2 py-4">
                 <div className="flex flex-wrap items-center justify-between gap-2"><p className="font-medium text-forest-950">{CAPABILITY_INFO[c.capability].label}</p><StatusBadge status={c.status} /></div>
-                {c.reason ? <p className="text-xs text-ink/60">Reason: {c.reason}</p> : null}
+                {c.reason ? <p className="text-xs text-ink/65">Reason: {c.reason}</p> : null}
                 <CapabilityDecisionForm vendorId={vendor.id} capability={c.capability} status={c.status} vendorApproved={vendor.status === "approved"} />
               </li>
             ))}
@@ -76,15 +76,15 @@ export default async function AdminVendorDetail({ params }: { params: Promise<{ 
 
       <Card>
         <CardTitle>Verification documents</CardTitle>
-        {documents.length === 0 ? <p className="text-sm text-ink/60">No documents uploaded.</p> : (
+        {documents.length === 0 ? <p className="text-sm text-ink/65">No documents uploaded.</p> : (
           <ul className="divide-y divide-forest-900/8">
             {documents.map((d, i) => (
               <li key={d.id} className="space-y-2 py-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <p className="text-sm font-medium text-forest-950">{d.label}{d.original_name ? <span className="ml-2 text-xs font-normal text-ink/50">{d.original_name}</span> : null}</p>
-                  <span className="flex items-center gap-3"><StatusBadge status={d.status} />{signed[i] ? <a href={signed[i]!} target="_blank" rel="noopener noreferrer" className="text-sm text-forest-700 underline">Open (5 min link)</a> : <span className="text-xs text-ink/50">File unavailable</span>}</span>
+                  <p className="text-sm font-medium text-forest-950">{d.label}{d.original_name ? <span className="ml-2 text-xs font-normal text-ink/65">{d.original_name}</span> : null}</p>
+                  <span className="flex items-center gap-3"><StatusBadge status={d.status} />{signed[i] ? <a href={signed[i]!} target="_blank" rel="noopener noreferrer" className="text-sm text-forest-700 underline">Open (5 min link)</a> : <span className="text-xs text-ink/65">File unavailable</span>}</span>
                 </div>
-                {d.reviewer_note ? <p className="text-xs text-ink/60">Note: {d.reviewer_note}</p> : null}
+                {d.reviewer_note ? <p className="text-xs text-ink/65">Note: {d.reviewer_note}</p> : null}
                 <DocumentDecisionForm vendorId={vendor.id} documentId={d.id} />
               </li>
             ))}
@@ -95,7 +95,7 @@ export default async function AdminVendorDetail({ params }: { params: Promise<{ 
       <Card>
         <CardTitle>History</CardTitle>
         <ul className="space-y-1.5 text-sm text-ink/70">
-          {(audit ?? []).length === 0 ? <li>No events recorded.</li> : (audit ?? []).map((a) => <li key={a.id as number}><span className="text-ink/50">{formatDateTime(a.created_at as string)}</span> · {(a.action as string).replace(/_/g, " ")}</li>)}
+          {(audit ?? []).length === 0 ? <li>No events recorded.</li> : (audit ?? []).map((a) => <li key={a.id as number}><span className="text-ink/65">{formatDateTime(a.created_at as string)}</span> · {(a.action as string).replace(/_/g, " ")}</li>)}
         </ul>
       </Card>
     </div>

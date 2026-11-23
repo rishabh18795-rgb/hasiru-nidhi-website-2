@@ -51,7 +51,7 @@ export default function BookPage() {
           </Reveal>
 
           <Reveal delay={0.1}>
-            <p className="mt-8 text-center text-sm text-ink/50">
+            <p className="mt-8 text-center text-sm text-ink/65">
               Just have a question first?{" "}
               <Link href="/contact" className="underline underline-offset-2">
                 Get in touch

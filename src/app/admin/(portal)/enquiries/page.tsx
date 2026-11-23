@@ -39,11 +39,11 @@ export default async function AdminEnquiries({ searchParams }: { searchParams: P
             <li key={r.id}><Card className="space-y-3">
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div><p className="font-medium text-forest-950">{r.name} <span className="ml-2 rounded-full bg-forest-50 px-2 py-0.5 text-xs capitalize text-forest-800">{r.kind.replace("_", " ")}</span></p>
-                  <p className="text-sm text-ink/60">{[r.email, r.phone].filter(Boolean).join(" · ")}</p></div>
-                <time className="text-xs text-ink/45" dateTime={r.created_at}>{formatDateTime(r.created_at)}</time>
+                  <p className="text-sm text-ink/65">{[r.email, r.phone].filter(Boolean).join(" · ")}</p></div>
+                <time className="text-xs text-ink/65" dateTime={r.created_at}>{formatDateTime(r.created_at)}</time>
               </div>
               {r.subject ? <p className="text-sm font-medium text-ink/80">{r.subject}</p> : null}
-              {r.properties ? <p className="text-xs text-ink/55">About listing: {r.properties.name}</p> : null}
+              {r.properties ? <p className="text-xs text-ink/65">About listing: {r.properties.name}</p> : null}
               <p className="whitespace-pre-line text-sm text-ink/80">{r.message}</p>
               {Object.keys(r.payload ?? {}).length ? <DefinitionList items={Object.entries(r.payload).filter(([, v]) => v).map(([k, v]) => ({ label: k.replace(/_/g, " "), value: String(v) }))} /> : null}
               <TriageForm table="contact_enquiries" id={r.id} status={r.status} notes={r.admin_notes} statuses={ENQ_STATUS} />
@@ -65,8 +65,8 @@ export default async function AdminEnquiries({ searchParams }: { searchParams: P
         <ul className="space-y-4">{rows.map((r) => (
           <li key={r.id}><Card className="space-y-3">
             <div className="flex flex-wrap items-start justify-between gap-2">
-              <div><p className="font-medium text-forest-950">{r.property_name} <span className="text-sm font-normal text-ink/55">· {r.city}, {r.state}</span></p><p className="text-sm text-ink/60">{r.owner_name} · {r.phone} · {r.email}</p></div>
-              <time className="text-xs text-ink/45" dateTime={r.created_at}>{formatDateTime(r.created_at)}</time>
+              <div><p className="font-medium text-forest-950">{r.property_name} <span className="text-sm font-normal text-ink/65">· {r.city}, {r.state}</span></p><p className="text-sm text-ink/65">{r.owner_name} · {r.phone} · {r.email}</p></div>
+              <time className="text-xs text-ink/65" dateTime={r.created_at}>{formatDateTime(r.created_at)}</time>
             </div>
             <DefinitionList items={[{ label: "Category", value: r.category }, { label: "Rooms", value: r.rooms_count }, { label: "Capacity", value: r.max_guests }, { label: "Listed elsewhere", value: r.current_platforms }, { label: "Partnership preference", value: r.partnership_model }]} />
             {r.description ? <p className="whitespace-pre-line text-sm text-ink/80">{r.description}</p> : null}

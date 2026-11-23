@@ -34,7 +34,7 @@ export function GoogleButton({ intent, next, label = "Continue with Google" }: {
 
 export function OrDivider() {
   return (
-    <div className="my-5 flex items-center gap-3 text-xs uppercase tracking-wide text-ink/45" role="separator" aria-label="or">
+    <div className="my-5 flex items-center gap-3 text-xs uppercase tracking-wide text-ink/65" role="separator" aria-label="or">
       <span className="h-px flex-1 bg-forest-900/10" /> or <span className="h-px flex-1 bg-forest-900/10" />
     </div>
   );

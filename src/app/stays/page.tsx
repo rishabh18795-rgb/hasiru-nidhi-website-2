@@ -67,7 +67,7 @@ export default async function StaysPage({ searchParams }: { searchParams: Promis
 
             {/* ---------------- results */}
             <div>
-              <p className="text-sm text-ink/60" aria-live="polite">
+              <p className="text-sm text-ink/65" aria-live="polite">
                 {outcome.error ? "" : `${outcome.total} ${outcome.total === 1 ? "stay" : "stays"}${filters.pin ? ` for PIN ${filters.pin}` : ""}${filters.q ? ` for “${filters.q}”` : ""}`}
               </p>
               {outcome.error ? (
@@ -81,7 +81,7 @@ export default async function StaysPage({ searchParams }: { searchParams: Promis
               ) : outcome.results.length === 0 ? (
                 <div className="mt-4 rounded-2xl border border-dashed border-forest-900/20 bg-white/60 px-6 py-14 text-center">
                   <p className="font-display text-xl text-forest-950">{filters.pin && !filters.q ? `No properties found for PIN ${filters.pin}` : hasAnyFilter ? "No stays match those filters" : "No stays are live yet"}</p>
-                  <p className="mx-auto mt-2 max-w-md text-sm text-ink/60">
+                  <p className="mx-auto mt-2 max-w-md text-sm text-ink/65">
                     {hasAnyFilter
                       ? "Try a nearby PIN code, a city name, different dates or fewer filters. We only show approved, published stays."
                       : "We are welcoming our first hosts, and every property is reviewed before it goes live. Please check back soon, or list your own property."}
@@ -100,7 +100,7 @@ export default async function StaysPage({ searchParams }: { searchParams: Promis
                       {filters.page > 1 ? (
                         <Link rel="prev" href={`/stays${stayFiltersToQuery({ ...filters, page: filters.page - 1 })}`} className="rounded-full border border-forest-900/20 px-5 py-2 text-sm hover:bg-forest-50">Previous</Link>
                       ) : null}
-                      <span className="text-sm text-ink/60">Page {filters.page} of {totalPages}</span>
+                      <span className="text-sm text-ink/65">Page {filters.page} of {totalPages}</span>
                       {filters.page < totalPages ? (
                         <Link rel="next" href={`/stays${stayFiltersToQuery({ ...filters, page: filters.page + 1 })}`} className="rounded-full border border-forest-900/20 px-5 py-2 text-sm hover:bg-forest-50">Next</Link>
                       ) : null}

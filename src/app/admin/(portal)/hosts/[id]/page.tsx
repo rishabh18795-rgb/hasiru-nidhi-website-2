@@ -61,7 +61,7 @@ export default async function AdminHostDetail({ params }: { params: Promise<{ id
               <li key={p.id}>
                 <Card className="flex flex-wrap items-center justify-between gap-2 p-4">
                   <Link href={`/admin/properties/${p.id}`} className="font-medium text-forest-950 underline-offset-2 hover:underline">{p.name}</Link>
-                  <span className="flex items-center gap-3 text-sm text-ink/60">{[p.city, p.postal_code && `PIN ${p.postal_code}`].filter(Boolean).join(" · ")} <StatusBadge status={p.status} /></span>
+                  <span className="flex items-center gap-3 text-sm text-ink/65">{[p.city, p.postal_code && `PIN ${p.postal_code}`].filter(Boolean).join(" · ")} <StatusBadge status={p.status} /></span>
                 </Card>
               </li>
             ))}

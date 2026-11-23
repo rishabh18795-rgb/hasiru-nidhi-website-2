@@ -20,7 +20,7 @@ export function RespondOrderForm({ orderId }: { orderId: string }) {
       <Field label="Decision" htmlFor="respond-decision"><NativeSelect id="respond-decision" name="decision" key={String(state.values?.decision ?? "")} defaultValue={state.values?.decision ?? "accept"}><option value="accept">Accept this order request</option><option value="reject">Decline (reason required)</option></NativeSelect></Field>
       <Field label="Note or reason" htmlFor="respond-reason" hint="Required to decline. The customer sees it."><TextArea id="respond-reason" name="reason" rows={3} maxLength={500} defaultValue={state.values?.reason} /></Field>
       <SubmitButton pendingLabel="Saving…">Apply decision</SubmitButton>
-      <p className="text-xs text-ink/55">Accepting does not mean payment has been received: this order is unpaid and payment is not configured. Agree payment arrangements with the customer yourself.</p>
+      <p className="text-xs text-ink/65">Accepting does not mean payment has been received: this order is unpaid and payment is not configured. Agree payment arrangements with the customer yourself.</p>
     </form>
   );
 }

@@ -40,9 +40,9 @@ export default async function AdminBookings({ searchParams }: { searchParams: Pr
                 </div>
                 <p className="text-sm text-ink/70">{formatDate(b.check_in)} → {formatDate(b.check_out)} · {b.guest_name} · {b.adults + b.children} guest(s) · {b.indicative_total_inr !== null ? formatINR(b.indicative_total_inr) : "no price"}</p>
                 {money.get(b.id) && b.commission_amount_inr !== null ? (
-                  <p className="text-xs text-ink/60">Commission {formatINR(money.get(b.id)!.net_commission_inr)} ({Number(b.commission_rate_percent)}%) · host share {formatINR(money.get(b.id)!.net_host_share_inr)} · payment: {money.get(b.id)!.payment_status.replace("_", " ")} · settlement: {money.get(b.id)!.settlement_status.replace("_", " ")}</p>
+                  <p className="text-xs text-ink/65">Commission {formatINR(money.get(b.id)!.net_commission_inr)} ({Number(b.commission_rate_percent)}%) · host share {formatINR(money.get(b.id)!.net_host_share_inr)} · payment: {money.get(b.id)!.payment_status.replace("_", " ")} · settlement: {money.get(b.id)!.settlement_status.replace("_", " ")}</p>
                 ) : null}
-                <p className="text-xs text-ink/45">Requested {formatDateTime(b.created_at)}</p>
+                <p className="text-xs text-ink/65">Requested {formatDateTime(b.created_at)}</p>
                 {b.status === "confirmed" && b.check_out <= today ? <AdminCompleteForm bookingId={b.id} /> : null}
                 {b.status === "requested" || b.status === "confirmed" ? <AdminCancelForm bookingId={b.id} /> : null}
               </Card>

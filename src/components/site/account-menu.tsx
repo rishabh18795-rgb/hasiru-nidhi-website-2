@@ -111,7 +111,7 @@ export function AccountMenu({ solid, onNavigate }: { solid: boolean; onNavigate?
         <div role="menu" className="absolute right-0 top-full z-50 mt-2 w-64 overflow-hidden rounded-2xl border border-forest-900/10 bg-cream shadow-xl shadow-forest-950/10">
           <div className="border-b border-forest-900/8 px-4 py-3">
             <p className="truncate text-sm font-medium text-forest-950">{me.name}</p>
-            <p className="text-xs capitalize text-ink/55">{me.role}</p>
+            <p className="text-xs capitalize text-ink/65">{me.role}</p>
           </div>
           {links.map(({ href, label, icon: Icon }) => (
             <Link

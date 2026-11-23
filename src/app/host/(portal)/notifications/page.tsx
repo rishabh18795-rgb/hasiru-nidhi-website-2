@@ -19,7 +19,7 @@ export default async function HostNotifications() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-3xl font-medium tracking-tight text-forest-950">Notifications</h1>
-          <p className="mt-1 text-sm text-ink/60">{unread} unread · booking requests and listing decisions appear here.</p>
+          <p className="mt-1 text-sm text-ink/65">{unread} unread · booking requests and listing decisions appear here.</p>
         </div>
         {unread ? (
           <form action={markAllNotificationsRead}>
@@ -40,7 +40,7 @@ export default async function HostNotifications() {
                     {n.body ? <p className="mt-1 text-sm text-ink/70">{n.body}</p> : null}
                     {n.link ? <Link href={n.link} className="mt-2 inline-block text-sm text-forest-700 underline">View</Link> : null}
                   </div>
-                  <time className="shrink-0 text-xs text-ink/45" dateTime={n.created_at}>{formatDateTime(n.created_at)}</time>
+                  <time className="shrink-0 text-xs text-ink/65" dateTime={n.created_at}>{formatDateTime(n.created_at)}</time>
                 </div>
               </Card>
             </li>

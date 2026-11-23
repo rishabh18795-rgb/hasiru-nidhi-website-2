@@ -60,7 +60,7 @@ export function ServiceImageManager({ vendorId, serviceId, serviceName, images, 
   return (
     <div className="space-y-4">
       {error ? <p role="alert" className="rounded-xl bg-red-50 px-4 py-2.5 text-sm text-red-800">{error}</p> : null}
-      {images.length === 0 ? <p className="rounded-xl border border-dashed border-forest-900/20 px-4 py-6 text-center text-sm text-ink/60">No photos yet. Add real photographs of the work you do. At least one is needed to submit.</p> : null}
+      {images.length === 0 ? <p className="rounded-xl border border-dashed border-forest-900/20 px-4 py-6 text-center text-sm text-ink/65">No photos yet. Add real photographs of the work you do. At least one is needed to submit.</p> : null}
       <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
         {images.map((img, i) => (
           <li key={img.id} className="overflow-hidden rounded-2xl border border-forest-900/10 bg-white">
@@ -87,7 +87,7 @@ export function ServiceImageManager({ vendorId, serviceId, serviceName, images, 
           <button type="button" disabled={busy} onClick={() => inputRef.current?.click()} className="inline-flex h-10 items-center gap-2 rounded-full bg-forest-800 px-5 text-sm font-medium text-cream hover:bg-forest-700 disabled:opacity-60">
             {busy ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <ImagePlus className="h-4 w-4" aria-hidden="true" />} Add photos
           </button>
-          <p className="w-full text-xs text-ink/55">JPG, PNG or WebP, up to 5 MB each, up to {MAX_IMAGES} photos. You must own the right to use every photo.</p>
+          <p className="w-full text-xs text-ink/65">JPG, PNG or WebP, up to 5 MB each, up to {MAX_IMAGES} photos. You must own the right to use every photo.</p>
         </div>
       ) : null}
     </div>

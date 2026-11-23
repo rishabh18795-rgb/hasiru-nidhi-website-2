@@ -43,7 +43,7 @@ export default async function VendorServiceRequestPage({ params }: { params: Pro
       <div>
         <Link href="/vendor/service-requests" className="text-sm text-forest-700 underline">← All requests</Link>
         <div className="mt-2 flex flex-wrap items-center gap-3"><h1 className="text-3xl font-medium tracking-tight text-forest-950">{req.request_number}</h1><StatusBadge status={req.status} /></div>
-        <p className="mt-1 text-sm text-ink/60">{req.service_name} · Received {formatDateTime(req.created_at)} · {REQUEST_STATUS_LABEL[req.status]}</p>
+        <p className="mt-1 text-sm text-ink/65">{req.service_name} · Received {formatDateTime(req.created_at)} · {REQUEST_STATUS_LABEL[req.status]}</p>
       </div>
       <Card><RequestTimeline status={req.status} pricing={req.pricing_model} /></Card>
       <ServicePaymentNotice />
@@ -94,7 +94,7 @@ export default async function VendorServiceRequestPage({ params }: { params: Pro
         <Card>
           <CardTitle>Quotations</CardTitle>
           <ul className="divide-y divide-forest-900/10 text-sm">
-            {quotes.map((x) => <li key={x.id} className="py-3"><span className="font-medium text-forest-950">Version {x.version}: {formatPrice(x.amount_inr)}</span> <span className="capitalize text-ink/60">· {x.status}</span><span className="block text-xs text-ink/55">Valid until {formatDate(x.valid_until)}{x.proposed_start ? ` · proposed ${formatDateTime(x.proposed_start)}` : ""}</span><span className="mt-1 block whitespace-pre-line text-ink/75">{x.description}</span>{x.decision_note ? <span className="mt-1 block text-xs text-ink/60">Customer note: {x.decision_note}</span> : null}</li>)}
+            {quotes.map((x) => <li key={x.id} className="py-3"><span className="font-medium text-forest-950">Version {x.version}: {formatPrice(x.amount_inr)}</span> <span className="capitalize text-ink/65">· {x.status}</span><span className="block text-xs text-ink/65">Valid until {formatDate(x.valid_until)}{x.proposed_start ? ` · proposed ${formatDateTime(x.proposed_start)}` : ""}</span><span className="mt-1 block whitespace-pre-line text-ink/75">{x.description}</span>{x.decision_note ? <span className="mt-1 block text-xs text-ink/65">Customer note: {x.decision_note}</span> : null}</li>)}
           </ul>
         </Card>
       ) : null}
@@ -102,7 +102,7 @@ export default async function VendorServiceRequestPage({ params }: { params: Pro
       <Card>
         <CardTitle>History</CardTitle>
         <ol className="space-y-2 text-sm">
-          {history.map((h) => <li key={h.id} className="flex flex-wrap justify-between gap-2"><span><span className="font-medium text-forest-950">{REQUEST_STATUS_LABEL[h.to_status]}</span>{h.note ? <span className="text-ink/60"> · {h.note}</span> : null}</span><span className="text-xs text-ink/50">{formatDateTime(h.created_at)}</span></li>)}
+          {history.map((h) => <li key={h.id} className="flex flex-wrap justify-between gap-2"><span><span className="font-medium text-forest-950">{REQUEST_STATUS_LABEL[h.to_status]}</span>{h.note ? <span className="text-ink/65"> · {h.note}</span> : null}</span><span className="text-xs text-ink/65">{formatDateTime(h.created_at)}</span></li>)}
         </ol>
       </Card>
     </div>

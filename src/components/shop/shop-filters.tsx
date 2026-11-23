@@ -14,7 +14,7 @@ export function ShopFiltersForm({ filters, basePath, idPrefix, hasAnyFilter }: {
       <div>
         <label htmlFor={id("pin")} className="text-sm font-medium text-forest-950">Deliver to PIN code</label>
         <input id={id("pin")} name="pin" inputMode="numeric" maxLength={6} defaultValue={filters.pin} placeholder="e.g. 560078" className={`${field} mt-1.5`} />
-        <p className="mt-1 text-xs text-ink/55">Shows only sellers who deliver to this PIN.</p>
+        <p className="mt-1 text-xs text-ink/65">Shows only sellers who deliver to this PIN.</p>
       </div>
       <fieldset>
         <legend className="text-sm font-medium text-forest-950">Price (₹)</legend>

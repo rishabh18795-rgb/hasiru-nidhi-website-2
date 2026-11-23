@@ -28,7 +28,7 @@ export default async function VendorVerificationPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-medium tracking-tight text-forest-950">Verification documents</h1>
-        <p className="mt-1 max-w-2xl text-sm text-ink/60">Our team decides which documents are needed for each part of the marketplace and may change that list. Files are private: only you and our verification team can open them. Uploading a document does not by itself approve you for anything.</p>
+        <p className="mt-1 max-w-2xl text-sm text-ink/65">Our team decides which documents are needed for each part of the marketplace and may change that list. Files are private: only you and our verification team can open them. Uploading a document does not by itself approve you for anything.</p>
       </div>
       {groups.length === 0 ? (
         <Card><p className="text-sm text-ink/70">No specific documents are required at the moment. You can still upload supporting documents below, and our team may ask for more during review.</p></Card>

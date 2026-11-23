@@ -77,7 +77,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
               {post.title}
             </h1>
             <p className="mt-5 text-lg leading-relaxed text-ink/70">{post.excerpt}</p>
-            <p className="mt-4 text-sm text-ink/55">
+            <p className="mt-4 text-sm text-ink/65">
               By the Hasiru Nidhi team · {new Date(post.date).toLocaleDateString("en-IN", {
                 day: "numeric",
                 month: "long",
@@ -111,7 +111,7 @@ export default async function BlogPostPage({ params }: { params: Params }) {
               {blogPosts.filter((p) => p.slug !== post.slug).map((p) => (
                 <li key={p.slug}>
                   <Link href={`/blog/${p.slug}`} className="text-base text-forest-700 underline underline-offset-4 hover:text-forest-900">{p.title}</Link>
-                  <span className="ml-2 text-xs text-ink/50">{p.category}</span>
+                  <span className="ml-2 text-xs text-ink/65">{p.category}</span>
                 </li>
               ))}
             </ul>

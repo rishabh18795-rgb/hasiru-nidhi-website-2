@@ -30,7 +30,7 @@ export function AddToCart({ variantId, disabled, reason, signInHref }: { variant
           <ShoppingBag className="h-4 w-4" aria-hidden="true" /> {pending ? "Adding…" : "Add to cart"}
         </button>
       </div>
-      {disabled && reason ? <p className="text-sm text-ink/60">{reason}</p> : null}
+      {disabled && reason ? <p className="text-sm text-ink/65">{reason}</p> : null}
       {msg ? <p role={msg.ok ? "status" : "alert"} className={`flex items-center gap-1.5 text-sm ${msg.ok ? "text-forest-800" : "text-red-700"}`}>{msg.ok ? <Check className="h-4 w-4" aria-hidden="true" /> : null}{msg.text}{msg.ok ? <> <a href="/cart" className="underline">View cart</a></> : null}</p> : null}
     </div>
   );

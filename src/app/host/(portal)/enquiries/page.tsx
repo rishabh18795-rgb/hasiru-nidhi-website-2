@@ -26,8 +26,8 @@ export default async function HostEnquiries() {
             <li key={q.id}>
               <Card>
                 <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div><p className="font-medium text-forest-950">{q.name}</p><p className="text-sm text-ink/60">About: {q.properties?.name ?? "your listing"}</p></div>
-                  <time className="text-xs text-ink/45" dateTime={q.created_at}>{formatDateTime(q.created_at)}</time>
+                  <div><p className="font-medium text-forest-950">{q.name}</p><p className="text-sm text-ink/65">About: {q.properties?.name ?? "your listing"}</p></div>
+                  <time className="text-xs text-ink/65" dateTime={q.created_at}>{formatDateTime(q.created_at)}</time>
                 </div>
                 <p className="mt-3 whitespace-pre-line text-sm text-ink/80">{q.message}</p>
                 <p className="mt-3 text-sm text-forest-800">{[q.email, q.phone].filter(Boolean).join(" · ")}</p>
@@ -38,9 +38,9 @@ export default async function HostEnquiries() {
       )}
       <Card>
         <CardTitle>Your partnership applications</CardTitle>
-        {(apps ?? []).length === 0 ? <p className="text-sm text-ink/55">You haven&apos;t submitted a partnership application from this account.</p> : (
+        {(apps ?? []).length === 0 ? <p className="text-sm text-ink/65">You haven&apos;t submitted a partnership application from this account.</p> : (
           <ul className="divide-y divide-forest-900/8 text-sm">
-            {(apps ?? []).map((a) => <li key={a.id as string} className="flex justify-between py-2.5"><span>{a.property_name as string}</span><span className="capitalize text-ink/60">{a.status as string} · {formatDateTime(a.created_at as string)}</span></li>)}
+            {(apps ?? []).map((a) => <li key={a.id as string} className="flex justify-between py-2.5"><span>{a.property_name as string}</span><span className="capitalize text-ink/65">{a.status as string} · {formatDateTime(a.created_at as string)}</span></li>)}
           </ul>
         )}
       </Card>

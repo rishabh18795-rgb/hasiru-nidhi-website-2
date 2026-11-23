@@ -44,7 +44,7 @@ export function ProductForm({ product, categories, locked }: { product: Product 
         </Field>
       </fieldset>
       {!locked ? <SubmitButton pendingLabel="Saving…" className="self-start">{product ? "Save details" : "Create draft"}</SubmitButton> : null}
-      {product?.status === "approved" ? <p className="text-xs text-ink/60">This product is approved. Saving changes to its name, category, description, brand or specifications sends it back for review and hides it until it is approved again.</p> : null}
+      {product?.status === "approved" ? <p className="text-xs text-ink/65">This product is approved. Saving changes to its name, category, description, brand or specifications sends it back for review and hides it until it is approved again.</p> : null}
     </form>
   );
 }

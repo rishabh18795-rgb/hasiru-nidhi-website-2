@@ -40,7 +40,7 @@ export default async function ContactPage() {
           <div>
             <Reveal>
               <h2 className="font-display text-2xl text-forest-950">Reach Us Directly</h2>
-              <p className="mt-3 text-sm leading-relaxed text-ink/60">
+              <p className="mt-3 text-sm leading-relaxed text-ink/65">
                 Prefer to talk it through? Reach us on any of the channels below
                 and we&apos;ll help you plan.
               </p>
@@ -56,7 +56,7 @@ export default async function ContactPage() {
                     <Phone className="mt-0.5 h-5 w-5 text-forest-700" />
                     <div>
                       <p className="text-sm font-medium text-forest-950">Call Us</p>
-                      <p className="text-sm text-ink/60">{settings.support_phone}</p>
+                      <p className="text-sm text-ink/65">{settings.support_phone}</p>
                     </div>
                   </a>
                 </Reveal>
@@ -72,7 +72,7 @@ export default async function ContactPage() {
                     <MessageCircle className="mt-0.5 h-5 w-5 text-forest-700" />
                     <div>
                       <p className="text-sm font-medium text-forest-950">WhatsApp</p>
-                      <p className="text-sm text-ink/60">Message us for a quick answer</p>
+                      <p className="text-sm text-ink/65">Message us for a quick answer</p>
                     </div>
                   </a>
                 </Reveal>
@@ -86,7 +86,7 @@ export default async function ContactPage() {
                     <Mail className="mt-0.5 h-5 w-5 text-forest-700" />
                     <div>
                       <p className="text-sm font-medium text-forest-950">Email</p>
-                      <p className="text-sm text-ink/60">{settings.support_email}</p>
+                      <p className="text-sm text-ink/65">{settings.support_email}</p>
                     </div>
                   </a>
                 </Reveal>
@@ -96,7 +96,7 @@ export default async function ContactPage() {
                   <MapPin className="mt-0.5 h-5 w-5 text-forest-700" />
                   <div>
                     <p className="text-sm font-medium text-forest-950">Visit Us</p>
-                    <p className="text-sm text-ink/60">
+                    <p className="text-sm text-ink/65">
                       {siteConfig.contact.address.line1},{" "}
                       {siteConfig.contact.address.line2},{" "}
                       {siteConfig.contact.address.city},{" "}
@@ -124,7 +124,7 @@ export default async function ContactPage() {
               <ContactForm />
             </Reveal>
             <Reveal delay={0.15}>
-              <p className="mt-6 text-center text-sm text-ink/50">
+              <p className="mt-6 text-center text-sm text-ink/65">
                 Already know you&apos;d like to visit?{" "}
                 <Link href="/book" className="underline underline-offset-2">
                   Farm Visit Enquiry

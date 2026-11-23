@@ -29,7 +29,7 @@ export function PurchasePanel({ productId, variants, isAvailable, ordersOpen, sl
         <p className="font-display text-3xl text-forest-950" data-testid="product-price">{formatPrice(variant.price_inr)}</p>
         <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
           <span className={cn("inline-flex shrink-0 items-center whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-medium", status === "In stock" ? "bg-forest-100 text-forest-800" : "bg-stone-200 text-stone-700")}>{status}</span>
-          <span className="text-ink/55">Price per item. Taxes and delivery charges are not configured yet.</span>
+          <span className="text-ink/65">Price per item. Taxes and delivery charges are not configured yet.</span>
         </p>
       </div>
 
@@ -41,7 +41,7 @@ export function PurchasePanel({ productId, variants, isAvailable, ordersOpen, sl
               <label key={v.id} className={cn("cursor-pointer rounded-xl border px-4 py-3 text-sm transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-forest-500", v.id === variant.id ? "border-forest-700 bg-forest-50" : "border-forest-900/15 bg-white hover:bg-forest-50/50", !v.in_stock && "opacity-70")}>
                 <input type="radio" name="variant" value={v.id} checked={v.id === variant.id} onChange={() => setSelected(v.id)} className="sr-only" />
                 <span className="block font-medium text-forest-950">{v.name}</span>
-                <span className="block text-xs text-ink/60">{formatPrice(v.price_inr)}{!v.in_stock ? " · out of stock" : ""}</span>
+                <span className="block text-xs text-ink/65">{formatPrice(v.price_inr)}{!v.in_stock ? " · out of stock" : ""}</span>
               </label>
             ))}
           </div>
@@ -50,8 +50,8 @@ export function PurchasePanel({ productId, variants, isAvailable, ordersOpen, sl
 
       {Object.keys(variant.options).length || variant.weight_grams ? (
         <dl className="grid gap-x-6 gap-y-1 text-sm sm:grid-cols-2">
-          {Object.entries(variant.options).map(([k, v]) => <div key={k} className="flex gap-2"><dt className="text-ink/55">{k}:</dt><dd className="text-ink/85">{v}</dd></div>)}
-          {variant.weight_grams ? <div className="flex gap-2"><dt className="text-ink/55">Weight:</dt><dd className="text-ink/85">{variant.weight_grams} g</dd></div> : null}
+          {Object.entries(variant.options).map(([k, v]) => <div key={k} className="flex gap-2"><dt className="text-ink/65">{k}:</dt><dd className="text-ink/85">{v}</dd></div>)}
+          {variant.weight_grams ? <div className="flex gap-2"><dt className="text-ink/65">Weight:</dt><dd className="text-ink/85">{variant.weight_grams} g</dd></div> : null}
         </dl>
       ) : null}
 

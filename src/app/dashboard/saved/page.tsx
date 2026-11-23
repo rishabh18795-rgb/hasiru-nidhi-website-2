@@ -23,7 +23,7 @@ export default async function SavedPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-medium tracking-tight text-forest-950">Saved stays</h1>
-        <p className="mt-1 text-sm text-ink/60">Stays you&apos;ve bookmarked. Unpublished listings disappear from this list automatically.</p>
+        <p className="mt-1 text-sm text-ink/65">Stays you&apos;ve bookmarked. Unpublished listings disappear from this list automatically.</p>
       </div>
       {items.length === 0 ? (
         <EmptyState title="Nothing saved yet" description="Tap “Save” on any stay to keep it here." action={{ href: "/stays", label: "Explore stays" }} />

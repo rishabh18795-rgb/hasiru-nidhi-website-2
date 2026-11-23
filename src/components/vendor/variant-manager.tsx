@@ -69,22 +69,23 @@ function AdjustForm({ variant, productId }: { variant: ProductVariant; productId
 export function VariantManager({ productId, variants, editable }: { productId: string; variants: ProductVariant[]; editable: boolean }) {
   return (
     <div className="space-y-4">
-      {variants.length === 0 ? <p className="rounded-xl border border-dashed border-forest-900/20 px-4 py-6 text-center text-sm text-ink/60">No variants yet. Add at least one with a price, so shoppers know what they are buying.</p> : null}
+      {variants.length === 0 ? <p className="rounded-xl border border-dashed border-forest-900/20 px-4 py-6 text-center text-sm text-ink/65">No variants yet. Add at least one with a price, so shoppers know what they are buying.</p> : null}
       {variants.map((v) => (
         <details key={v.id} className="rounded-2xl border border-forest-900/10 bg-white p-4">
           <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-3">
             <span>
               <span className="font-medium text-forest-950">{v.name}</span>
-              <span className="ml-2 text-xs text-ink/50">SKU {v.sku}</span>
+              <span className="ml-2 text-xs text-ink/65">SKU {v.sku}</span>
               {!v.is_active ? <span className="ml-2 rounded-full bg-stone-100 px-2 py-0.5 text-xs text-stone-600">Not offered</span> : null}
             </span>
             <span className="flex items-center gap-4 text-sm"><span className="font-display text-lg text-forest-950">{formatPrice(v.price_inr)}</span>
-              <span className={v.track_inventory && v.stock_on_hand === 0 ? "text-red-700" : "text-ink/70"}>{v.track_inventory ? `${v.stock_on_hand} in stock` : "Stock not tracked"}</span></span>
+              <span className={v.track_inventory && v.stock_on_hand === 0 ? "text-red-700" : "text-ink/70"}>{v.track_inventory ? `${v.stock_on_hand} in stock` : "Stock not tracked"}</span>
+              <span className="text-xs font-medium text-forest-700 underline underline-offset-2">Manage</span></span>
           </summary>
           <div className="mt-4 border-t border-forest-900/10 pt-4">
             {v.track_inventory ? <AdjustForm variant={v} productId={productId} /> : null}
             <div className="mt-4"><VariantForm productId={productId} variant={v} onlyIfEditable={editable} /></div>
-            {!editable ? <p className="mt-2 text-xs text-ink/55">Variant details can&apos;t be edited while the product is in this state. Stock can still be adjusted.</p> : null}
+            {!editable ? <p className="mt-2 text-xs text-ink/65">Variant details can&apos;t be edited while the product is in this state. Stock can still be adjusted.</p> : null}
           </div>
         </details>
       ))}

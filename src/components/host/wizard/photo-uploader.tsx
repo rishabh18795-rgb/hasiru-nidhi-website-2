@@ -169,7 +169,7 @@ export function PhotoUploader({ propertyId, images, editable }: { propertyId: st
           <button type="button" onClick={() => inputRef.current?.click()} className="inline-flex h-10 items-center rounded-full bg-forest-800 px-5 font-medium text-cream hover:bg-forest-700">Browse files</button>
           <input ref={inputRef} type="file" accept="image/jpeg,image/png,image/webp" multiple className="sr-only" aria-label="Choose photographs to upload"
             onChange={(e) => { if (e.target.files) addFiles(e.target.files); e.target.value = ""; }} />
-          <p className="text-xs text-ink/60">JPEG, PNG or WebP · up to 5 MB each · up to {MAX_PHOTOS} photographs. We recommend at least 5, taken by you, showing the real property.</p>
+          <p className="text-xs text-ink/65">JPEG, PNG or WebP · up to 5 MB each · up to {MAX_PHOTOS} photographs. We recommend at least 5, taken by you, showing the real property.</p>
         </div>
       ) : null}
 
@@ -199,7 +199,7 @@ export function PhotoUploader({ propertyId, images, editable }: { propertyId: st
                     <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-forest-900/10" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={u.progress} aria-label={`Uploading ${u.file.name}`}>
                       <div className="h-full bg-forest-600 transition-all" style={{ width: `${u.progress}%` }} />
                     </div>
-                    <p className="mt-1 text-ink/60">{u.status === "saving" ? "Saving…" : `Uploading… ${u.progress}%`}</p>
+                    <p className="mt-1 text-ink/65">{u.status === "saving" ? "Saving…" : `Uploading… ${u.progress}%`}</p>
                   </>
                 )}
               </div>
@@ -209,7 +209,7 @@ export function PhotoUploader({ propertyId, images, editable }: { propertyId: st
       ) : null}
 
       {order.length === 0 && uploads.length === 0 ? (
-        <p className="text-sm text-ink/60">No photographs yet. At least one is required before you can submit your listing.</p>
+        <p className="text-sm text-ink/65">No photographs yet. At least one is required before you can submit your listing.</p>
       ) : (
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" aria-label="Saved photographs">
           {order.map((img, i) => {
@@ -236,7 +236,7 @@ export function PhotoUploader({ propertyId, images, editable }: { propertyId: st
           })}
         </ul>
       )}
-      {order.length > 1 && editable ? <p className="text-xs text-ink/55">Drag photographs to reorder them, or use the arrows. The first photograph is the cover.</p> : null}
+      {order.length > 1 && editable ? <p className="text-xs text-ink/65">Drag photographs to reorder them, or use the arrows. The first photograph is the cover.</p> : null}
     </div>
   );
 }

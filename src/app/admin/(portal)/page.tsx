@@ -93,7 +93,7 @@ export default async function AdminOverview() {
             </li>
           ))}
         </ul>
-        <p className="mt-4 text-xs text-ink/50">Items marked with a warning are pending setup — the related feature is skipped or hidden, never faked.</p>
+        <p className="mt-4 text-xs text-ink/65">Items marked with a warning are pending setup — the related feature is skipped or hidden, never faked.</p>
       </Card>
 
       <div className="grid gap-6 lg:grid-cols-2">
@@ -101,14 +101,14 @@ export default async function AdminOverview() {
           <CardTitle aside={<Link href="/admin/properties" className="text-sm text-forest-700 underline">Review queue</Link>}>Listings by status</CardTitle>
           <ul className="space-y-1.5 text-sm">
             {Object.entries(ps).map(([k, v]) => <li key={k} className="flex justify-between capitalize"><span>{k.replace("_", " ")}</span><strong>{v}</strong></li>)}
-            {Object.keys(ps).length === 0 ? <li className="text-ink/55">No listings yet.</li> : null}
+            {Object.keys(ps).length === 0 ? <li className="text-ink/65">No listings yet.</li> : null}
           </ul>
         </Card>
         <Card>
           <CardTitle>Recent admin activity</CardTitle>
-          {(audit.data ?? []).length === 0 ? <p className="text-sm text-ink/55">No admin actions recorded yet.</p> : (
+          {(audit.data ?? []).length === 0 ? <p className="text-sm text-ink/65">No admin actions recorded yet.</p> : (
             <ul className="space-y-2 text-sm">
-              {(audit.data ?? []).map((a) => <li key={a.id as number} className="flex justify-between gap-3"><span>{(a.action as string).replace("_", " ")} · {a.entity_type as string}</span><time className="text-xs text-ink/45">{formatDateTime(a.created_at as string)}</time></li>)}
+              {(audit.data ?? []).map((a) => <li key={a.id as number} className="flex justify-between gap-3"><span>{(a.action as string).replace("_", " ")} · {a.entity_type as string}</span><time className="text-xs text-ink/65">{formatDateTime(a.created_at as string)}</time></li>)}
             </ul>
           )}
         </Card>

@@ -41,13 +41,13 @@ export function PricingPreview({ rules, maxGuests }: { rules: PricingRules; maxG
                     </dl>
                     <p className="mt-2 flex justify-between border-t border-forest-900/10 pt-2 font-semibold text-forest-950"><span>Total</span><span>{formatINR(q.total)}</span></p>
                   </>
-                ) : <p className="mt-2 text-ink/55">Not available with the current settings.</p>}
+                ) : <p className="mt-2 text-ink/65">Not available with the current settings.</p>}
               </div>
             );
           })}
         </div>
       )}
-      <p className="mt-3 text-xs text-ink/60">Shown to travellers as an estimate. Requests are never charged online; the host confirms every stay. Weekend nights are Friday and Saturday.</p>
+      <p className="mt-3 text-xs text-ink/65">Shown to travellers as an estimate. Requests are never charged online; the host confirms every stay. Weekend nights are Friday and Saturday.</p>
     </div>
   );
 }

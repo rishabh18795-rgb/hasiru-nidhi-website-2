@@ -19,7 +19,7 @@ async function callable(role: string): Promise<string[]> {
 }
 
 // Read-only helpers that are safe for anyone (they only return what RLS already lets the caller see, or public data).
-const PUBLIC_HELPERS = ["is_admin", "is_host", "owns_property", "today_ist", "is_property_available", "property_unavailable_ranges", "search_properties", "quote_stay", "vendor_can", "owns_vendor", "vendor_covers_pin", "products_enabled", "product_is_public", "search_products", "get_product_public", "check_product_delivery", "get_vendor_store", "orders_enabled", "services_enabled", "service_is_public", "search_services", "get_service_public", "check_service_coverage", "get_service_slots", "get_service_provider"];
+const PUBLIC_HELPERS = ["is_admin", "is_host", "owns_property", "today_ist", "is_property_available", "property_unavailable_ranges", "search_properties", "quote_stay", "vendor_can", "owns_vendor", "vendor_covers_pin", "products_enabled", "product_is_public", "search_products", "get_product_public", "check_product_delivery", "get_vendor_store", "orders_enabled", "services_enabled", "service_is_public", "search_services", "get_service_public", "check_service_coverage", "get_service_slots", "get_service_provider", "get_marketplace_reviews"];
 // Actions a signed-in user may invoke; each re-checks its own authorization inside the function.
 const SIGNED_IN_ACTIONS = ["request_booking", "respond_to_booking", "cancel_booking", "submit_property", "review_property", "admin_update_user", "moderate_review", "become_host", "reorder_property_images",
   // commercial layer: every admin_* function checks is_admin() itself; booking_payment_status runs as the caller (RLS applies)
@@ -30,7 +30,9 @@ const SIGNED_IN_ACTIONS = ["request_booking", "respond_to_booking", "cancel_book
   // services: each authorizes internally (own requests, own provider with the services capability, or admin)
   "save_service", "register_service_image", "delete_service_image", "reorder_service_images", "set_service_availability_flag", "submit_service", "archive_service", "restore_service", "set_service_availability", "add_service_time_off", "delete_service_time_off", "request_service", "cancel_service_request", "decide_quotation", "provider_respond_service_request", "provider_send_quotation", "provider_schedule_appointment", "provider_start_service", "provider_complete_service", "provider_cancel_service_request", "admin_review_service", "admin_set_service_featured", "admin_reorder_service_categories", "admin_cancel_service_request",
   // commission foundation (admin only, checked inside)
-  "admin_set_marketplace_commission"];
+  "admin_set_marketplace_commission",
+  // verified reviews: the author (verified purchase or completed service) or an admin; moderation is admin only
+  "submit_marketplace_review", "admin_moderate_marketplace_review"];
 
 describe("who can call which function", () => {
   it("anonymous visitors can call only the public read helpers", async () => {

@@ -20,8 +20,8 @@ export default async function AdminReports() {
           <li key={r.id}><Card className="space-y-3">
             <div className="flex flex-wrap items-start justify-between gap-2">
               <div><p className="font-medium text-forest-950">{r.reason}</p>
-                <p className="text-sm text-ink/60">Listing: <Link href={`/admin/properties/${r.property_id}`} className="text-forest-700 underline">{r.properties?.name ?? "unavailable"}</Link></p></div>
-              <time className="text-xs text-ink/45" dateTime={r.created_at}>{formatDateTime(r.created_at)}</time>
+                <p className="text-sm text-ink/65">Listing: <Link href={`/admin/properties/${r.property_id}`} className="text-forest-700 underline">{r.properties?.name ?? "unavailable"}</Link></p></div>
+              <time className="text-xs text-ink/65" dateTime={r.created_at}>{formatDateTime(r.created_at)}</time>
             </div>
             {r.details ? <p className="whitespace-pre-line text-sm text-ink/80">{r.details}</p> : null}
             <TriageForm table="reports" id={r.id} status={r.status} statuses={["open", "reviewing", "closed"]} />

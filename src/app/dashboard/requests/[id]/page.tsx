@@ -6,6 +6,8 @@ import { CalendarClock } from "lucide-react";
 import { Card, CardTitle, DefinitionList, StatusBadge } from "@/components/app/ui";
 import { CancelRequestForm, QuotationDecisionForm } from "@/components/dashboard/service-request-forms";
 import { ServicePaymentNotice } from "@/components/orders/payment-notice";
+import { ReviewForm } from "@/components/reviews/review-form";
+import { Stars } from "@/components/reviews/review-list";
 import { RequestTimeline } from "@/components/services/request-timeline";
 import { requireUser } from "@/lib/auth";
 import { formatDate, formatDateTime, formatPrice, todayIST } from "@/lib/format";
@@ -33,6 +35,8 @@ export default async function ServiceRequestPage({ params, searchParams }: { par
   const appointments = (ap ?? []) as ServiceAppointment[];
   const appointment = appointments.find((a) => a.status !== "cancelled") ?? null;
   const history = (hi ?? []) as ServiceHistoryRow[];
+  const { data: rv } = await supabase.from("marketplace_reviews").select("rating, status, moderation_note").eq("service_request_id", id).maybeSingle();
+  const myReview = rv as { rating: number; status: string; moderation_note: string | null } | null;
   const contact = ct as { phone: string; address_line: string } | null;
   const live = quotes.find((x) => x.status === "sent") ?? null;
   const expired = live ? live.valid_until < todayIST() : false;
@@ -43,7 +47,7 @@ export default async function ServiceRequestPage({ params, searchParams }: { par
       <div>
         <Link href="/dashboard/requests" className="text-sm text-forest-700 underline">← All service requests</Link>
         <div className="mt-2 flex flex-wrap items-center gap-3"><h1 className="text-3xl font-medium tracking-tight text-forest-950">{req.request_number}</h1><StatusBadge status={req.status} /></div>
-        <p className="mt-1 text-sm text-ink/60">{sv?.slug ? <Link href={`/services/${sv.slug}`} className="underline">{req.service_name}</Link> : req.service_name} · {req.vendor_name} · Sent {formatDateTime(req.created_at)}</p>
+        <p className="mt-1 text-sm text-ink/65">{sv?.slug ? <Link href={`/services/${sv.slug}`} className="underline">{req.service_name}</Link> : req.service_name} · {req.vendor_name} · Sent {formatDateTime(req.created_at)}</p>
       </div>
       {sp.sent ? <p role="status" className="rounded-xl bg-forest-50 px-4 py-3 text-sm text-forest-900">Your request was sent to {req.vendor_name}. You will be notified when they respond.</p> : null}
 
@@ -52,9 +56,9 @@ export default async function ServiceRequestPage({ params, searchParams }: { par
 
       {live ? (
         <Card id="quotation">
-          <CardTitle aside={<span className="text-xs text-ink/55">Version {live.version}</span>}>Quotation</CardTitle>
+          <CardTitle aside={<span className="text-xs text-ink/65">Version {live.version}</span>}>Quotation</CardTitle>
           <p className="font-display text-3xl text-forest-950" data-testid="quotation-amount">{formatPrice(live.amount_inr)}</p>
-          <p className="mt-1 text-xs text-ink/60">{expired ? <span className="font-medium text-red-700">Expired on {formatDate(live.valid_until)}. Ask the provider for a new one.</span> : <>Valid until {formatDate(live.valid_until)}</>} · Taxes are not configured yet.</p>
+          <p className="mt-1 text-xs text-ink/65">{expired ? <span className="font-medium text-red-700">Expired on {formatDate(live.valid_until)}. Ask the provider for a new one.</span> : <>Valid until {formatDate(live.valid_until)}</>} · Taxes are not configured yet.</p>
           <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-ink/80">{live.description}</p>
           {live.proposed_start ? <p className="mt-3 flex items-center gap-2 text-sm text-ink/80"><CalendarClock className="h-4 w-4" aria-hidden="true" /> Proposed time: {formatDateTime(live.proposed_start)} (IST). It is booked for you when you accept.</p> : null}
           {!expired ? <div className="mt-5 border-t border-forest-900/10 pt-5"><QuotationDecisionForm quotationId={live.id} requestId={req.id} /></div> : null}
@@ -65,7 +69,7 @@ export default async function ServiceRequestPage({ params, searchParams }: { par
         <Card>
           <CardTitle>Appointment</CardTitle>
           <p className="flex items-center gap-2 text-sm font-medium text-forest-950" data-testid="appointment"><CalendarClock className="h-4 w-4" aria-hidden="true" />{formatDateTime(appointment.starts_at)} (IST), about {Math.round((new Date(appointment.ends_at).getTime() - new Date(appointment.starts_at).getTime()) / 60000)} minutes</p>
-          <p className="mt-2 text-xs text-ink/55">Set by the provider within their published hours. If it no longer suits you, cancel the request or message the provider.</p>
+          <p className="mt-2 text-xs text-ink/65">Set by the provider within their published hours. If it no longer suits you, cancel the request or message the provider.</p>
         </Card>
       ) : ["accepted"].includes(req.status) ? <Card><CardTitle>Appointment</CardTitle><p className="text-sm text-ink/70">The provider has not set a time yet. You will be notified when they do.</p></Card> : null}
 
@@ -88,8 +92,16 @@ export default async function ServiceRequestPage({ params, searchParams }: { par
         <Card>
           <CardTitle>Earlier quotations</CardTitle>
           <ul className="divide-y divide-forest-900/10 text-sm">
-            {quotes.filter((x) => x.id !== live?.id).map((x) => <li key={x.id} className="py-2.5"><span className="font-medium text-forest-950">Version {x.version}: {formatPrice(x.amount_inr)}</span> <span className="capitalize text-ink/60">· {x.status}</span>{x.decision_note ? <span className="block text-xs text-ink/60">Your note: {x.decision_note}</span> : null}</li>)}
+            {quotes.filter((x) => x.id !== live?.id).map((x) => <li key={x.id} className="py-2.5"><span className="font-medium text-forest-950">Version {x.version}: {formatPrice(x.amount_inr)}</span> <span className="capitalize text-ink/65">· {x.status}</span>{x.decision_note ? <span className="block text-xs text-ink/65">Your note: {x.decision_note}</span> : null}</li>)}
           </ul>
+        </Card>
+      ) : null}
+
+      {req.status === "completed" ? (
+        <Card>
+          <CardTitle>Review this service</CardTitle>
+          {myReview ? <p className="flex flex-wrap items-center gap-2 text-sm text-ink/75" data-testid="my-review"><Stars value={myReview.rating} /> Your review: {myReview.status === "approved" ? "published" : myReview.status === "pending" ? "waiting for our team to check it" : `not published${myReview.moderation_note ? `: ${myReview.moderation_note}` : ""}`}</p>
+            : <ReviewForm kind="service" refId={req.id} back={`/dashboard/requests/${req.id}`} subject={req.service_name} />}
         </Card>
       ) : null}
 
@@ -98,7 +110,7 @@ export default async function ServiceRequestPage({ params, searchParams }: { par
       <Card>
         <CardTitle>History</CardTitle>
         <ol className="space-y-2 text-sm">
-          {history.map((h) => <li key={h.id} className="flex flex-wrap justify-between gap-2"><span><span className="font-medium text-forest-950">{REQUEST_STATUS_LABEL[h.to_status]}</span>{h.note ? <span className="text-ink/60"> · {h.note}</span> : null}</span><span className="text-xs text-ink/50">{formatDateTime(h.created_at)}</span></li>)}
+          {history.map((h) => <li key={h.id} className="flex flex-wrap justify-between gap-2"><span><span className="font-medium text-forest-950">{REQUEST_STATUS_LABEL[h.to_status]}</span>{h.note ? <span className="text-ink/65"> · {h.note}</span> : null}</span><span className="text-xs text-ink/65">{formatDateTime(h.created_at)}</span></li>)}
         </ol>
       </Card>
     </div>

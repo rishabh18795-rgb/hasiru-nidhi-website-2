@@ -17,7 +17,7 @@ export function ProductDecisionForm({ productId, status }: { productId: string; 
     : status === "approved" ? [{ value: "suspend", label: "Suspend / hide (reason required)" }]
     : status === "suspended" ? [{ value: "reinstate", label: "Reinstate" }]
     : [];
-  if (!options.length) return <p className="text-sm text-ink/60">Nothing to decide: this product is {status.replace("_", " ")}.</p>;
+  if (!options.length) return <p className="text-sm text-ink/65">Nothing to decide: this product is {status.replace("_", " ")}.</p>;
   return (
     <form action={action} className="flex flex-col gap-4">
       <input type="hidden" name="product_id" value={productId} />
@@ -46,9 +46,9 @@ export function EditCategoryForm({ id, name, description, isActive }: { id: numb
   return (
     <form action={action} className="grid gap-3 sm:grid-cols-[1fr_1.4fr_auto_auto] sm:items-end">
       <input type="hidden" name="id" value={id} />
-      <label className="text-xs text-ink/60">Name<TextInput name="name" defaultValue={name} maxLength={80} className="mt-1 h-9 text-sm" aria-label={`Name of ${name}`} /></label>
-      <label className="text-xs text-ink/60">Description<TextInput name="description" defaultValue={description ?? ""} maxLength={400} className="mt-1 h-9 text-sm" aria-label={`Description of ${name}`} /></label>
-      <label className="text-xs text-ink/60">Visibility
+      <label className="text-xs text-ink/65">Name<TextInput name="name" defaultValue={name} maxLength={80} className="mt-1 h-9 text-sm" aria-label={`Name of ${name}`} /></label>
+      <label className="text-xs text-ink/65">Description<TextInput name="description" defaultValue={description ?? ""} maxLength={400} className="mt-1 h-9 text-sm" aria-label={`Description of ${name}`} /></label>
+      <label className="text-xs text-ink/65">Visibility
         <NativeSelect name="is_active" defaultValue={String(isActive)} className="mt-1 h-9 text-sm" aria-label={`Visibility of ${name}`}><option value="true">Shown</option><option value="false">Disabled (hidden)</option></NativeSelect>
       </label>
       <SubmitButton variant="outline" pendingLabel="…" className="h-9 px-4">Save</SubmitButton>

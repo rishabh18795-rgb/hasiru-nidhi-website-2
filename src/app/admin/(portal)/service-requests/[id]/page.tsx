@@ -36,7 +36,7 @@ export default async function AdminServiceRequestPage({ params }: { params: Prom
       <div>
         <Link href="/admin/service-requests" className="text-sm text-forest-700 underline">← All service requests</Link>
         <div className="mt-2 flex flex-wrap items-center gap-3"><h1 className="text-3xl font-medium tracking-tight text-forest-950">{req.request_number}</h1><StatusBadge status={req.status} /></div>
-        <p className="mt-1 text-sm text-ink/60">{req.service_name} · {req.vendor_name} · Received {formatDateTime(req.created_at)}</p>
+        <p className="mt-1 text-sm text-ink/65">{req.service_name} · {req.vendor_name} · Received {formatDateTime(req.created_at)}</p>
       </div>
       <Card><RequestTimeline status={req.status} pricing={req.pricing_model} /><p className="mt-4 text-sm text-ink/70">{REQUEST_STATUS_LABEL[req.status]}{req.decline_reason ? `: ${req.decline_reason}` : ""}{req.cancel_reason ? `: ${req.cancel_reason}` : ""}</p></Card>
       <ServicePaymentNotice />
@@ -60,12 +60,12 @@ export default async function AdminServiceRequestPage({ params }: { params: Prom
       {appointments.length ? <Card><CardTitle>Appointments</CardTitle><ul className="space-y-1 text-sm">{appointments.map((a) => <li key={a.id}>{formatDateTime(a.starts_at)} (IST) · <span className="capitalize">{a.status}</span></li>)}</ul></Card> : null}
       {quotes.length ? (
         <Card><CardTitle>Quotations</CardTitle>
-          <ul className="divide-y divide-forest-900/10 text-sm">{quotes.map((x) => <li key={x.id} className="py-3"><span className="font-medium text-forest-950">Version {x.version}: {formatPrice(x.amount_inr)}</span> <span className="capitalize text-ink/60">· {x.status}</span><span className="block text-xs text-ink/55">Valid until {formatDate(x.valid_until)}</span><span className="mt-1 block whitespace-pre-line text-ink/75">{x.description}</span></li>)}</ul>
+          <ul className="divide-y divide-forest-900/10 text-sm">{quotes.map((x) => <li key={x.id} className="py-3"><span className="font-medium text-forest-950">Version {x.version}: {formatPrice(x.amount_inr)}</span> <span className="capitalize text-ink/65">· {x.status}</span><span className="block text-xs text-ink/65">Valid until {formatDate(x.valid_until)}</span><span className="mt-1 block whitespace-pre-line text-ink/75">{x.description}</span></li>)}</ul>
         </Card>
       ) : null}
       <Card>
         <CardTitle>History</CardTitle>
-        <ol className="space-y-2 text-sm">{history.map((h) => <li key={h.id} className="flex flex-wrap justify-between gap-2"><span><span className="font-medium text-forest-950">{REQUEST_STATUS_LABEL[h.to_status]}</span> <span className="text-xs text-ink/50">({h.actor_kind})</span>{h.note ? <span className="text-ink/60"> · {h.note}</span> : null}</span><span className="text-xs text-ink/50">{formatDateTime(h.created_at)}</span></li>)}</ol>
+        <ol className="space-y-2 text-sm">{history.map((h) => <li key={h.id} className="flex flex-wrap justify-between gap-2"><span><span className="font-medium text-forest-950">{REQUEST_STATUS_LABEL[h.to_status]}</span> <span className="text-xs text-ink/65">({h.actor_kind})</span>{h.note ? <span className="text-ink/65"> · {h.note}</span> : null}</span><span className="text-xs text-ink/65">{formatDateTime(h.created_at)}</span></li>)}</ol>
       </Card>
     </div>
   );

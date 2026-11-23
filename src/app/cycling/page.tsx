@@ -79,7 +79,7 @@ export default function CyclingPage() {
               </li>
             ))}
           </ul>
-          <p className="mt-8 text-sm text-ink/60">General guidance only. Always follow your host&apos;s advice about local roads, weather and conditions.</p>
+          <p className="mt-8 text-sm text-ink/65">General guidance only. Always follow your host&apos;s advice about local roads, weather and conditions.</p>
         </div>
       </section>
 

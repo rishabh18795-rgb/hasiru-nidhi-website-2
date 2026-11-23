@@ -77,7 +77,7 @@ export default async function HostWallet() {
       </section>
 
       <details className="group rounded-2xl border border-forest-900/10 bg-white p-5 text-sm leading-relaxed text-ink/75">
-        <summary className="cursor-pointer list-none font-medium text-forest-950 marker:content-none">How your wallet is calculated <span className="text-ink/50 group-open:hidden">(show)</span></summary>
+        <summary className="cursor-pointer list-none font-medium text-forest-950 marker:content-none">How your wallet is calculated <span className="text-ink/65 group-open:hidden">(show)</span></summary>
         <div className="mt-3 space-y-3">
           <p><strong>Commissionable base.</strong> Each booking stores the platform commission rate and amounts at the moment it was requested. Later changes to the rate never alter an existing booking. The default is 20%, so you keep 80% of the commissionable base. For example, on a base of ₹10,000 the commission is ₹2,000 and your share is ₹8,000.</p>
           <p><strong>What is not assumed.</strong> Taxes are not part of the commissionable base. Whether cleaning fees, discounts and gateway charges are included follows the company&apos;s confirmed policy, which is shown on each booking&apos;s saved figures.</p>
@@ -91,15 +91,15 @@ export default async function HostWallet() {
         {earning.length === 0 ? <EmptyState title="No earnings yet" description="Earnings appear here once you confirm a booking request." /> : (
           <div className="overflow-x-auto rounded-2xl bg-white ring-1 ring-forest-900/10">
             <table className="w-full min-w-[46rem] text-left text-sm">
-              <thead className="text-xs uppercase tracking-wide text-ink/55">
+              <thead className="text-xs uppercase tracking-wide text-ink/65">
                 <tr><th className="p-3">Stay</th><th className="p-3 text-right">Guest total</th><th className="p-3 text-right">Commission</th><th className="p-3 text-right">Your share</th><th className="p-3">Payment</th><th className="p-3">Settlement</th></tr>
               </thead>
               <tbody>
                 {earning.map((b) => (
                   <tr key={b.booking_id} className="border-t border-forest-900/8 align-top">
-                    <td className="p-3"><span className="font-medium text-forest-950">{b.property_name}</span><span className="block text-xs text-ink/55">{b.guest_name} · {formatDate(b.check_in)} → {formatDate(b.check_out)} · {b.status}</span></td>
+                    <td className="p-3"><span className="font-medium text-forest-950">{b.property_name}</span><span className="block text-xs text-ink/65">{b.guest_name} · {formatDate(b.check_in)} → {formatDate(b.check_out)} · {b.status}</span></td>
                     <td className="p-3 text-right">{b.gross_inr !== null ? formatINR(b.gross_inr) : "—"}</td>
-                    <td className="p-3 text-right">{formatINR(b.net_commission_inr)}{b.commission_rate_percent !== null ? <span className="block text-xs text-ink/50">{Number(b.commission_rate_percent)}%</span> : null}</td>
+                    <td className="p-3 text-right">{formatINR(b.net_commission_inr)}{b.commission_rate_percent !== null ? <span className="block text-xs text-ink/65">{Number(b.commission_rate_percent)}%</span> : null}</td>
                     <td className="p-3 text-right font-medium">{formatINR(b.net_host_share_inr)}</td>
                     <td className="p-3">{PAYMENT_LABEL[b.payment_status] ?? b.payment_status}</td>
                     <td className="p-3">{SETTLEMENT_LABEL[b.settlement_status] ?? b.settlement_status}</td>
@@ -113,21 +113,21 @@ export default async function HostWallet() {
 
       <section aria-labelledby="led-h" className="space-y-3">
         <h2 id="led-h" className="text-lg font-medium text-forest-950">Transaction history</h2>
-        <p className="text-sm text-ink/60">Each line is an immutable ledger entry tied to a booking. Reversals appear as negative lines when a confirmed booking is cancelled or a refund is recorded.</p>
+        <p className="text-sm text-ink/65">Each line is an immutable ledger entry tied to a booking. Reversals appear as negative lines when a confirmed booking is cancelled or a refund is recorded.</p>
         {entries.length === 0 ? <EmptyState title="No transactions yet" description="A ledger entry is created when you confirm a booking." /> : (
           <div className="overflow-x-auto rounded-2xl bg-white ring-1 ring-forest-900/10">
             <table className="w-full min-w-[44rem] text-left text-sm">
-              <thead className="text-xs uppercase tracking-wide text-ink/55">
+              <thead className="text-xs uppercase tracking-wide text-ink/65">
                 <tr><th className="p-3">Date</th><th className="p-3">Entry</th><th className="p-3">Booking</th><th className="p-3 text-right">Base</th><th className="p-3 text-right">Commission</th><th className="p-3 text-right">Your share</th></tr>
               </thead>
               <tbody>
                 {entries.map((e) => (
                   <tr key={e.id} className="border-t border-forest-900/8 align-top">
-                    <td className="p-3 text-ink/60">{formatDateTime(e.created_at)}</td>
-                    <td className="p-3 capitalize">{e.kind}{e.note ? <span className="block text-xs normal-case text-ink/50">{e.note}</span> : null}</td>
-                    <td className="p-3">{e.bookings ? <>{e.bookings.property_name}<span className="block text-xs text-ink/50">{formatDate(e.bookings.check_in)} → {formatDate(e.bookings.check_out)}</span></> : "—"}</td>
+                    <td className="p-3 text-ink/65">{formatDateTime(e.created_at)}</td>
+                    <td className="p-3 capitalize">{e.kind}{e.note ? <span className="block text-xs normal-case text-ink/65">{e.note}</span> : null}</td>
+                    <td className="p-3">{e.bookings ? <>{e.bookings.property_name}<span className="block text-xs text-ink/65">{formatDate(e.bookings.check_in)} → {formatDate(e.bookings.check_out)}</span></> : "—"}</td>
                     <td className="p-3 text-right">{formatINR(e.commissionable_inr)}</td>
-                    <td className="p-3 text-right">{formatINR(e.commission_inr)}<span className="block text-xs text-ink/50">{Number(e.commission_rate_percent)}%</span></td>
+                    <td className="p-3 text-right">{formatINR(e.commission_inr)}<span className="block text-xs text-ink/65">{Number(e.commission_rate_percent)}%</span></td>
                     <td className="p-3 text-right font-medium">{formatINR(e.host_share_inr)}</td>
                   </tr>
                 ))}

@@ -81,7 +81,7 @@ export function BookingPanel({ propertyId, slug, maxGuests, pricing, minNights, 
           <TextInput id="children" name="children" type="number" min={0} max={maxGuests} value={children} onChange={(ev) => setChildren(Number(ev.target.value) || 0)} />
         </Field>
       </div>
-      <p className="-mt-2 text-xs text-ink/50">Sleeps up to {maxGuests} guests. Stay of {minNights}–{maxNights} night{maxNights === 1 ? "" : "s"}.</p>
+      <p className="-mt-2 text-xs text-ink/65">Sleeps up to {maxGuests} guests. Stay of {minNights}–{maxNights} night{maxNights === 1 ? "" : "s"}.</p>
       {problem ? <p role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800" data-testid="booking-problem">{problem}</p> : null}
       {quote && !problem ? (
         <div className="rounded-xl bg-sand-50 px-4 py-3 text-sm text-earth-800" aria-live="polite" data-testid="booking-quote">
@@ -100,7 +100,7 @@ export function BookingPanel({ propertyId, slug, maxGuests, pricing, minNights, 
     <div id="booking" className="rounded-3xl border border-forest-900/10 bg-white p-6 shadow-lg shadow-forest-950/5 lg:sticky lg:top-28">
       <div className="flex items-baseline justify-between">
         {price !== null ? (
-          <p><span className="font-display text-2xl text-forest-950">{formatINR(price)}</span> <span className="text-sm text-ink/55">{PRICE_UNIT_LABEL[priceUnit]}</span>{demoNotice ? <span className="block text-[11px] font-medium uppercase tracking-wide text-amber-800">Illustrative demo price</span> : null}</p>
+          <p><span className="font-display text-2xl text-forest-950">{formatINR(price)}</span> <span className="text-sm text-ink/65">{PRICE_UNIT_LABEL[priceUnit]}</span>{demoNotice ? <span className="block text-[11px] font-medium uppercase tracking-wide text-amber-800">Illustrative demo price</span> : null}</p>
         ) : (
           <p className="font-display text-xl text-forest-950">Price on request</p>
         )}
@@ -128,7 +128,7 @@ export function BookingPanel({ propertyId, slug, maxGuests, pricing, minNights, 
           <Link href={authHrefForBooking("sign-in", slug, selection)} className="inline-flex min-h-11 w-full items-center justify-center rounded-full bg-forest-800 text-sm font-medium text-cream hover:bg-forest-700">
             Sign in to request
           </Link>
-          <p className="text-center text-xs text-ink/55">
+          <p className="text-center text-xs text-ink/65">
             New here? <Link href={authHrefForBooking("sign-up", slug, selection)} className="underline">Create an account</Link>
           </p>
         </div>
@@ -141,7 +141,7 @@ export function BookingPanel({ propertyId, slug, maxGuests, pricing, minNights, 
             <TextArea id="message" name="message" rows={3} maxLength={2000} placeholder="Occasion, arrival time, dietary needs…" defaultValue={state?.values?.message} />
           </Field>
           <SubmitButton pendingLabel="Sending request…" disabled={Boolean(problem)}>Request to book</SubmitButton>
-          <p className="text-center text-xs text-ink/55">You won&apos;t be charged. The host reviews your request first.</p>
+          <p className="text-center text-xs text-ink/65">You won&apos;t be charged. The host reviews your request first.</p>
         </form>
       )}
     </div>

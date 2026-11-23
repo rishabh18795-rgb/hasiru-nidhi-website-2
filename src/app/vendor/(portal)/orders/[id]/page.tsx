@@ -46,7 +46,7 @@ export default async function VendorOrderPage({ params }: { params: Promise<{ id
       <div>
         <Link href="/vendor/orders" className="text-sm text-forest-700 underline">← All orders</Link>
         <h1 className="mt-2 text-3xl font-medium tracking-tight text-forest-950">{order.order_number}</h1>
-        <p className="mt-1 text-sm text-ink/60">Placed {formatDateTime(order.created_at)} · {ORDER_STATUS_LABEL[order.status]}</p>
+        <p className="mt-1 text-sm text-ink/65">Placed {formatDateTime(order.created_at)} · {ORDER_STATUS_LABEL[order.status]}</p>
       </div>
       <Card><OrderTimeline status={order.status} /></Card>
       <PaymentNotice />
@@ -70,7 +70,7 @@ export default async function VendorOrderPage({ params }: { params: Promise<{ id
           {items.map((i) => (
             <li key={i.id} className="flex gap-4 py-4">
               <span className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-forest-50">{productImageUrl(i.image_path) ? <Image src={productImageUrl(i.image_path)!} alt="" fill sizes="64px" className="object-cover" /> : null}</span>
-              <div className="min-w-0 flex-1"><p className="font-medium text-forest-950">{i.product_name}</p><p className="text-sm text-ink/60">{i.variant_name} · SKU {i.sku} · {formatPrice(i.unit_price_inr)} × {i.quantity}</p></div>
+              <div className="min-w-0 flex-1"><p className="font-medium text-forest-950">{i.product_name}</p><p className="text-sm text-ink/65">{i.variant_name} · SKU {i.sku} · {formatPrice(i.unit_price_inr)} × {i.quantity}</p></div>
               <p className="font-display text-lg text-forest-950">{formatPrice(i.line_total_inr)}</p>
             </li>
           ))}
@@ -85,7 +85,7 @@ export default async function VendorOrderPage({ params }: { params: Promise<{ id
         ) : (
           <>
             <p className="text-sm text-ink/80">{order.ship_name}, {order.ship_city}, {order.ship_state} {order.ship_postal_code}</p>
-            <p className="mt-2 text-xs text-ink/55">{order.status === "placed" ? "The customer's phone number and full address are shown after you accept the order." : "Full delivery details are only shown while an order is accepted."}</p>
+            <p className="mt-2 text-xs text-ink/65">{order.status === "placed" ? "The customer's phone number and full address are shown after you accept the order." : "Full delivery details are only shown while an order is accepted."}</p>
           </>
         )}
       </Card>
@@ -96,10 +96,10 @@ export default async function VendorOrderPage({ params }: { params: Promise<{ id
           <ul className="divide-y divide-forest-900/10 text-sm">
             {requests.map((r) => (
               <li key={r.id} className="space-y-2 py-3">
-                <p className="font-medium text-forest-950">{REQUEST_KIND_LABEL[r.kind]} request: <span className="capitalize">{r.status}</span> <span className="text-xs font-normal text-ink/50">{formatDateTime(r.created_at)}</span></p>
+                <p className="font-medium text-forest-950">{REQUEST_KIND_LABEL[r.kind]} request: <span className="capitalize">{r.status}</span> <span className="text-xs font-normal text-ink/65">{formatDateTime(r.created_at)}</span></p>
                 <p className="text-ink/75">{r.reason}</p>
-                {r.details ? <p className="text-ink/60">{r.details}</p> : null}
-                {r.policy_note ? <p className="text-xs text-ink/55">{r.policy_note}</p> : null}
+                {r.details ? <p className="text-ink/65">{r.details}</p> : null}
+                {r.policy_note ? <p className="text-xs text-ink/65">{r.policy_note}</p> : null}
                 {r.decision_note ? <p className="text-xs text-ink/70">Decision note: {r.decision_note}</p> : null}
                 <RequestDecisionForm requestId={r.id} orderId={order.id} kind={r.kind} status={r.status} />
               </li>
@@ -110,7 +110,7 @@ export default async function VendorOrderPage({ params }: { params: Promise<{ id
 
       <Card>
         <CardTitle>Status history</CardTitle>
-        <ol className="space-y-2 text-sm">{history.map((h) => <li key={h.id} className="flex flex-wrap justify-between gap-2"><span><span className="font-medium text-forest-950">{ORDER_STATUS_LABEL[h.to_status]}</span><span className="text-ink/50"> · by {h.actor_kind}</span>{h.note ? <span className="text-ink/60"> · {h.note}</span> : null}</span><span className="text-xs text-ink/50">{formatDateTime(h.created_at)}</span></li>)}</ol>
+        <ol className="space-y-2 text-sm">{history.map((h) => <li key={h.id} className="flex flex-wrap justify-between gap-2"><span><span className="font-medium text-forest-950">{ORDER_STATUS_LABEL[h.to_status]}</span><span className="text-ink/65"> · by {h.actor_kind}</span>{h.note ? <span className="text-ink/65"> · {h.note}</span> : null}</span><span className="text-xs text-ink/65">{formatDateTime(h.created_at)}</span></li>)}</ol>
       </Card>
     </div>
   );

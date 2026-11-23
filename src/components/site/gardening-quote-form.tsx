@@ -96,7 +96,7 @@ export function GardeningQuoteForm() {
         <input id="g-photos" name="photos" type="file" accept="image/jpeg,image/png,image/webp" multiple className="block w-full text-sm text-ink/70 file:mr-4 file:rounded-full file:border-0 file:bg-forest-50 file:px-4 file:py-2 file:text-sm file:font-medium file:text-forest-800 hover:file:bg-forest-100" />
       </Field>
       <SubmitButton disabled={busy} pendingLabel="Sending…" className="self-start">{busy ? "Uploading photos…" : "Send gardening enquiry"}</SubmitButton>
-      <p className="text-xs text-ink/55">We use these details only to respond to your enquiry. See our <a href="/privacy" className="underline">Privacy Policy</a>.</p>
+      <p className="text-xs text-ink/65">We use these details only to respond to your enquiry. See our <a href="/privacy" className="underline">Privacy Policy</a>.</p>
     </form>
   );
 }

@@ -114,9 +114,9 @@ export default async function WizardStepPage({ params, searchParams }: { params:
                         </li>
                       ))}
                     </ul>
-                  ) : <p className="mb-5 text-sm text-ink/55">No room types listed. Add them if you offer different kinds of room.</p>}
+                  ) : <p className="mb-5 text-sm text-ink/65">No room types listed. Add them if you offer different kinds of room.</p>}
                   <AddRoomTypeForm propertyId={p.id} />
-                  <p className="mt-3 text-xs text-ink/55">Room types describe what you offer. Booking prices come from the Pricing step; each confirmed booking reserves the whole property.</p>
+                  <p className="mt-3 text-xs text-ink/65">Room types describe what you offer. Booking prices come from the Pricing step; each confirmed booking reserves the whole property.</p>
                 </Card>
               </section>
             </>
@@ -126,7 +126,7 @@ export default async function WizardStepPage({ params, searchParams }: { params:
               <Card>
                 <CardTitle>Your photographs</CardTitle>
                 <PhotoUploader propertyId={id} images={listing.images.map((i) => ({ id: i.id, path: i.path, source: i.source, alt: i.alt }))} editable />
-                <p className="mt-4 text-sm text-ink/60">{listing.images.length === 0 ? `Add at least one photograph (we recommend ${RECOMMENDED_PHOTOS} or more) before submitting.` : `${listing.images.length} saved.${listing.images.length < RECOMMENDED_PHOTOS ? ` We recommend at least ${RECOMMENDED_PHOTOS}.` : ""}`}</p>
+                <p className="mt-4 text-sm text-ink/65">{listing.images.length === 0 ? `Add at least one photograph (we recommend ${RECOMMENDED_PHOTOS} or more) before submitting.` : `${listing.images.length} saved.${listing.images.length < RECOMMENDED_PHOTOS ? ` We recommend at least ${RECOMMENDED_PHOTOS}.` : ""}`}</p>
               </Card>
               <NavLinks id={id} step={step} />
             </>

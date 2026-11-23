@@ -31,7 +31,7 @@ export function WeeklyHoursForm({ rules }: { rules: AvailabilityRule[] }) {
           </div>
         ))}
       </div>
-      <p className="text-xs text-ink/60">Times are India time. Leave a day blank if you do not work that day. If you leave every day blank, customers can only state a preference and you confirm the time yourself.</p>
+      <p className="text-xs text-ink/65">Times are India time. Leave a day blank if you do not work that day. If you leave every day blank, customers can only state a preference and you confirm the time yourself.</p>
       <SubmitButton pendingLabel="Saving…">Save weekly hours</SubmitButton>
     </form>
   );
@@ -54,14 +54,14 @@ export function TimeOffList({ items }: { items: TimeOff[] }) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [pending, start] = useTransition();
-  if (items.length === 0) return <p className="text-sm text-ink/60">No days off are set.</p>;
+  if (items.length === 0) return <p className="text-sm text-ink/65">No days off are set.</p>;
   return (
     <div className="space-y-2">
       {error ? <p role="alert" className="text-sm text-red-700">{error}</p> : null}
       <ul className="divide-y divide-forest-900/10 text-sm">
         {items.map((t) => (
           <li key={t.id} className="flex items-center justify-between gap-3 py-2.5">
-            <span><span className="font-medium text-forest-950">{t.starts_on === t.ends_on ? formatDate(t.starts_on) : `${formatDate(t.starts_on)} to ${formatDate(t.ends_on)}`}</span>{t.note ? <span className="text-ink/60"> · {t.note}</span> : null}</span>
+            <span><span className="font-medium text-forest-950">{t.starts_on === t.ends_on ? formatDate(t.starts_on) : `${formatDate(t.starts_on)} to ${formatDate(t.ends_on)}`}</span>{t.note ? <span className="text-ink/65"> · {t.note}</span> : null}</span>
             <button type="button" disabled={pending} onClick={() => start(async () => { const r = await deleteTimeOff(t.id); if (!r.ok) setError(r.message ?? "Could not remove it."); else { setError(null); router.refresh(); } })} className="text-red-700 underline disabled:opacity-60">Remove</button>
           </li>
         ))}

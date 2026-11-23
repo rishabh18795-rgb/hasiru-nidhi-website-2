@@ -31,7 +31,7 @@ export default async function AdminReviews() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-medium tracking-tight text-forest-950">Reviews</h1>
-        <p className="mt-1 text-sm text-ink/60">
+        <p className="mt-1 text-sm text-ink/65">
           Only guests of a finished, confirmed stay can leave a review. You can hide a review that breaks the rules or restore it later; the text and rating can never be edited. Every decision is recorded in the audit log.
         </p>
       </div>
@@ -48,14 +48,14 @@ export default async function AdminReviews() {
                       {"★".repeat(r.rating)}<span className="text-ink/25">{"★".repeat(5 - r.rating)}</span>
                       <span className="sr-only"> {r.rating} out of 5</span>
                     </p>
-                    <p className="text-sm text-ink/60">
+                    <p className="text-sm text-ink/65">
                       {r.profiles?.full_name || "Guest"} on{" "}
                       <Link href={`/admin/properties/${r.property_id}`} className="text-forest-700 underline">{r.properties?.name ?? "a listing"}</Link>
                     </p>
                   </div>
                   <div className="flex items-center gap-3">
                     {r.is_hidden ? <StatusBadge status="suspended" /> : null}
-                    <time className="text-xs text-ink/45" dateTime={r.created_at}>{formatDateTime(r.created_at)}</time>
+                    <time className="text-xs text-ink/65" dateTime={r.created_at}>{formatDateTime(r.created_at)}</time>
                   </div>
                 </div>
                 {r.comment ? <p className="whitespace-pre-line text-sm text-ink/80">{r.comment}</p> : null}

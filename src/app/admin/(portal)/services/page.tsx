@@ -30,7 +30,7 @@ export default async function AdminServices({ searchParams }: { searchParams: Pr
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-medium tracking-tight text-forest-950">Services</h1>
-        <p className="mt-1 max-w-2xl text-sm text-ink/60">Listing approval is separate from provider and capability approval. An approved provider&apos;s service stays private until you approve it here. Oldest submissions first.</p>
+        <p className="mt-1 max-w-2xl text-sm text-ink/65">Listing approval is separate from provider and capability approval. An approved provider&apos;s service stays private until you approve it here. Oldest submissions first.</p>
       </div>
       <nav aria-label="Filter services" className="flex flex-wrap gap-2">
         {FILTERS.map(([k, label]) => <Link key={k} href={`/admin/services?status=${k}`} aria-current={filter === k ? "page" : undefined} className={cn("rounded-full px-4 py-1.5 text-sm font-medium", filter === k ? "bg-forest-800 text-cream" : "bg-white text-forest-900 ring-1 ring-forest-900/15 hover:bg-forest-50")}>{label}</Link>)}
@@ -38,16 +38,16 @@ export default async function AdminServices({ searchParams }: { searchParams: Pr
       {rows.length === 0 ? <EmptyState title="No services here" description={filter === "queue" ? "No services are waiting for review." : "Nothing matches this filter."} /> : (
         <Card className="overflow-x-auto p-0">
           <table className="w-full min-w-[42rem] text-left text-sm">
-            <thead className="border-b border-forest-900/10 text-xs uppercase tracking-wide text-ink/50"><tr><th className="px-4 py-3">Service</th><th className="px-4 py-3">Provider</th><th className="px-4 py-3">Category</th><th className="px-4 py-3">Pricing</th><th className="px-4 py-3">Status</th><th className="px-4 py-3">Submitted</th></tr></thead>
+            <thead className="border-b border-forest-900/10 text-xs uppercase tracking-wide text-ink/65"><tr><th className="px-4 py-3">Service</th><th className="px-4 py-3">Provider</th><th className="px-4 py-3">Category</th><th className="px-4 py-3">Pricing</th><th className="px-4 py-3">Status</th><th className="px-4 py-3">Submitted</th></tr></thead>
             <tbody className="divide-y divide-forest-900/8">
               {rows.map((r) => (
                 <tr key={r.id}>
-                  <td className="px-4 py-3"><Link href={`/admin/services/${r.id}`} className="font-medium text-forest-800 underline">{r.name}</Link>{r.is_featured ? <span className="ml-2 text-xs text-ink/50">featured</span> : null}</td>
+                  <td className="px-4 py-3"><Link href={`/admin/services/${r.id}`} className="font-medium text-forest-800 underline">{r.name}</Link>{r.is_featured ? <span className="ml-2 text-xs text-ink/65">featured</span> : null}</td>
                   <td className="px-4 py-3">{r.vendors ? <Link href={`/admin/vendors/${r.vendors.id}`} className="text-ink/80 underline">{r.vendors.business_name}</Link> : "—"}</td>
                   <td className="px-4 py-3 text-ink/70">{r.service_categories?.name}</td>
                   <td className="px-4 py-3">{servicePriceText(r.pricing_model, r.price_inr, r.price_unit)}</td>
                   <td className="px-4 py-3"><StatusBadge status={r.status} /></td>
-                  <td className="px-4 py-3 text-ink/60">{formatDate(r.submitted_at) || "—"}</td>
+                  <td className="px-4 py-3 text-ink/65">{formatDate(r.submitted_at) || "—"}</td>
                 </tr>
               ))}
             </tbody>

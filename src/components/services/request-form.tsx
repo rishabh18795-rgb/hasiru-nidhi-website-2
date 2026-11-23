@@ -62,7 +62,7 @@ export function ServiceRequestForm({ serviceId, serviceName, pricing, price, uni
           <Field label={`How many ${UNIT_NOUN[unit ?? "visit"] ?? "units"}?`} htmlFor="rq-qty" error={err("quantity")}>
             <TextInput id="rq-qty" name="quantity" type="number" min={1} max={1000} value={qty} onChange={(e) => setQty(Math.max(1, Math.min(1000, Number(e.target.value) || 1)))} />
           </Field>
-          <p className="text-sm text-ink/70" aria-live="polite">{price !== null ? <>{formatPrice(price)} {PRICE_UNIT_TEXT[unit ?? ""] ?? ""} × {qty} = <strong className="text-forest-950" data-testid="request-total">{formatPrice(total)}</strong></> : null}<span className="block text-xs text-ink/55">Taxes are not configured yet. The provider confirms the final amount.</span></p>
+          <p className="text-sm text-ink/70" aria-live="polite">{price !== null ? <>{formatPrice(price)} {PRICE_UNIT_TEXT[unit ?? ""] ?? ""} × {qty} = <strong className="text-forest-950" data-testid="request-total">{formatPrice(total)}</strong></> : null}<span className="block text-xs text-ink/65">Taxes are not configured yet. The provider confirms the final amount.</span></p>
         </div>
       ) : <p className="rounded-xl bg-sand-50 px-4 py-3 text-sm text-ink/75"><Info className="mr-2 inline h-4 w-4 text-earth-700" aria-hidden="true" />This provider prices each job after hearing the details. They will send you a quotation to accept or decline. You pay nothing to ask.</p>}
 

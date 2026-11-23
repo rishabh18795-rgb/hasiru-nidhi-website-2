@@ -182,7 +182,11 @@
     @apply mx-auto w-full max-w-[1400px] px-6 sm:px-8 lg:px-12;
   }
   .text-eyebrow {
-    @apply font-sans text-xs font-semibold uppercase tracking-[0.28em] text-forest-600;
+    @apply font-sans text-xs font-semibold uppercase tracking-[0.28em];
+  }
+  /* The default colour has zero specificity, so any text-* utility (for example text-sand-400 on a dark footer) wins. */
+  :where(.text-eyebrow) {
+    color: var(--color-forest-600);
   }
   /* Selective "crystal glass" surfaces: translucent, softly blurred, hairline border. Use sparingly (search panel, wallet cards, overlays);
      text on them must keep AA contrast, and browsers without backdrop-filter get a near-solid fallback. */

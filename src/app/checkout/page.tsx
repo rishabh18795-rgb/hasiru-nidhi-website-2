@@ -48,13 +48,13 @@ export default async function CheckoutPage({ searchParams }: { searchParams: Pro
               <summary className="cursor-pointer font-display text-xl text-forest-950">{addresses.length ? "Add a new address" : "Your delivery address"}</summary>
               <div className="mt-5"><AddressForm submitLabel="Save address" defaultChecked={addresses.length === 0} /></div>
             </details>
-            <p className="text-sm text-ink/60"><Link href="/cart" className="underline">Back to your cart</Link></p>
+            <p className="text-sm text-ink/65"><Link href="/cart" className="underline">Back to your cart</Link></p>
           </div>
 
           <aside className="h-fit space-y-4 lg:sticky lg:top-28" aria-label="Order summary">
             <div className="rounded-3xl bg-white p-6 ring-1 ring-forest-900/10">
               <h2 className="font-display text-xl text-forest-950">Your orders</h2>
-              <p className="mt-1 text-xs text-ink/55">{cart.vendors.length === 1 ? "1 order, from 1 seller." : `${cart.vendors.length} separate orders, one per seller. Each seller handles their own delivery.`}</p>
+              <p className="mt-1 text-xs text-ink/65">{cart.vendors.length === 1 ? "1 order, from 1 seller." : `${cart.vendors.length} separate orders, one per seller. Each seller handles their own delivery.`}</p>
               <div className="mt-4 space-y-5">
                 {cart.vendors.map((v) => (
                   <div key={v.vendor_id} data-testid="checkout-vendor">
@@ -66,8 +66,8 @@ export default async function CheckoutPage({ searchParams }: { searchParams: Pro
                 ))}
               </div>
               <dl className="mt-5 space-y-2 border-t border-forest-900/10 pt-4 text-sm">
-                <div className="flex justify-between"><dt className="text-ink/70">Delivery charges</dt><dd className="text-ink/60">Not configured yet</dd></div>
-                <div className="flex justify-between"><dt className="text-ink/70">Taxes</dt><dd className="text-ink/60">Not confirmed yet</dd></div>
+                <div className="flex justify-between"><dt className="text-ink/70">Delivery charges</dt><dd className="text-ink/65">Not configured yet</dd></div>
+                <div className="flex justify-between"><dt className="text-ink/70">Taxes</dt><dd className="text-ink/65">Not confirmed yet</dd></div>
                 <div className="flex justify-between font-display text-xl text-forest-950"><dt>Items total</dt><dd>{formatPrice(cart.subtotal_inr)}</dd></div>
               </dl>
             </div>

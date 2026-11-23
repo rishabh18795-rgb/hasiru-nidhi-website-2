@@ -30,7 +30,7 @@ export default async function HostOverview() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-3xl font-medium tracking-tight text-forest-950">Host dashboard</h1>
-          <p className="mt-1 text-sm text-ink/60">Welcome{profile.full_name ? `, ${profile.full_name.split(" ")[0]}` : ""}. Manage your listings, calendar and booking requests.</p>
+          <p className="mt-1 text-sm text-ink/65">Welcome{profile.full_name ? `, ${profile.full_name.split(" ")[0]}` : ""}. Manage your listings, calendar and booking requests.</p>
         </div>
         <Link href="/host/properties/new" className="inline-flex h-11 items-center gap-2 rounded-full bg-forest-800 px-6 text-sm font-medium text-cream hover:bg-forest-700"><Plus className="h-4 w-4" aria-hidden="true" /> Add a property</Link>
       </div>

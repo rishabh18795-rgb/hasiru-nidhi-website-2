@@ -65,7 +65,7 @@ export default function BlogIndexPage() {
                     <span className="text-xs font-medium uppercase tracking-wider text-forest-600">{post.category} · {post.readTime}</span>
                     <span className="mt-2 font-display text-xl leading-snug text-forest-950">{post.title}</span>
                     <span className="mt-2 flex-1 text-sm leading-relaxed text-ink/65">{post.excerpt}</span>
-                    <span className="mt-4 text-xs text-ink/55">{fmt(post.date)}</span>
+                    <span className="mt-4 text-xs text-ink/65">{fmt(post.date)}</span>
                   </span>
                 </Link>
               </StaggerItem>

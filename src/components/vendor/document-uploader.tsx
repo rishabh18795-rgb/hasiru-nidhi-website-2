@@ -57,7 +57,7 @@ export function DocumentSlot({ vendorId, requirementId, label, hint, required, d
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="text-sm font-medium text-forest-950">{label}{required ? <span className="ml-2 rounded-full bg-sand-100 px-2 py-0.5 text-[11px] font-semibold text-earth-700">Required</span> : null}</p>
-          {hint ? <p className="mt-0.5 text-xs text-ink/55">{hint}</p> : null}
+          {hint ? <p className="mt-0.5 text-xs text-ink/65">{hint}</p> : null}
         </div>
         {!disabled ? (
           <>
@@ -78,10 +78,10 @@ export function DocumentSlot({ vendorId, requirementId, label, hint, required, d
               <span className="flex items-center gap-3">
                 <StatusBadge status={d.status === "accepted" ? "approved" : d.status === "rejected" ? "rejected" : "pending_review"} />
                 {d.status !== "accepted" && !disabled ? (
-                  <button type="button" onClick={() => remove(d.id)} aria-label={`Remove ${d.original_name ?? d.label}`} className="text-ink/50 hover:text-red-700"><Trash2 className="h-4 w-4" aria-hidden="true" /></button>
+                  <button type="button" onClick={() => remove(d.id)} aria-label={`Remove ${d.original_name ?? d.label}`} className="text-ink/65 hover:text-red-700"><Trash2 className="h-4 w-4" aria-hidden="true" /></button>
                 ) : null}
               </span>
-              {d.reviewer_note ? <p className="w-full text-xs text-ink/60">Reviewer note: {d.reviewer_note}</p> : null}
+              {d.reviewer_note ? <p className="w-full text-xs text-ink/65">Reviewer note: {d.reviewer_note}</p> : null}
             </li>
           ))}
         </ul>

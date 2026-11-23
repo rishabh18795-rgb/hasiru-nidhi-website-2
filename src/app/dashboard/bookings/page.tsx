@@ -31,13 +31,13 @@ function BookingCard({ b, today, reviewed }: { b: Row; today: string; reviewed: 
       </div>
       {b.status === "requested" ? <p className="rounded-xl bg-sand-50 px-4 py-2.5 text-sm text-earth-800">Waiting for the host. This is a request — it is not a confirmed reservation.</p> : null}
       {b.host_response ? <p className="text-sm text-ink/75"><span className="font-medium">Host note:</span> {b.host_response}</p> : null}
-      <dl className="grid gap-3 text-xs text-ink/60 sm:grid-cols-2 lg:grid-cols-4">
+      <dl className="grid gap-3 text-xs text-ink/65 sm:grid-cols-2 lg:grid-cols-4">
         <div><dt className="uppercase tracking-wide">Requested</dt><dd className="mt-0.5 text-ink/80">{formatDateTime(b.created_at)}</dd></div>
         <div><dt className="uppercase tracking-wide">Indicative total</dt><dd className="mt-0.5 text-ink/80">{b.indicative_total_inr !== null ? formatINR(b.indicative_total_inr) : "On request"}</dd></div>
         <div><dt className="uppercase tracking-wide">Cancellation</dt><dd className="mt-0.5 text-ink/80">{b.cancellation_policy}</dd></div>
         <div><dt className="uppercase tracking-wide">Payment</dt><dd className="mt-0.5 text-ink/80">Not collected online yet</dd></div>
       </dl>
-      {b.cancelled_at ? <p className="text-xs text-ink/55">Cancelled {formatDateTime(b.cancelled_at)}{b.cancellation_note ? ` — ${b.cancellation_note}` : ""}</p> : null}
+      {b.cancelled_at ? <p className="text-xs text-ink/65">Cancelled {formatDateTime(b.cancelled_at)}{b.cancellation_note ? ` — ${b.cancellation_note}` : ""}</p> : null}
       <Link href={`/dashboard/bookings/${b.id}`} className="inline-flex text-sm font-medium text-forest-700 underline underline-offset-2 hover:text-forest-900">View booking details</Link>
       {cancellable ? <CancelBookingForm bookingId={b.id} policyText={policy} /> : null}
       {finished && !reviewed ? <ReviewForm bookingId={b.id} /> : null}
@@ -50,7 +50,7 @@ function BookingSection({ title, items, empty, today, reviewedIds }: { title: st
   return (
     <section aria-labelledby={id}>
       <h2 id={id} className="mb-4 font-display text-2xl text-forest-950">{title}</h2>
-      {items.length ? <div className="space-y-4">{items.map((b) => <BookingCard key={b.id} b={b} today={today} reviewed={reviewedIds.has(b.id)} />)}</div> : <p className="text-sm text-ink/55">{empty}</p>}
+      {items.length ? <div className="space-y-4">{items.map((b) => <BookingCard key={b.id} b={b} today={today} reviewed={reviewedIds.has(b.id)} />)}</div> : <p className="text-sm text-ink/65">{empty}</p>}
     </section>
   );
 }
@@ -72,7 +72,7 @@ export default async function BookingsPage() {
     <div className="space-y-10">
       <div>
         <h1 className="text-3xl font-medium tracking-tight text-forest-950">My bookings</h1>
-        <p className="mt-1 text-sm text-ink/60">Requests, confirmed stays and your history.</p>
+        <p className="mt-1 text-sm text-ink/65">Requests, confirmed stays and your history.</p>
       </div>
       {rows.length === 0 ? (
         <EmptyState title="No bookings yet" description="When you request a stay it will show up here with its status." action={{ href: "/stays", label: "Explore stays" }} />

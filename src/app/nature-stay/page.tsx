@@ -99,7 +99,7 @@ export default function NatureStayPage() {
               </li>
             ))}
           </ul>
-          <p className="mt-8 max-w-3xl text-sm text-ink/60">Payment is not collected on this website yet. Sending a request costs nothing, and payment arrangements are shared when a booking is confirmed. See <Link href="/pricing" className="underline">how pricing works</Link>.</p>
+          <p className="mt-8 max-w-3xl text-sm text-ink/65">Payment is not collected on this website yet. Sending a request costs nothing, and payment arrangements are shared when a booking is confirmed. See <Link href="/pricing" className="underline">how pricing works</Link>.</p>
         </div>
       </section>
 

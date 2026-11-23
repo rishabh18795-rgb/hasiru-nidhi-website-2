@@ -105,7 +105,7 @@ export function EmptyState({
   return (
     <div className="rounded-2xl border border-dashed border-forest-900/20 bg-white/60 px-6 py-12 text-center">
       <p className="font-display text-xl text-forest-950">{title}</p>
-      {description ? <p className="mx-auto mt-2 max-w-md text-sm text-ink/60">{description}</p> : null}
+      {description ? <p className="mx-auto mt-2 max-w-md text-sm text-ink/65">{description}</p> : null}
       {action ? (
         <Link href={action.href} className="mt-5 inline-flex h-10 items-center rounded-full bg-forest-800 px-5 text-sm font-medium text-cream hover:bg-forest-700">
           {action.label}
@@ -118,9 +118,9 @@ export function EmptyState({
 export function Stat({ label, value, hint }: { label: string; value: ReactNode; hint?: string }) {
   return (
     <Card className="p-5">
-      <p className="text-xs uppercase tracking-wide text-ink/50">{label}</p>
+      <p className="text-xs uppercase tracking-wide text-ink/65">{label}</p>
       <p className="mt-1.5 font-display text-3xl text-forest-950">{value}</p>
-      {hint ? <p className="mt-1 text-xs text-ink/50">{hint}</p> : null}
+      {hint ? <p className="mt-1 text-xs text-ink/65">{hint}</p> : null}
     </Card>
   );
 }
@@ -130,8 +130,8 @@ export function DefinitionList({ items }: { items: { label: string; value: React
     <dl className="grid gap-x-6 gap-y-3 text-sm sm:grid-cols-2">
       {items.map((i) => (
         <div key={i.label}>
-          <dt className="text-xs uppercase tracking-wide text-ink/50">{i.label}</dt>
-          <dd className="mt-0.5 text-ink/85">{i.value || <span className="text-ink/40">—</span>}</dd>
+          <dt className="text-xs uppercase tracking-wide text-ink/65">{i.label}</dt>
+          <dd className="mt-0.5 text-ink/85">{i.value || <span className="text-ink/65">—</span>}</dd>
         </div>
       ))}
     </dl>

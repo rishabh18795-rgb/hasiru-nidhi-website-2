@@ -44,7 +44,7 @@ export default async function PropertyOverview({ params }: { params: Promise<{ i
           </div>
           <p className="mt-2 max-w-2xl text-sm text-ink/65">{STATUS_HELP[p.status]}</p>
           {p.rejection_reason ? <p className="mt-2 rounded-xl bg-red-50 px-4 py-2.5 text-sm text-red-800">Administrator note: {p.rejection_reason}</p> : null}
-          {p.submitted_at ? <p className="mt-2 text-xs text-ink/55">Reference {applicationReference(p.id)} · submitted {formatDateTime(p.submitted_at)}</p> : null}
+          {p.submitted_at ? <p className="mt-2 text-xs text-ink/65">Reference {applicationReference(p.id)} · submitted {formatDateTime(p.submitted_at)}</p> : null}
         </div>
         <div className="flex flex-wrap gap-2">
           {editable ? <Link href={resume} className="inline-flex h-11 items-center gap-2 rounded-full bg-forest-800 px-6 text-sm font-medium text-cream hover:bg-forest-700"><Pencil className="h-4 w-4" aria-hidden="true" /> {p.status === "draft" ? (firstTodo ? "Continue your listing" : "Review & submit") : "Edit listing"}</Link> : null}
@@ -71,7 +71,7 @@ export default async function PropertyOverview({ params }: { params: Promise<{ i
           <ul className="divide-y divide-forest-900/8 text-sm">
             {WIZARD_STEPS.map((s, i) => (
               <li key={s.key} className="flex items-center justify-between gap-3 py-2.5">
-                <span className="text-ink/80"><span className="mr-2 text-ink/40">{i + 1}.</span>{s.label}</span>
+                <span className="text-ink/80"><span className="mr-2 text-ink/65">{i + 1}.</span>{s.label}</span>
                 {editable || p.status === "pending_review" ? <Link href={wizardPath(id, s.key)} className="text-forest-700 underline underline-offset-2">{editable ? "Edit" : "View"}</Link> : null}
               </li>
             ))}

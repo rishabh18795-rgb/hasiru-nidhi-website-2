@@ -16,10 +16,10 @@ export function RequestTimeline({ status, pricing }: { status: ServiceRequestSta
       {steps.map((s, i) => (
         <li key={s} className={cn("flex items-center", i < steps.length - 1 && "flex-1")} aria-current={i === at ? "step" : undefined}>
           <span className="flex flex-col items-center gap-1.5">
-            <span className={cn("flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold ring-2", i < at ? "bg-forest-700 text-cream ring-forest-700" : i === at ? "bg-white text-forest-800 ring-forest-700" : "bg-white text-ink/40 ring-forest-900/15")}>
+            <span className={cn("flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold ring-2", i < at ? "bg-forest-700 text-cream ring-forest-700" : i === at ? "bg-white text-forest-800 ring-forest-700" : "bg-white text-ink/65 ring-forest-900/15")}>
               {i < at ? <Check className="h-4 w-4" aria-hidden="true" /> : i + 1}
             </span>
-            <span className={cn("text-center text-[11px] font-medium sm:text-xs", i <= at ? "text-forest-900" : "text-ink/45")}>{REQUEST_STATUS_SHORT[s]}</span>
+            <span className={cn("text-center text-[11px] font-medium sm:text-xs", i <= at ? "text-forest-900" : "text-ink/65")}>{REQUEST_STATUS_SHORT[s]}</span>
           </span>
           {i < steps.length - 1 ? <span className={cn("mx-1 mb-5 h-0.5 flex-1 rounded", i < at ? "bg-forest-700" : "bg-forest-900/15")} aria-hidden="true" /> : null}
         </li>

@@ -27,14 +27,14 @@ export default async function AdminMarketplaceCommission() {
     const whole = latest(vertical, null);
     return whole ? { rate: whole.rate_percent, scope: "vertical" as const } : { rate: null, scope: "none" as const };
   };
-  const show = (c: { rate: number | string | null; scope: string }) => (c.rate === null ? <span className="font-medium text-amber-800">UNCONFIGURED</span> : <span className="font-medium text-forest-950">{Number(c.rate)}%{c.scope === "vertical" ? <span className="text-xs font-normal text-ink/50"> (vertical default)</span> : null}</span>);
+  const show = (c: { rate: number | string | null; scope: string }) => (c.rate === null ? <span className="font-medium text-amber-800">UNCONFIGURED</span> : <span className="font-medium text-forest-950">{Number(c.rate)}%{c.scope === "vertical" ? <span className="text-xs font-normal text-ink/65"> (vertical default)</span> : null}</span>);
   const catName = (r: Row) => (r.category_id === null ? "Whole vertical" : (r.vertical === "products" ? productCats : serviceCats).find((c) => c.id === r.category_id)?.name ?? `Category ${r.category_id}`);
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-medium tracking-tight text-forest-950">Marketplace commission</h1>
-        <p className="mt-1 max-w-2xl text-sm text-ink/60">Product and service commission is <strong>unconfigured</strong> until you approve rates here. These rates are separate from the Stay commission and never reuse it. Nothing is deducted or settled yet: there is no payment gateway, so every order and service request is unpaid.</p>
+        <p className="mt-1 max-w-2xl text-sm text-ink/65">Product and service commission is <strong>unconfigured</strong> until you approve rates here. These rates are separate from the Stay commission and never reuse it. Nothing is deducted or settled yet: there is no payment gateway, so every order and service request is unpaid.</p>
       </div>
 
       <Card>
@@ -65,9 +65,9 @@ export default async function AdminMarketplaceCommission() {
 
       <Card>
         <CardTitle>History</CardTitle>
-        {history.length === 0 ? <p className="text-sm text-ink/60">No rate has ever been recorded.</p> : (
+        {history.length === 0 ? <p className="text-sm text-ink/65">No rate has ever been recorded.</p> : (
           <ul className="divide-y divide-forest-900/10 text-sm">
-            {history.map((r) => <li key={r.id} className="flex flex-wrap items-baseline justify-between gap-2 py-2.5"><span><span className="font-medium text-forest-950">{r.vertical === "products" ? "Products" : "Services"} · {catName(r)}: {r.rate_percent === null ? "unconfigured" : `${Number(r.rate_percent)}%`}</span><span className="block text-xs text-ink/60">{r.note}</span></span><span className="text-xs text-ink/50">{formatDateTime(r.created_at)}</span></li>)}
+            {history.map((r) => <li key={r.id} className="flex flex-wrap items-baseline justify-between gap-2 py-2.5"><span><span className="font-medium text-forest-950">{r.vertical === "products" ? "Products" : "Services"} · {catName(r)}: {r.rate_percent === null ? "unconfigured" : `${Number(r.rate_percent)}%`}</span><span className="block text-xs text-ink/65">{r.note}</span></span><span className="text-xs text-ink/65">{formatDateTime(r.created_at)}</span></li>)}
           </ul>
         )}
       </Card>

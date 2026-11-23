@@ -51,7 +51,7 @@ export default async function VendorProductEditor({ params }: { params: Promise<
       <div>
         <Link href="/vendor/products" className="text-sm text-forest-700 underline">← All products</Link>
         <div className="mt-2 flex flex-wrap items-center gap-3"><h1 className="text-3xl font-medium tracking-tight text-forest-950">{product.name}</h1><StatusBadge status={product.status} /></div>
-        <p className="mt-1 text-sm text-ink/60">{PRODUCT_STATUS_COPY[product.status]}</p>
+        <p className="mt-1 text-sm text-ink/65">{PRODUCT_STATUS_COPY[product.status]}</p>
       </div>
       {product.rejection_reason && ["draft", "rejected", "suspended"].includes(product.status) ? <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800">Note from our team: {product.rejection_reason}</p> : null}
 
@@ -66,10 +66,10 @@ export default async function VendorProductEditor({ params }: { params: Promise<
       <Card><CardTitle>Variants, prices and stock</CardTitle><VariantManager productId={product.id} variants={variants} editable={editable} /></Card>
       <Card>
         <CardTitle>Stock history</CardTitle>
-        {movements.length === 0 ? <p className="text-sm text-ink/60">No stock changes yet.</p> : (
-          <div className="overflow-x-auto"><table className="w-full min-w-[32rem] text-left text-sm"><thead className="text-xs uppercase tracking-wide text-ink/50"><tr><th className="py-2 pr-3">When</th><th className="py-2 pr-3">Variant</th><th className="py-2 pr-3">Change</th><th className="py-2 pr-3">Balance</th><th className="py-2">Reason</th></tr></thead>
+        {movements.length === 0 ? <p className="text-sm text-ink/65">No stock changes yet.</p> : (
+          <div className="overflow-x-auto"><table className="w-full min-w-[32rem] text-left text-sm"><thead className="text-xs uppercase tracking-wide text-ink/65"><tr><th className="py-2 pr-3">When</th><th className="py-2 pr-3">Variant</th><th className="py-2 pr-3">Change</th><th className="py-2 pr-3">Balance</th><th className="py-2">Reason</th></tr></thead>
             <tbody className="divide-y divide-forest-900/8">{movements.map((m) => (
-              <tr key={m.id}><td className="py-2 pr-3 text-ink/60">{formatDateTime(m.created_at)}</td><td className="py-2 pr-3">{variantName.get(m.variant_id) ?? "—"}</td><td className={`py-2 pr-3 font-medium ${m.delta > 0 ? "text-forest-700" : "text-red-700"}`}>{m.delta > 0 ? `+${m.delta}` : m.delta}</td><td className="py-2 pr-3">{m.balance_after}</td><td className="py-2 text-ink/70">{INVENTORY_REASONS[m.reason]}{m.note ? ` · ${m.note}` : ""}</td></tr>
+              <tr key={m.id}><td className="py-2 pr-3 text-ink/65">{formatDateTime(m.created_at)}</td><td className="py-2 pr-3">{variantName.get(m.variant_id) ?? "—"}</td><td className={`py-2 pr-3 font-medium ${m.delta > 0 ? "text-forest-700" : "text-red-700"}`}>{m.delta > 0 ? `+${m.delta}` : m.delta}</td><td className="py-2 pr-3">{m.balance_after}</td><td className="py-2 text-ink/70">{INVENTORY_REASONS[m.reason]}{m.note ? ` · ${m.note}` : ""}</td></tr>
             ))}</tbody></table></div>
         )}
       </Card>

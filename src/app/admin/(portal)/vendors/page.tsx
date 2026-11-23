@@ -32,7 +32,7 @@ export default async function AdminVendors({ searchParams }: { searchParams: Pro
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-medium tracking-tight text-forest-950">Vendors</h1>
-        <p className="mt-1 text-sm text-ink/60">Applications and verification. Approving the business does not approve any capability; each is approved on its own, and listings are approved separately again.</p>
+        <p className="mt-1 text-sm text-ink/65">Applications and verification. Approving the business does not approve any capability; each is approved on its own, and listings are approved separately again.</p>
       </div>
       <nav aria-label="Filter vendors" className="flex flex-wrap gap-2">
         {FILTERS.map(([k, label]) => (
@@ -43,15 +43,15 @@ export default async function AdminVendors({ searchParams }: { searchParams: Pro
       {rows.length === 0 ? <EmptyState title="No vendors here" description={filter === "queue" ? "No applications are waiting for review." : "Nothing matches this filter."} /> : (
         <Card className="overflow-x-auto p-0">
           <table className="w-full min-w-[40rem] text-left text-sm">
-            <thead className="border-b border-forest-900/10 text-xs uppercase tracking-wide text-ink/50"><tr><th className="px-4 py-3">Business</th><th className="px-4 py-3">Owner</th><th className="px-4 py-3">Status</th><th className="px-4 py-3">Capabilities</th><th className="px-4 py-3">Submitted</th></tr></thead>
+            <thead className="border-b border-forest-900/10 text-xs uppercase tracking-wide text-ink/65"><tr><th className="px-4 py-3">Business</th><th className="px-4 py-3">Owner</th><th className="px-4 py-3">Status</th><th className="px-4 py-3">Capabilities</th><th className="px-4 py-3">Submitted</th></tr></thead>
             <tbody className="divide-y divide-forest-900/8">
               {rows.map((r) => (
                 <tr key={r.id}>
-                  <td className="px-4 py-3"><Link href={`/admin/vendors/${r.id}`} className="font-medium text-forest-800 underline">{r.business_name}</Link>{r.is_legacy_host ? <span className="ml-2 text-xs text-ink/50">existing host</span> : null}<div className="text-xs text-ink/50">{r.city}</div></td>
-                  <td className="px-4 py-3 text-ink/70">{owner.get(r.owner_id)?.full_name || "—"}<div className="text-xs text-ink/50">{owner.get(r.owner_id)?.email}</div></td>
+                  <td className="px-4 py-3"><Link href={`/admin/vendors/${r.id}`} className="font-medium text-forest-800 underline">{r.business_name}</Link>{r.is_legacy_host ? <span className="ml-2 text-xs text-ink/65">existing host</span> : null}<div className="text-xs text-ink/65">{r.city}</div></td>
+                  <td className="px-4 py-3 text-ink/70">{owner.get(r.owner_id)?.full_name || "—"}<div className="text-xs text-ink/65">{owner.get(r.owner_id)?.email}</div></td>
                   <td className="px-4 py-3"><StatusBadge status={r.status} /></td>
                   <td className="px-4 py-3"><div className="flex flex-wrap gap-1.5">{r.vendor_capabilities.map((c) => <span key={c.capability} className="text-xs text-ink/70">{c.capability}: <StatusBadge status={c.status} /></span>)}</div></td>
-                  <td className="px-4 py-3 text-ink/60">{formatDate(r.submitted_at) || "—"}</td>
+                  <td className="px-4 py-3 text-ink/65">{formatDate(r.submitted_at) || "—"}</td>
                 </tr>
               ))}
             </tbody>

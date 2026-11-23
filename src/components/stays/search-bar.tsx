@@ -56,7 +56,7 @@ function DateField({ id, name, label, value, onChange, min, placeholder, inputCl
         aria-label={label} aria-invalid={invalid || undefined} aria-describedby={describedBy}
         className={cn(inputClass, empty && "text-transparent")}
       />
-      {empty ? <span aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 right-7 flex items-center overflow-hidden text-ellipsis whitespace-nowrap text-sm text-ink/50">{placeholder}</span> : null}
+      {empty ? <span aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 right-7 flex items-center overflow-hidden text-ellipsis whitespace-nowrap text-sm text-ink/65">{placeholder}</span> : null}
     </div>
   );
 }

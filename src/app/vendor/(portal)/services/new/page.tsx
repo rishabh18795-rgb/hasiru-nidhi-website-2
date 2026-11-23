@@ -20,7 +20,7 @@ export default async function NewServicePage() {
       <div>
         <Link href="/vendor/services" className="text-sm text-forest-700 underline">← All services</Link>
         <h1 className="mt-2 text-3xl font-medium tracking-tight text-forest-950">New service</h1>
-        <p className="mt-1 text-sm text-ink/60">Start with the basics. After you save, you can add photos and submit it for review.</p>
+        <p className="mt-1 text-sm text-ink/65">Start with the basics. After you save, you can add photos and submit it for review.</p>
       </div>
       <Card><CardTitle>Service details</CardTitle><ServiceForm service={null} categories={categories} /></Card>
     </div>

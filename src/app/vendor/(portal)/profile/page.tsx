@@ -17,7 +17,7 @@ export default async function VendorProfilePage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-medium tracking-tight text-forest-950">{vendor ? "Business profile" : "Apply as a vendor"}</h1>
-        <p className="mt-1 max-w-2xl text-sm text-ink/60">Tell us about your business. Our team verifies it before you can sell, offer services or host stays. Your private details are never shown to customers.</p>
+        <p className="mt-1 max-w-2xl text-sm text-ink/65">Tell us about your business. Our team verifies it before you can sell, offer services or host stays. Your private details are never shown to customers.</p>
       </div>
       {vendor ? (
         <Card className="flex flex-wrap items-center justify-between gap-3">

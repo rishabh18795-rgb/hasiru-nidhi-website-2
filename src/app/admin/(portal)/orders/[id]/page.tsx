@@ -48,7 +48,7 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
       <div>
         <Link href="/admin/orders" className="text-sm text-forest-700 underline">← All orders</Link>
         <h1 className="mt-2 text-3xl font-medium tracking-tight text-forest-950">{order.order_number}</h1>
-        <p className="mt-1 text-sm text-ink/60">{ORDER_STATUS_LABEL[order.status]} · Placed {formatDateTime(order.created_at)}</p>
+        <p className="mt-1 text-sm text-ink/65">{ORDER_STATUS_LABEL[order.status]} · Placed {formatDateTime(order.created_at)}</p>
       </div>
       <Card><OrderTimeline status={order.status} /></Card>
 
@@ -80,21 +80,21 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
 
       <Card>
         <CardTitle>Items</CardTitle>
-        <ul className="divide-y divide-forest-900/10 text-sm">{items.map((i) => <li key={i.id} className="flex justify-between gap-3 py-3"><span>{i.product_name} <span className="text-ink/55">({i.variant_name}, SKU {i.sku}) · {formatPrice(i.unit_price_inr)} × {i.quantity}</span></span><span className="font-medium">{formatPrice(i.line_total_inr)}</span></li>)}</ul>
-        {(mv ?? []).length ? <p className="mt-3 text-xs text-ink/55">Stock movements: {(mv ?? []).map((m) => `${m.delta > 0 ? "+" : ""}${m.delta} (${String(m.reason).replace("_", " ")})`).join(", ")}</p> : null}
+        <ul className="divide-y divide-forest-900/10 text-sm">{items.map((i) => <li key={i.id} className="flex justify-between gap-3 py-3"><span>{i.product_name} <span className="text-ink/65">({i.variant_name}, SKU {i.sku}) · {formatPrice(i.unit_price_inr)} × {i.quantity}</span></span><span className="font-medium">{formatPrice(i.line_total_inr)}</span></li>)}</ul>
+        {(mv ?? []).length ? <p className="mt-3 text-xs text-ink/65">Stock movements: {(mv ?? []).map((m) => `${m.delta > 0 ? "+" : ""}${m.delta} (${String(m.reason).replace("_", " ")})`).join(", ")}</p> : null}
       </Card>
 
       <Card>
         <CardTitle>Delivery</CardTitle>
         <p className="text-sm text-ink/80">{order.ship_name}{shipping ? `, ${shipping.ship_phone}` : ""}<br />{shipping ? [shipping.ship_line1, shipping.ship_line2, shipping.ship_landmark].filter(Boolean).join(", ") : null}{shipping ? <br /> : null}{order.ship_city}, {order.ship_state} {order.ship_postal_code}</p>
-        {shipment ? <p className="mt-3 text-sm text-ink/80">Shipment: {SHIPMENT_LABEL[shipment.status]} · {shipment.carrier} · tracking {shipment.tracking_number}</p> : <p className="mt-3 text-sm text-ink/55">Not shipped yet.</p>}
+        {shipment ? <p className="mt-3 text-sm text-ink/80">Shipment: {SHIPMENT_LABEL[shipment.status]} · {shipment.carrier} · tracking {shipment.tracking_number}</p> : <p className="mt-3 text-sm text-ink/65">Not shipped yet.</p>}
       </Card>
 
       {requests.length ? (
         <Card>
           <CardTitle>Requests</CardTitle>
           <ul className="divide-y divide-forest-900/10 text-sm">
-            {requests.map((r) => <li key={r.id} className="space-y-2 py-3"><p className="font-medium text-forest-950">{REQUEST_KIND_LABEL[r.kind]}: <span className="capitalize">{r.status}</span> <span className="text-xs font-normal text-ink/50">{formatDateTime(r.created_at)}</span></p><p className="text-ink/75">{r.reason}</p>{r.policy_note ? <p className="text-xs text-ink/55">{r.policy_note}</p> : null}{r.decision_note ? <p className="text-xs text-ink/70">Decision: {r.decision_note}</p> : null}<AdminRequestForm requestId={r.id} orderId={order.id} kind={r.kind} status={r.status} /></li>)}
+            {requests.map((r) => <li key={r.id} className="space-y-2 py-3"><p className="font-medium text-forest-950">{REQUEST_KIND_LABEL[r.kind]}: <span className="capitalize">{r.status}</span> <span className="text-xs font-normal text-ink/65">{formatDateTime(r.created_at)}</span></p><p className="text-ink/75">{r.reason}</p>{r.policy_note ? <p className="text-xs text-ink/65">{r.policy_note}</p> : null}{r.decision_note ? <p className="text-xs text-ink/70">Decision: {r.decision_note}</p> : null}<AdminRequestForm requestId={r.id} orderId={order.id} kind={r.kind} status={r.status} /></li>)}
           </ul>
         </Card>
       ) : null}
@@ -103,7 +103,7 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
         <Card>
           <CardTitle>Disputes</CardTitle>
           <ul className="divide-y divide-forest-900/10 text-sm">
-            {disputes.map((d) => <li key={d.id} className="space-y-2 py-3"><p className="font-medium capitalize text-forest-950">{d.status.replace("_", " ")} <span className="text-xs font-normal text-ink/50">{formatDateTime(d.created_at)}</span></p><p className="text-ink/75">{d.description}</p>{d.resolution ? <p className="text-xs text-ink/70">Resolution: {d.resolution}</p> : null}<DisputeResolveForm disputeId={d.id} orderId={order.id} status={d.status} /></li>)}
+            {disputes.map((d) => <li key={d.id} className="space-y-2 py-3"><p className="font-medium capitalize text-forest-950">{d.status.replace("_", " ")} <span className="text-xs font-normal text-ink/65">{formatDateTime(d.created_at)}</span></p><p className="text-ink/75">{d.description}</p>{d.resolution ? <p className="text-xs text-ink/70">Resolution: {d.resolution}</p> : null}<DisputeResolveForm disputeId={d.id} orderId={order.id} status={d.status} /></li>)}
           </ul>
         </Card>
       ) : null}
@@ -112,8 +112,8 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
 
       <Card>
         <CardTitle>Status history</CardTitle>
-        <ol className="space-y-2 text-sm">{history.map((h) => <li key={h.id} className="flex flex-wrap justify-between gap-2"><span><span className="font-medium text-forest-950">{ORDER_STATUS_LABEL[h.to_status]}</span><span className="text-ink/50"> · by {h.actor_kind}</span>{h.note ? <span className="text-ink/60"> · {h.note}</span> : null}</span><span className="text-xs text-ink/50">{formatDateTime(h.created_at)}</span></li>)}</ol>
-        {(audit ?? []).length ? <p className="mt-4 text-xs text-ink/50">Audit log: {(audit ?? []).map((a) => String(a.action).replace(/_/g, " ")).join(" · ")}</p> : null}
+        <ol className="space-y-2 text-sm">{history.map((h) => <li key={h.id} className="flex flex-wrap justify-between gap-2"><span><span className="font-medium text-forest-950">{ORDER_STATUS_LABEL[h.to_status]}</span><span className="text-ink/65"> · by {h.actor_kind}</span>{h.note ? <span className="text-ink/65"> · {h.note}</span> : null}</span><span className="text-xs text-ink/65">{formatDateTime(h.created_at)}</span></li>)}</ol>
+        {(audit ?? []).length ? <p className="mt-4 text-xs text-ink/65">Audit log: {(audit ?? []).map((a) => String(a.action).replace(/_/g, " ")).join(" · ")}</p> : null}
       </Card>
     </div>
   );

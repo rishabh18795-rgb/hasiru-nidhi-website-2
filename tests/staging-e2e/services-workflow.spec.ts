@@ -38,7 +38,7 @@ test.describe.configure({ mode: "serial" });
 
 test.beforeAll(async ({ browser }) => {
   const { loadEnv, clients, signedIn: signedInUser } = await import("../staging/lib.mjs");
-  const env = loadEnv();
+  const env = loadEnv() as Record<string, string>;
   const c = clients(env);
   svc = c.service;
   password = env.STAGING_TEST_PASSWORD;

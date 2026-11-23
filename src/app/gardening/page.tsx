@@ -182,7 +182,7 @@ export default function GardeningPage() {
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               </div>
-              <p className="mt-3 text-sm text-ink/60">{item.caption}</p>
+              <p className="mt-3 text-sm text-ink/65">{item.caption}</p>
             </Reveal>
           ))}
         </div>

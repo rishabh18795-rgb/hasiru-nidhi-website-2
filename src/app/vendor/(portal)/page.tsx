@@ -43,7 +43,7 @@ export default async function VendorOverview() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-medium tracking-tight text-forest-950">{vendor.business_name}</h1>
-        <p className="mt-1 text-sm text-ink/60">Vendor dashboard{vendor.is_legacy_host ? " · existing stay host" : ""}</p>
+        <p className="mt-1 text-sm text-ink/65">Vendor dashboard{vendor.is_legacy_host ? " · existing stay host" : ""}</p>
       </div>
 
       <Card>
@@ -68,7 +68,7 @@ export default async function VendorOverview() {
               <li key={k} className="flex flex-wrap items-center justify-between gap-3 py-4">
                 <div className="min-w-0">
                   <p className="font-medium text-forest-950">{CAPABILITY_INFO[k].label}</p>
-                  <p className="text-sm text-ink/60">
+                  <p className="text-sm text-ink/65">
                     {!c ? "Not requested." : c.status === "pending" ? "Waiting for our team to review this request." : c.status === "rejected" ? `Not approved${c.reason ? `: ${c.reason}` : "."}` : c.status === "suspended" ? `Suspended${c.reason ? `: ${c.reason}` : "."}` : !approved ? "Approved, but your business is not currently verified." : k === "stays" ? "Approved. Manage properties and bookings in the Host portal." : moduleOpen[k] ? "Approved. Your tools will appear here." : "Approved. Selling tools open when this part of the marketplace launches. Nothing is public yet."}
                   </p>
                 </div>

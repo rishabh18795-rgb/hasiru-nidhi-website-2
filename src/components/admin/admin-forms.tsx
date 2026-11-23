@@ -18,7 +18,7 @@ export function ReviewListingForm({ propertyId, status }: { propertyId: string; 
     : status === "approved" ? [{ value: "suspend", label: "Suspend (reason required)" }]
     : status === "suspended" ? [{ value: "reinstate", label: "Reinstate" }]
     : [];
-  if (options.length === 0) return <p className="text-sm text-ink/60">Drafts can&apos;t be reviewed until the host submits them.</p>;
+  if (options.length === 0) return <p className="text-sm text-ink/65">Drafts can&apos;t be reviewed until the host submits them.</p>;
   return (
     <form action={action} className="flex flex-col gap-4">
       <input type="hidden" name="property_id" value={propertyId} />

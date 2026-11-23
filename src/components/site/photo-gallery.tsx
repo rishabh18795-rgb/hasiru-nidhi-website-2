@@ -60,7 +60,7 @@ export function PhotoGallery({ items, categories }: { items: PhotoItem[]; catego
           </button>
         ))}
       </div>
-      <p className="mt-4 text-sm text-ink/60" aria-live="polite" data-testid="gallery-count">
+      <p className="mt-4 text-sm text-ink/65" aria-live="polite" data-testid="gallery-count">
         Showing {count} {count === 1 ? "photograph" : "photographs"}{active === "All" ? "" : ` in ${active}`}
       </p>
 

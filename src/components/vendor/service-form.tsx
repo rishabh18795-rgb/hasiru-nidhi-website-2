@@ -61,7 +61,7 @@ export function ServiceForm({ service, categories, locked }: { service: Service 
         </Field>
       </fieldset>
       {!locked ? <SubmitButton pendingLabel="Saving…" className="self-start">{service ? "Save details" : "Create draft"}</SubmitButton> : null}
-      {service?.status === "approved" ? <p className="text-xs text-ink/60">This service is approved. Saving changes to its details or price sends it back for review and hides it until it is approved again.</p> : null}
+      {service?.status === "approved" ? <p className="text-xs text-ink/65">This service is approved. Saving changes to its details or price sends it back for review and hides it until it is approved again.</p> : null}
     </form>
   );
 }

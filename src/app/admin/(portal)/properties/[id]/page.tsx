@@ -67,11 +67,11 @@ export default async function AdminPropertyReview({ params }: { params: Promise<
               { label: "Facilities", value: names(am.data, "amenities") },
               { label: "Experiences", value: names(ex.data, "experiences") },
             ]} />
-            <p className="mt-4 text-xs uppercase tracking-wide text-ink/50">Summary</p>
+            <p className="mt-4 text-xs uppercase tracking-wide text-ink/65">Summary</p>
             <p className="mt-1 text-sm text-ink/80">{p.summary || "—"}</p>
-            <p className="mt-4 text-xs uppercase tracking-wide text-ink/50">Description</p>
+            <p className="mt-4 text-xs uppercase tracking-wide text-ink/65">Description</p>
             <p className="mt-1 whitespace-pre-line text-sm text-ink/80">{p.description || "—"}</p>
-            <p className="mt-4 text-xs uppercase tracking-wide text-ink/50">House rules</p>
+            <p className="mt-4 text-xs uppercase tracking-wide text-ink/65">House rules</p>
             <p className="mt-1 whitespace-pre-line text-sm text-ink/80">{p.house_rules || "—"}</p>
           </Card>
 
@@ -93,7 +93,7 @@ export default async function AdminPropertyReview({ params }: { params: Promise<
 
           <Card>
             <CardTitle>Photographs ({images.length})</CardTitle>
-            {images.length === 0 ? <p className="text-sm text-ink/55">No photographs.</p> : (
+            {images.length === 0 ? <p className="text-sm text-ink/65">No photographs.</p> : (
               <ul className="grid gap-3 sm:grid-cols-3">
                 {images.map((i) => {
                   const url = propertyImageUrl(i.path, i.source);
@@ -125,7 +125,7 @@ export default async function AdminPropertyReview({ params }: { params: Promise<
                 <p className="text-ink/65">{hostProfile.email}<br />{hostProfile.phone}</p>
                 <UserActions userId={hostProfile.id} role={hostProfile.role} suspended={hostProfile.is_suspended} verified={hostProfile.host_verified} />
               </div>
-            ) : <p className="text-sm text-ink/60">Platform-managed listing (no individual host).</p>}
+            ) : <p className="text-sm text-ink/65">Platform-managed listing (no individual host).</p>}
           </Card>
         </aside>
       </div>

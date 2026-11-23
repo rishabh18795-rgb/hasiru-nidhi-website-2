@@ -60,7 +60,7 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
         ]} />
         {b.message ? <p className="text-sm text-ink/75"><span className="font-medium">Your message:</span> {b.message}</p> : null}
         {b.host_response ? <p className="text-sm text-ink/75"><span className="font-medium">Host note:</span> {b.host_response}</p> : null}
-        {b.cancelled_at ? <p className="text-xs text-ink/55">Cancelled {formatDateTime(b.cancelled_at)}{b.cancellation_note ? ` — ${b.cancellation_note}` : ""}</p> : null}
+        {b.cancelled_at ? <p className="text-xs text-ink/65">Cancelled {formatDateTime(b.cancelled_at)}{b.cancellation_note ? ` — ${b.cancellation_note}` : ""}</p> : null}
       </Card>
 
       <Card className="space-y-3">
@@ -74,14 +74,14 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
             <div className="flex justify-between border-t border-forest-900/10 pt-2 font-medium text-forest-950"><dt>Total</dt><dd>{formatINR(q.total)}</dd></div>
           </dl>
         ) : <p className="text-sm text-ink/65">Price on request.</p>}
-        <p className="text-xs text-ink/55">Payment status: <span className="font-medium text-ink/75">{PAYMENT_LABEL[payment] ?? payment}</span>. The platform does not take online payments yet; payment is arranged as described in the booking confirmation and our <Link href="/cancellation-policy" className="underline">Cancellation Policy</Link>.</p>
+        <p className="text-xs text-ink/65">Payment status: <span className="font-medium text-ink/75">{PAYMENT_LABEL[payment] ?? payment}</span>. The platform does not take online payments yet; payment is arranged as described in the booking confirmation and our <Link href="/cancellation-policy" className="underline">Cancellation Policy</Link>.</p>
       </Card>
 
       <Card className="space-y-3">
         <h2 className="text-lg font-medium text-forest-950">Status history</h2>
         <ol className="space-y-2 text-sm">
           {((history ?? []) as { from_status: string | null; to_status: string; created_at: string }[]).map((h, i) => (
-            <li key={i} className="flex flex-wrap items-center justify-between gap-2"><StatusBadge status={h.to_status} /><time className="text-xs text-ink/55" dateTime={h.created_at}>{formatDateTime(h.created_at)}</time></li>
+            <li key={i} className="flex flex-wrap items-center justify-between gap-2"><StatusBadge status={h.to_status} /><time className="text-xs text-ink/65" dateTime={h.created_at}>{formatDateTime(h.created_at)}</time></li>
           ))}
         </ol>
       </Card>

@@ -43,7 +43,7 @@ export function StayCard({ stay, selection = {}, base = "/stays" }: { stay: Sear
           <Link href={detail} className="hover:underline">{stay.name}</Link>
         </h3>
         {location ? (
-          <p className="mt-1.5 flex items-center gap-1.5 text-sm text-ink/60">
+          <p className="mt-1.5 flex items-center gap-1.5 text-sm text-ink/65">
             <MapPin className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
             {location}
           </p>
@@ -59,7 +59,7 @@ export function StayCard({ stay, selection = {}, base = "/stays" }: { stay: Sear
         {amenities.length ? (
           <ul className="mt-3 flex flex-wrap gap-1.5" aria-label="Amenities">
             {amenities.slice(0, MAX_CHIPS).map((a) => <li key={a} className="rounded-full bg-forest-50 px-2.5 py-1 text-xs text-forest-800">{a}</li>)}
-            {amenities.length > MAX_CHIPS ? <li className="rounded-full bg-stone-100 px-2.5 py-1 text-xs text-ink/60">+{amenities.length - MAX_CHIPS} more</li> : null}
+            {amenities.length > MAX_CHIPS ? <li className="rounded-full bg-stone-100 px-2.5 py-1 text-xs text-ink/65">+{amenities.length - MAX_CHIPS} more</li> : null}
           </ul>
         ) : null}
 
@@ -68,11 +68,11 @@ export function StayCard({ stay, selection = {}, base = "/stays" }: { stay: Sear
             {stay.price_inr !== null ? (
               <p>
                 <span className="font-display text-xl text-forest-950">{formatINR(stay.price_inr)}</span>{" "}
-                <span className="text-xs text-ink/55">{PRICE_UNIT_LABEL[stay.price_unit]}</span>
+                <span className="text-xs text-ink/65">{PRICE_UNIT_LABEL[stay.price_unit]}</span>
                 {stay.is_sample ? <span className="block text-[11px] font-medium uppercase tracking-wide text-amber-800">Illustrative demo price</span> : null}
               </p>
             ) : (
-              <p className="text-sm text-ink/55">Price on request</p>
+              <p className="text-sm text-ink/65">Price on request</p>
             )}
           </div>
           <div className="mt-4 flex gap-3">

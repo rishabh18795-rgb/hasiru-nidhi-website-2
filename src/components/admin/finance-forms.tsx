@@ -53,7 +53,7 @@ export function CommissionForm({ rate, basis, reverseOnCancellation, refundRever
         <label className="flex flex-col gap-1.5 text-sm font-medium text-forest-950">
           Platform commission (%)
           <input name="rate" type="number" min="0" max="50" step="0.01" required defaultValue={rate} className={`${input} max-w-40`} aria-describedby="rate-hint" />
-          <span id="rate-hint" className="text-xs font-normal text-ink/55">Default 20. Allowed range 0–50. New bookings only.</span>
+          <span id="rate-hint" className="text-xs font-normal text-ink/65">Default 20. Allowed range 0–50. New bookings only.</span>
         </label>
         <label className="flex flex-col gap-1.5 text-sm font-medium text-forest-950">
           Commission is charged on
@@ -61,7 +61,7 @@ export function CommissionForm({ rate, basis, reverseOnCancellation, refundRever
             <option value="accommodation">Accommodation (stay + extra-guest charges)</option>
             <option value="accommodation_and_cleaning">Accommodation + cleaning fee</option>
           </select>
-          <span className="text-xs font-normal text-ink/55">Taxes are never commissionable. Confirm the treatment with your accountant.</span>
+          <span className="text-xs font-normal text-ink/65">Taxes are never commissionable. Confirm the treatment with your accountant.</span>
         </label>
       </div>
       <fieldset className="space-y-2 text-sm text-forest-950">
@@ -95,7 +95,7 @@ const NEXT: Record<string, string[]> = { pending: ["processing", "on_hold"], on_
 export function SettlementStatusForm({ id, status, reference }: { id: string; status: string; reference: string | null }) {
   const [state, action] = useActionState(updateSettlement, initial);
   const options = NEXT[status] ?? [];
-  if (options.length === 0) return <p className="text-xs text-ink/55">No further changes{reference ? ` · reference ${reference}` : ""}.</p>;
+  if (options.length === 0) return <p className="text-xs text-ink/65">No further changes{reference ? ` · reference ${reference}` : ""}.</p>;
   return (
     <form action={action} className="flex flex-wrap items-center gap-2">
       <input type="hidden" name="settlement_id" value={id} />

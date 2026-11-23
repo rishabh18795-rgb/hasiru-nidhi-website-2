@@ -48,7 +48,7 @@ export default async function AdminProperties({ searchParams }: { searchParams: 
                     {p.status === "rejected" && p.review_kind === "changes_requested" ? <span className="rounded-full bg-sand-100 px-2 py-0.5 text-xs text-earth-700">Changes requested</span> : null}
                     {p.is_featured ? <span className="rounded-full bg-sand-100 px-2 py-0.5 text-xs text-earth-700">Featured</span> : null}
                   </div>
-                  <p className="mt-1 text-xs text-ink/55">{[p.city, p.state].filter(Boolean).join(", ")} · {p.submitted_at ? `submitted ${formatDate(p.submitted_at)}` : `updated ${formatDate(p.updated_at)}`}</p>
+                  <p className="mt-1 text-xs text-ink/65">{[p.city, p.state].filter(Boolean).join(", ")} · {p.submitted_at ? `submitted ${formatDate(p.submitted_at)}` : `updated ${formatDate(p.updated_at)}`}</p>
                 </div>
                 <Link href={`/admin/properties/${p.id}`} className="text-sm text-forest-700 underline">Review</Link>
               </Card>

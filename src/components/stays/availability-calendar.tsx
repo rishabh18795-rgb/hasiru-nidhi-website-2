@@ -34,7 +34,7 @@ export function AvailabilityCalendar({ ranges, months = 3 }: { ranges: Range[]; 
           return (
             <div key={label} role="group" aria-label={label}>
               <p className="mb-2 text-sm font-medium text-forest-950">{label}</p>
-              <div className="grid grid-cols-7 gap-1 text-center text-[11px] text-ink/45">
+              <div className="grid grid-cols-7 gap-1 text-center text-[11px] text-ink/65">
                 {WEEKDAYS.map((w) => <span key={w}>{w}</span>)}
               </div>
               <div className="mt-1 grid grid-cols-7 gap-1 text-center text-xs">
@@ -59,7 +59,7 @@ export function AvailabilityCalendar({ ranges, months = 3 }: { ranges: Range[]; 
           );
         })}
       </div>
-      <p className="mt-3 text-xs text-ink/55">Struck-through dates are already booked or blocked. Availability is final only when the host confirms your request.</p>
+      <p className="mt-3 text-xs text-ink/65">Struck-through dates are already booked or blocked. Availability is final only when the host confirms your request.</p>
     </div>
   );
 }

@@ -25,7 +25,7 @@ export function RespondRequestForm({ requestId, fixed }: { requestId: string; fi
       </Field>
       <Field label="Note or reason" htmlFor="svc-respond-reason" hint="Required to decline. The customer sees it."><TextArea id="svc-respond-reason" name="reason" rows={3} maxLength={1000} defaultValue={state.values?.reason} /></Field>
       <SubmitButton pendingLabel="Saving…">Apply decision</SubmitButton>
-      {fixed ? <p className="text-xs text-ink/55">Accepting does not mean payment has been received: this request is unpaid and payment is not configured. Agree payment arrangements with the customer yourself.</p> : null}
+      {fixed ? <p className="text-xs text-ink/65">Accepting does not mean payment has been received: this request is unpaid and payment is not configured. Agree payment arrangements with the customer yourself.</p> : null}
     </form>
   );
 }

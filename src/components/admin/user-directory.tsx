@@ -28,7 +28,7 @@ export async function UserDirectory({ role, path, title, sp, detailBase }: {
         <input name="q" defaultValue={q} placeholder="Search name or email" aria-label={`Search ${title.toLowerCase()}`} className="h-10 flex-1 rounded-xl border border-forest-900/15 bg-white px-3 text-sm" />
         <button type="submit" className="h-10 rounded-full bg-forest-800 px-5 text-sm font-medium text-cream hover:bg-forest-700">Search</button>
       </form>
-      <p className="text-xs text-ink/55">Admin accounts can only be created through the documented SQL procedure (supabase/scripts/create_first_admin.sql); they are not manageable here.</p>
+      <p className="text-xs text-ink/65">Admin accounts can only be created through the documented SQL procedure (supabase/scripts/create_first_admin.sql); they are not manageable here.</p>
       <ul className="space-y-3">
         {users.map((u) => (
           <li key={u.id}>
@@ -37,17 +37,17 @@ export async function UserDirectory({ role, path, title, sp, detailBase }: {
                 <div>
                   <p className="font-medium text-forest-950">
                     {detailBase && u.role === "host" ? <Link href={`${detailBase}/${u.id}`} className="underline-offset-2 hover:underline">{u.full_name || "(no name)"}</Link> : (u.full_name || "(no name)")}{" "}
-                    {u.id === user.id ? <span className="text-xs text-ink/45">(you)</span> : null}
+                    {u.id === user.id ? <span className="text-xs text-ink/65">(you)</span> : null}
                   </p>
-                  <p className="text-sm text-ink/60">{u.email} · joined {formatDate(u.created_at)}</p>
+                  <p className="text-sm text-ink/65">{u.email} · joined {formatDate(u.created_at)}</p>
                 </div>
                 <span className="rounded-full bg-forest-50 px-2.5 py-0.5 text-xs capitalize text-forest-800">{u.role}{u.is_suspended ? " · suspended" : ""}{u.host_verified ? " · verified" : ""}</span>
               </div>
-              {u.role !== "admin" && u.id !== user.id ? <UserActions userId={u.id} role={u.role} suspended={u.is_suspended} verified={u.host_verified} /> : <p className="text-xs text-ink/50">Protected account.</p>}
+              {u.role !== "admin" && u.id !== user.id ? <UserActions userId={u.id} role={u.role} suspended={u.is_suspended} verified={u.host_verified} /> : <p className="text-xs text-ink/65">Protected account.</p>}
             </Card>
           </li>
         ))}
-        {users.length === 0 ? <li className="text-sm text-ink/55">No {title.toLowerCase()} match.</li> : null}
+        {users.length === 0 ? <li className="text-sm text-ink/65">No {title.toLowerCase()} match.</li> : null}
       </ul>
     </div>
   );

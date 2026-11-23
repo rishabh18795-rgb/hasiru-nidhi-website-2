@@ -26,7 +26,7 @@ export function Field({ label, htmlFor, error, hint, required, className, childr
         {required ? <span aria-hidden="true" className="text-red-600"> *</span> : null}
       </label>
       {children}
-      {hint && !error?.length ? <p className="text-xs text-ink/55">{hint}</p> : null}
+      {hint && !error?.length ? <p className="text-xs text-ink/65">{hint}</p> : null}
       {error?.length ? (
         <p id={`${htmlFor}-error`} role="alert" className="text-xs text-red-600">
           {error[0]}

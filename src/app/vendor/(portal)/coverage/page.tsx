@@ -19,7 +19,7 @@ export default async function VendorCoveragePage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-medium tracking-tight text-forest-950">Delivery and service areas</h1>
-        <p className="mt-1 max-w-2xl text-sm text-ink/60">We never assume a vendor serves every PIN code. Customers can buy your products or request your services only where you have listed coverage. Enter 6-digit PIN codes, or a 3-digit prefix (for example 560) to cover every PIN that starts with it.</p>
+        <p className="mt-1 max-w-2xl text-sm text-ink/65">We never assume a vendor serves every PIN code. Customers can buy your products or request your services only where you have listed coverage. Enter 6-digit PIN codes, or a 3-digit prefix (for example 560) to cover every PIN that starts with it.</p>
       </div>
       <Card>
         <CardTitle>Where you deliver products</CardTitle>

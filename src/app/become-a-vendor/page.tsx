@@ -54,7 +54,7 @@ export default async function BecomeAVendorPage() {
               </li>
             ))}
           </ol>
-          <p className="mt-8 text-sm text-ink/60">Verification does not guarantee approval or sales. Payment collection, commissions, taxes and shipping rules are confirmed with vendors before any listing goes live.</p>
+          <p className="mt-8 text-sm text-ink/65">Verification does not guarantee approval or sales. Payment collection, commissions, taxes and shipping rules are confirmed with vendors before any listing goes live.</p>
           {flags.vendorRegistration ? <div className="mt-8"><LinkButton href="/vendor/profile" size="lg" className="rounded-full bg-forest-800 px-7 text-cream hover:bg-forest-700">Start your application</LinkButton></div> : null}
         </div>
       </section>

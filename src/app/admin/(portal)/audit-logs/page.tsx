@@ -37,7 +37,7 @@ export default async function AdminAuditLogs() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-medium tracking-tight text-forest-950">Audit log</h1>
-        <p className="mt-1 text-sm text-ink/60">
+        <p className="mt-1 text-sm text-ink/65">
           A tamper-resistant record of sensitive administrator actions: listing decisions, account changes, review moderation, catalogue and settings changes. Entries cannot be edited or deleted through the app. Showing the latest {ACTIONS_PER_PAGE}.
         </p>
       </div>
@@ -46,7 +46,7 @@ export default async function AdminAuditLogs() {
       ) : (
         <Card className="overflow-x-auto p-0">
           <table className="w-full min-w-[40rem] text-left text-sm">
-            <thead className="border-b border-forest-900/10 text-xs uppercase tracking-wide text-ink/50">
+            <thead className="border-b border-forest-900/10 text-xs uppercase tracking-wide text-ink/65">
               <tr>
                 <th className="px-4 py-3 font-medium">When</th>
                 <th className="px-4 py-3 font-medium">Who</th>
@@ -63,7 +63,7 @@ export default async function AdminAuditLogs() {
                   <td className="px-4 py-3 font-mono text-xs text-forest-900">{r.action}</td>
                   <td className="px-4 py-3 text-ink/70">
                     {r.entity_type}
-                    {r.entity_id ? <span className="block break-all font-mono text-[11px] text-ink/45">{r.entity_id}</span> : null}
+                    {r.entity_id ? <span className="block break-all font-mono text-[11px] text-ink/65">{r.entity_id}</span> : null}
                   </td>
                   <td className="px-4 py-3 break-words text-xs text-ink/65">
                     {r.details && Object.keys(r.details).length ? JSON.stringify(r.details) : "—"}

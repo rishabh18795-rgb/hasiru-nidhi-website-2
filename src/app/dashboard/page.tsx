@@ -24,7 +24,7 @@ export default async function DashboardHome({ searchParams }: { searchParams: Pr
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-medium tracking-tight text-forest-950">Hello{profile.full_name ? `, ${profile.full_name.split(" ")[0]}` : ""}</h1>
-        <p className="mt-1 text-sm text-ink/60">Your trips, requests and saved stays in one place.</p>
+        <p className="mt-1 text-sm text-ink/65">Your trips, requests and saved stays in one place.</p>
       </div>
 
       {sp.denied ? <p role="alert" className="rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-900">You don&apos;t have access to that area with this account.</p> : null}

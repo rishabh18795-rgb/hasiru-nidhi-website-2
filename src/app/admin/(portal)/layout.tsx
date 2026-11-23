@@ -13,12 +13,13 @@ export const metadata: Metadata = {
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const { supabase } = await requireRole(["admin"], "/admin");
-  const [{ count }, { count: vendorQueue }, { count: productQueue }, { count: requestQueue }, { count: serviceQueue }] = await Promise.all([
+  const [{ count }, { count: vendorQueue }, { count: productQueue }, { count: requestQueue }, { count: serviceQueue }, { count: reviewQueue }] = await Promise.all([
     supabase.from("properties").select("id", { count: "exact", head: true }).eq("status", "pending_review"),
     supabase.from("vendors").select("id", { count: "exact", head: true }).in("status", ["submitted", "under_review"]),
     supabase.from("products").select("id", { count: "exact", head: true }).eq("status", "pending_review"),
     supabase.from("order_requests").select("id", { count: "exact", head: true }).eq("status", "requested"),
     supabase.from("services").select("id", { count: "exact", head: true }).eq("status", "pending_review"),
+    supabase.from("marketplace_reviews").select("id", { count: "exact", head: true }).eq("status", "pending"),
   ]);
   const items = [
     { href: "/admin", label: "Overview", icon: "overview", exact: true },
@@ -33,6 +34,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     { href: "/admin/service-categories", label: "Service categories", icon: "catalog" },
     { href: "/admin/service-requests", label: "Service requests", icon: "bookings" },
     { href: "/admin/marketplace", label: "Marketplace", icon: "marketplace" },
+    { href: "/admin/marketplace-reviews", label: "Marketplace reviews", icon: "reviews", badge: reviewQueue ?? 0 },
+    { href: "/admin/marketplace-finance", label: "Marketplace finance", icon: "payments" },
     { href: "/admin/marketplace-commission", label: "Marketplace commission", icon: "commission" },
     { href: "/admin/customers", label: "Customers", icon: "users" },
     { href: "/admin/bookings", label: "Bookings", icon: "bookings" },

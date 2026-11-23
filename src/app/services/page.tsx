@@ -39,7 +39,7 @@ export default async function ServicesPage({ searchParams }: { searchParams: SP 
   return (
     <section className="bg-cream pb-24 pt-32">
       <div className="container-nidhi">
-        <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-sm text-ink/60"><Link href="/" className="hover:underline">Home</Link><ChevronRight className="h-3.5 w-3.5" aria-hidden="true" /><span aria-current="page" className="text-ink/80">Services</span></nav>
+        <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-sm text-ink/65"><Link href="/" className="hover:underline">Home</Link><ChevronRight className="h-3.5 w-3.5" aria-hidden="true" /><span aria-current="page" className="text-ink/80">Services</span></nav>
         <h1 className="mt-3 max-w-3xl text-4xl font-medium tracking-tight text-forest-950 sm:text-5xl">{title}</h1>
         <p className="mt-3 max-w-2xl text-base leading-relaxed text-ink/70">{current?.description ?? "Garden design, planting, lawn and plant care from verified providers. Some services have a fixed price you can request straight away; others are quoted after the provider hears the details. Nothing is charged online yet."}</p>
 
@@ -78,13 +78,13 @@ export default async function ServicesPage({ searchParams }: { searchParams: SP 
           </aside>
 
           <div>
-            <p className="text-sm text-ink/60" aria-live="polite">{outcome.error ? "" : `${outcome.total} ${outcome.total === 1 ? "service" : "services"}${filters.pin ? ` available at ${filters.pin}` : ""}`}</p>
+            <p className="text-sm text-ink/65" aria-live="polite">{outcome.error ? "" : `${outcome.total} ${outcome.total === 1 ? "service" : "services"}${filters.pin ? ` available at ${filters.pin}` : ""}`}</p>
             {outcome.error ? (
               <div role="alert" className="mt-4 rounded-2xl border border-red-200 bg-red-50 p-6 text-sm text-red-800">We couldn&apos;t load services right now. Nothing is shown in its place. <a href={`${base}${serviceFiltersToQuery(filters)}`} className="underline">Retry</a></div>
             ) : outcome.results.length === 0 ? (
               <div className="mt-4 rounded-2xl border border-dashed border-forest-900/20 bg-white/60 px-6 py-14 text-center">
                 <p className="font-display text-xl text-forest-950">{hasAnyFilter ? "No services match these filters" : "No services are listed yet"}</p>
-                <p className="mx-auto mt-2 max-w-md text-sm text-ink/60">{hasAnyFilter ? "Try a different PIN code, clear the filters, or send a general gardening enquiry." : "Services appear here only after a verified provider lists them and our team approves them. We never show sample providers as if they were real."}</p>
+                <p className="mx-auto mt-2 max-w-md text-sm text-ink/65">{hasAnyFilter ? "Try a different PIN code, clear the filters, or send a general gardening enquiry." : "Services appear here only after a verified provider lists them and our team approves them. We never show sample providers as if they were real."}</p>
                 <div className="mt-5 flex flex-wrap justify-center gap-3">
                   {hasAnyFilter ? <Link href={base} className="inline-flex h-10 items-center rounded-full bg-forest-800 px-5 text-sm font-medium text-cream hover:bg-forest-700">Clear all filters</Link> : <Link href="/become-a-vendor" className="inline-flex h-10 items-center rounded-full bg-forest-800 px-5 text-sm font-medium text-cream hover:bg-forest-700">Become a provider</Link>}
                   <Link href="/gardening#enquire" className="inline-flex h-10 items-center rounded-full border border-forest-900/20 px-5 text-sm font-medium text-forest-900 hover:bg-forest-50">Gardening enquiry</Link>
@@ -96,7 +96,7 @@ export default async function ServicesPage({ searchParams }: { searchParams: SP 
                 {totalPages > 1 ? (
                   <nav aria-label="Pagination" className="mt-10 flex items-center justify-center gap-3">
                     {filters.page > 1 ? <Link rel="prev" href={`${base}${serviceFiltersToQuery({ ...filters, page: filters.page - 1 })}`} className="rounded-full border border-forest-900/20 bg-white px-5 py-2 text-sm font-medium text-forest-900 hover:bg-forest-50">Previous</Link> : null}
-                    <span className="text-sm text-ink/60">Page {filters.page} of {totalPages}</span>
+                    <span className="text-sm text-ink/65">Page {filters.page} of {totalPages}</span>
                     {filters.page < totalPages ? <Link rel="next" href={`${base}${serviceFiltersToQuery({ ...filters, page: filters.page + 1 })}`} className="rounded-full border border-forest-900/20 bg-white px-5 py-2 text-sm font-medium text-forest-900 hover:bg-forest-50">Next</Link> : null}
                   </nav>
                 ) : null}

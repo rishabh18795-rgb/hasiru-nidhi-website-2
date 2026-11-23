@@ -191,7 +191,7 @@ export default function AboutPage() {
             <h2 className="mt-4 font-display text-3xl text-cream sm:text-4xl">
               {siteConfig.legalName}
             </h2>
-            <p className="mt-4 text-cream/60">
+            <p className="mt-4 text-cream/75">
               Operating the Hasiru Nidhi nature experience grounds near
               Harohalli, Bengaluru Rural, Karnataka.
             </p>

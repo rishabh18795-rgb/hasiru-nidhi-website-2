@@ -93,7 +93,7 @@ export function VendorProfileForm({ vendor, requested }: { vendor: Vendor | null
       {canSubmit ? (
         <fieldset className="rounded-2xl border border-forest-900/10 bg-forest-50/40 p-5">
           <legend className="px-2 font-display text-lg text-forest-950">What would you like to do?</legend>
-          <p className="mb-3 text-sm text-ink/60">Each one is reviewed and approved separately. You can ask for more later.</p>
+          <p className="mb-3 text-sm text-ink/65">Each one is reviewed and approved separately. You can ask for more later.</p>
           <div className="flex flex-col gap-3">
             {(Object.keys(CAPABILITY_INFO) as VendorCapabilityKind[]).map((k) => (
               <CheckboxField key={k} name="capabilities" value={k} id={`cap-${k}`} defaultChecked={requested.includes(k)}
@@ -113,7 +113,7 @@ export function VendorProfileForm({ vendor, requested }: { vendor: Vendor | null
           <IntentButton intent="save" primary>Save changes</IntentButton>
         )}
       </div>
-      {canSubmit ? <p className="text-xs text-ink/55">Submitting needs a complete profile and any documents our team requires for what you chose (see Verification). We do not promise approval, and nothing is public until you are verified and each listing is approved.</p> : null}
+      {canSubmit ? <p className="text-xs text-ink/65">Submitting needs a complete profile and any documents our team requires for what you chose (see Verification). We do not promise approval, and nothing is public until you are verified and each listing is approved.</p> : null}
     </form>
   );
 }

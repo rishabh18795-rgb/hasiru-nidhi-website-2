@@ -588,3 +588,8 @@ export interface ServiceAppointment { id: string; request_id: string; starts_at:
 export interface ServiceHistoryRow { id: number; from_status: ServiceRequestStatus | null; to_status: ServiceRequestStatus; actor_kind: string; note: string | null; created_at: string }
 export interface AvailabilityRule { id: string; weekday: number; start_time: string; end_time: string }
 export interface TimeOff { id: string; starts_on: string; ends_on: string; note: string | null }
+
+/* ---------------------------------------------------------------- marketplace: verified reviews (M7) */
+export type ReviewStatus = "pending" | "approved" | "rejected";
+export interface PublicReviews { count: number; average: number | string | null; reviews: { rating: number; title: string | null; body: string; created_at: string; author: string }[] }
+export interface MarketplaceReview { id: string; kind: "product" | "service"; product_id: string | null; service_id: string | null; vendor_id: string; order_item_id: string | null; service_request_id: string | null; rating: number; title: string | null; body: string; status: ReviewStatus; moderation_note: string | null; created_at: string }

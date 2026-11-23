@@ -18,7 +18,7 @@ export default async function HostCalendar({ searchParams }: { searchParams: Pro
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-medium tracking-tight text-forest-950">Calendar</h1>
-        <p className="mt-1 text-sm text-ink/60">Block dates you can&apos;t host and see confirmed and requested stays. Confirmed bookings block dates automatically.</p>
+        <p className="mt-1 text-sm text-ink/65">Block dates you can&apos;t host and see confirmed and requested stays. Confirmed bookings block dates automatically.</p>
       </div>
       {props.length === 0 || !current ? (
         <EmptyState title="No properties yet" description="Add a property to manage its availability." action={{ href: "/host/properties/new", label: "Add a property" }} />

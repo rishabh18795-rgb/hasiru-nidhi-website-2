@@ -79,7 +79,7 @@ function Section({ title, hint, children, cols = 2 }: { title?: string; hint?: s
   return (
     <fieldset className="rounded-2xl border border-forest-900/10 bg-white p-5 sm:p-6">
       {title ? <legend className="px-2 font-display text-xl text-forest-950">{title}</legend> : null}
-      {hint ? <p className={cn("mb-4 text-sm text-ink/60", title && "-mt-1")}>{hint}</p> : null}
+      {hint ? <p className={cn("mb-4 text-sm text-ink/65", title && "-mt-1")}>{hint}</p> : null}
       <div className={cn("grid gap-5", cols === 2 && "sm:grid-cols-2")}>{children}</div>
     </fieldset>
   );
@@ -103,7 +103,7 @@ export function TypeStep({ propertyId, initial, catalog }: { propertyId?: string
               <label key={c.id} className="group relative flex cursor-pointer flex-col rounded-xl border border-forest-900/15 bg-white p-4 text-sm transition-colors hover:bg-forest-50 has-[:checked]:border-forest-700 has-[:checked]:bg-forest-50 has-[:checked]:ring-2 has-[:checked]:ring-forest-700/30">
                 <input type="radio" name="category_id" value={c.id} defaultChecked={v("category_id") === String(c.id)} required className="sr-only" />
                 <span className="font-medium text-forest-950">{c.name}</span>
-                {c.description ? <span className="mt-1 text-xs text-ink/60">{c.description}</span> : null}
+                {c.description ? <span className="mt-1 text-xs text-ink/65">{c.description}</span> : null}
               </label>
             ))}
           </div>
@@ -148,7 +148,7 @@ export function LocationStep({ propertyId, initial }: { propertyId: string; init
               <label key={o.value} className="flex cursor-pointer flex-col rounded-xl border border-forest-900/15 bg-white p-4 text-sm hover:bg-forest-50 has-[:checked]:border-forest-700 has-[:checked]:bg-forest-50 has-[:checked]:ring-2 has-[:checked]:ring-forest-700/30">
                 <input type="radio" name="location_precision" value={o.value} defaultChecked={v("location_precision", "approximate") === o.value} required className="sr-only" />
                 <span className="font-medium text-forest-950">{o.title}</span>
-                <span className="mt-1 text-xs text-ink/60">{o.copy}</span>
+                <span className="mt-1 text-xs text-ink/65">{o.copy}</span>
               </label>
             ))}
           </div>
@@ -223,7 +223,7 @@ export function AmenitiesStep({ propertyId, initial, catalog }: { propertyId: st
           {catalog.experiences.map((x) => <CheckboxField key={x.id} name="experience_ids" value={String(x.id)} id={`ex-${x.id}`} label={x.name} defaultChecked={experienceSet.has(x.id)} />)}
         </div>
       </fieldset>
-      <p className="text-sm text-ink/60">Something missing? <Link href="/contact" className="underline">Ask us to add it</Link> — administrators manage this list.</p>
+      <p className="text-sm text-ink/65">Something missing? <Link href="/contact" className="underline">Ask us to add it</Link> — administrators manage this list.</p>
     </Frame>
   );
 }
@@ -277,7 +277,7 @@ export function PricingStep({ propertyId, initial, maxGuests }: { propertyId: st
         <Field label="Taxes (%)" htmlFor="tax_percent" error={e.tax_percent} hint="Only enter a tax you actually charge (for example GST). Leave 0 if prices are tax-inclusive."><TextInput id="tax_percent" name="tax_percent" type="number" min={0} max={40} step="0.01" value={f.tax} onChange={set("tax")} error={!!e.tax_percent} /></Field>
         <Field label="Minimum stay (nights)" htmlFor="min_nights" error={e.min_nights} required><TextInput id="min_nights" name="min_nights" type="number" min={1} max={30} step={1} defaultValue={v("min_nights", "1")} required error={!!e.min_nights} /></Field>
         <Field label="Maximum stay (nights)" htmlFor="max_nights" error={e.max_nights} required hint="Online requests are limited to 30 nights."><TextInput id="max_nights" name="max_nights" type="number" min={1} max={30} step={1} defaultValue={v("max_nights", "30")} required error={!!e.max_nights} /></Field>
-        <p className="text-sm text-ink/60 sm:col-span-2">Currency: Indian rupee (₹). Other currencies are not supported yet.</p>
+        <p className="text-sm text-ink/65 sm:col-span-2">Currency: Indian rupee (₹). Other currencies are not supported yet.</p>
       </Section>
 
       <PricingPreview rules={rules} maxGuests={maxGuests} />

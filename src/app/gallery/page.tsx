@@ -53,7 +53,7 @@ export default function GalleryPage() {
       <section className="bg-cream py-20">
         <div className="container-nidhi">
           <PhotoGallery items={items} categories={categories} />
-          <p className="mt-10 max-w-3xl text-sm leading-relaxed text-ink/60">
+          <p className="mt-10 max-w-3xl text-sm leading-relaxed text-ink/65">
             These photographs are illustrative of the Karnataka countryside and rural life. They are not photographs of any particular listed property. Each stay shows its own host-supplied photographs on its page.
           </p>
         </div>

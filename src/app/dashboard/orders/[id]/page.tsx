@@ -6,6 +6,8 @@ import { ExternalLink, Truck } from "lucide-react";
 
 import { Card, CardTitle, DefinitionList, StatusBadge } from "@/components/app/ui";
 import { CancelOrderForm, DisputeForm, ReturnForm } from "@/components/orders/order-actions";
+import { ReviewForm } from "@/components/reviews/review-form";
+import { Stars } from "@/components/reviews/review-list";
 import { OrderTimeline } from "@/components/orders/order-timeline";
 import { PaymentNotice } from "@/components/orders/payment-notice";
 import { requireUser } from "@/lib/auth";
@@ -33,6 +35,8 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
     supabase.from("orders").select("id, order_number, vendor_name, status").eq("checkout_id", order.checkout_id).neq("id", id),
   ]);
   const items = (it ?? []) as OrderItem[];
+  const { data: rvs } = await supabase.from("marketplace_reviews").select("order_item_id, rating, status, moderation_note").in("order_item_id", items.map((i) => i.id));
+  const reviewOf = new Map((rvs ?? []).map((r) => [r.order_item_id as string, r as { rating: number; status: string; moderation_note: string | null }]));
   const shipment = sh as Shipment | null;
   const history = (hi ?? []) as OrderHistoryRow[];
   const requests = (rq ?? []) as OrderRequest[];
@@ -49,7 +53,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
       <div>
         <Link href="/dashboard/orders" className="text-sm text-forest-700 underline">← All orders</Link>
         <div className="mt-2 flex flex-wrap items-center gap-3"><h1 className="text-3xl font-medium tracking-tight text-forest-950">{order.order_number}</h1><StatusBadge status={order.status === "placed" ? "requested" : order.status === "rejected" || order.status === "cancelled" ? "rejected" : order.status === "delivered" ? "completed" : "confirmed"} /></div>
-        <p className="mt-1 text-sm text-ink/60">Sold by {order.vendor_name} · Checkout {checkout?.reference} · Placed {formatDateTime(order.created_at)}</p>
+        <p className="mt-1 text-sm text-ink/65">Sold by {order.vendor_name} · Checkout {checkout?.reference} · Placed {formatDateTime(order.created_at)}</p>
       </div>
 
       <Card><OrderTimeline status={order.status} /><p className="mt-4 text-sm text-ink/70">{ORDER_STATUS_LABEL[order.status]}{order.rejection_reason ? `: ${order.rejection_reason}` : ""}{order.status === "cancelled" && order.cancel_reason ? `: ${order.cancel_reason}` : ""}</p></Card>
@@ -61,7 +65,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
           <p className="flex items-center gap-2 text-sm font-medium text-forest-950"><Truck className="h-4 w-4" aria-hidden="true" />{SHIPMENT_LABEL[shipment.status]}</p>
           <DefinitionList items={[{ label: "Carrier", value: shipment.carrier }, { label: "Tracking number", value: <span data-testid="tracking-number">{shipment.tracking_number}</span> }, { label: "Dispatched", value: formatDateTime(shipment.shipped_at) }, { label: "Delivered", value: shipment.delivered_at ? formatDateTime(shipment.delivered_at) : null }]} />
           {shipment.tracking_url ? <a href={shipment.tracking_url} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex items-center gap-1.5 text-sm text-forest-700 underline">Track with the carrier <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" /></a> : null}
-          <p className="mt-3 text-xs text-ink/55">Tracking is entered by the seller. Hasiru Nidhi does not run the delivery.</p>
+          <p className="mt-3 text-xs text-ink/65">Tracking is entered by the seller. Hasiru Nidhi does not run the delivery.</p>
         </Card>
       ) : null}
 
@@ -69,17 +73,26 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
         <CardTitle>Items</CardTitle>
         <ul className="divide-y divide-forest-900/10">
           {items.map((i) => (
-            <li key={i.id} className="flex gap-4 py-4">
+            <li key={i.id} className="flex flex-wrap gap-4 py-4">
               <span className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-forest-50">{productImageUrl(i.image_path) ? <Image src={productImageUrl(i.image_path)!} alt="" fill sizes="64px" className="object-cover" /> : null}</span>
-              <div className="min-w-0 flex-1"><Link href={`/shop/p/${i.product_slug}`} className="font-medium text-forest-950 hover:underline">{i.product_name}</Link><p className="text-sm text-ink/60">{i.variant_name} · {formatPrice(i.unit_price_inr)} × {i.quantity}</p></div>
+              <div className="min-w-0 flex-1"><Link href={`/shop/p/${i.product_slug}`} className="font-medium text-forest-950 hover:underline">{i.product_name}</Link><p className="text-sm text-ink/65">{i.variant_name} · {formatPrice(i.unit_price_inr)} × {i.quantity}</p></div>
               <p className="font-display text-lg text-forest-950">{formatPrice(i.line_total_inr)}</p>
+              {order.status === "delivered" ? (
+                <div className="basis-full pl-20">
+                  {reviewOf.get(i.id) ? (
+                    <p className="flex flex-wrap items-center gap-2 text-sm text-ink/75" data-testid="my-review"><Stars value={reviewOf.get(i.id)!.rating} /> Your review: {reviewOf.get(i.id)!.status === "approved" ? "published" : reviewOf.get(i.id)!.status === "pending" ? "waiting for our team to check it" : `not published${reviewOf.get(i.id)!.moderation_note ? `: ${reviewOf.get(i.id)!.moderation_note}` : ""}`}</p>
+                  ) : (
+                    <details className="rounded-xl bg-forest-50/60 p-3"><summary className="cursor-pointer text-sm font-medium text-forest-800">Write a review</summary><div className="mt-3"><ReviewForm kind="product" refId={i.id} back={`/dashboard/orders/${order.id}`} subject={i.product_name} /></div></details>
+                  )}
+                </div>
+              ) : null}
             </li>
           ))}
         </ul>
         <dl className="mt-3 space-y-1.5 border-t border-forest-900/10 pt-3 text-sm">
           <div className="flex justify-between"><dt className="text-ink/70">Items total</dt><dd className="font-medium">{formatPrice(order.items_total_inr)}</dd></div>
-          <div className="flex justify-between"><dt className="text-ink/70">Delivery charges</dt><dd className="text-ink/60">{order.shipping_fee_inr === null ? "Not configured: the seller will confirm" : formatPrice(order.shipping_fee_inr)}</dd></div>
-          <div className="flex justify-between"><dt className="text-ink/70">Taxes</dt><dd className="text-ink/60">{order.tax_inr === null ? "Not confirmed yet" : formatPrice(order.tax_inr)}</dd></div>
+          <div className="flex justify-between"><dt className="text-ink/70">Delivery charges</dt><dd className="text-ink/65">{order.shipping_fee_inr === null ? "Not configured: the seller will confirm" : formatPrice(order.shipping_fee_inr)}</dd></div>
+          <div className="flex justify-between"><dt className="text-ink/70">Taxes</dt><dd className="text-ink/65">{order.tax_inr === null ? "Not confirmed yet" : formatPrice(order.tax_inr)}</dd></div>
         </dl>
       </Card>
 
@@ -102,7 +115,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
         <Card>
           <CardTitle>Your requests</CardTitle>
           <ul className="divide-y divide-forest-900/10 text-sm">
-            {requests.map((r) => <li key={r.id} className="space-y-1 py-3"><p className="font-medium text-forest-950">{REQUEST_KIND_LABEL[r.kind]}: <span className="capitalize">{r.status}</span></p><p className="text-ink/70">{r.reason}</p>{r.policy_note ? <p className="text-xs text-ink/55">{r.policy_note}</p> : null}{r.decision_note ? <p className="text-xs text-ink/70">Decision note: {r.decision_note}</p> : null}</li>)}
+            {requests.map((r) => <li key={r.id} className="space-y-1 py-3"><p className="font-medium text-forest-950">{REQUEST_KIND_LABEL[r.kind]}: <span className="capitalize">{r.status}</span></p><p className="text-ink/70">{r.reason}</p>{r.policy_note ? <p className="text-xs text-ink/65">{r.policy_note}</p> : null}{r.decision_note ? <p className="text-xs text-ink/70">Decision note: {r.decision_note}</p> : null}</li>)}
           </ul>
         </Card>
       ) : null}
@@ -110,7 +123,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
       <Card>
         <CardTitle>Status history</CardTitle>
         <ol className="space-y-2 text-sm">
-          {history.map((h) => <li key={h.id} className="flex flex-wrap justify-between gap-2"><span><span className="font-medium text-forest-950">{ORDER_STATUS_LABEL[h.to_status]}</span>{h.note ? <span className="text-ink/60"> · {h.note}</span> : null}</span><span className="text-xs text-ink/50">{formatDateTime(h.created_at)}</span></li>)}
+          {history.map((h) => <li key={h.id} className="flex flex-wrap justify-between gap-2"><span><span className="font-medium text-forest-950">{ORDER_STATUS_LABEL[h.to_status]}</span>{h.note ? <span className="text-ink/65"> · {h.note}</span> : null}</span><span className="text-xs text-ink/65">{formatDateTime(h.created_at)}</span></li>)}
         </ol>
       </Card>
 

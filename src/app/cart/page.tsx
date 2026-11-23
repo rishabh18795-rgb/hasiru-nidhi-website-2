@@ -31,7 +31,7 @@ export default async function CartPage({ searchParams }: { searchParams: Promise
         {cart.lines.length === 0 ? (
           <div className="mt-10 rounded-3xl border border-dashed border-forest-900/20 bg-white/60 px-6 py-16 text-center">
             <p className="font-display text-2xl text-forest-950">Your cart is empty</p>
-            <p className="mx-auto mt-2 max-w-md text-sm text-ink/60">Browse the Shop and add products. Items from different sellers can share one cart.</p>
+            <p className="mx-auto mt-2 max-w-md text-sm text-ink/65">Browse the Shop and add products. Items from different sellers can share one cart.</p>
             <div className="mt-6"><LinkButton href="/shop" className="rounded-full bg-forest-800 px-7 text-cream hover:bg-forest-700">Go to the Shop</LinkButton></div>
           </div>
         ) : (
@@ -42,7 +42,7 @@ export default async function CartPage({ searchParams }: { searchParams: Promise
                   <input id="cart-pin" name="pin" inputMode="numeric" maxLength={6} defaultValue={pin ?? ""} className="mt-1.5 block h-10 w-44 rounded-xl border border-forest-900/15 bg-white px-3 text-sm font-normal" />
                 </label>
                 <button type="submit" className="inline-flex h-10 items-center rounded-full border border-forest-900/20 px-5 text-sm font-medium text-forest-900 hover:bg-forest-50">Check</button>
-                <p className="w-full text-xs text-ink/55">One cart can hold items from several sellers. At checkout each seller gets their own order and manages their own delivery.</p>
+                <p className="w-full text-xs text-ink/65">One cart can hold items from several sellers. At checkout each seller gets their own order and manages their own delivery.</p>
               </form>
               <CartView cart={cart} />
             </div>
@@ -51,11 +51,11 @@ export default async function CartPage({ searchParams }: { searchParams: Promise
                 <h2 className="font-display text-xl text-forest-950">Summary</h2>
                 <dl className="mt-4 space-y-2 text-sm">
                   <div className="flex justify-between"><dt className="text-ink/70">Items ({cart.item_count})</dt><dd className="font-medium">{formatPrice(cart.subtotal_inr)}</dd></div>
-                  <div className="flex justify-between"><dt className="text-ink/70">Delivery charges</dt><dd className="text-ink/60">Not configured yet</dd></div>
-                  <div className="flex justify-between"><dt className="text-ink/70">Taxes</dt><dd className="text-ink/60">Not confirmed yet</dd></div>
+                  <div className="flex justify-between"><dt className="text-ink/70">Delivery charges</dt><dd className="text-ink/65">Not configured yet</dd></div>
+                  <div className="flex justify-between"><dt className="text-ink/70">Taxes</dt><dd className="text-ink/65">Not confirmed yet</dd></div>
                   <div className="flex justify-between border-t border-forest-900/10 pt-3 font-display text-xl text-forest-950"><dt>Items total</dt><dd data-testid="cart-total">{formatPrice(cart.subtotal_inr)}</dd></div>
                 </dl>
-                <p className="mt-2 text-xs text-ink/55">Delivery charges and taxes are not added because they have not been confirmed. The seller will tell you before dispatch.</p>
+                <p className="mt-2 text-xs text-ink/65">Delivery charges and taxes are not added because they have not been confirmed. The seller will tell you before dispatch.</p>
                 <div className="mt-5">
                   {addresses.length === 0 ? (
                     <Link href="/checkout" className="inline-flex h-12 w-full items-center justify-center rounded-full bg-forest-800 text-sm font-medium text-cream hover:bg-forest-700">Continue: add a delivery address</Link>

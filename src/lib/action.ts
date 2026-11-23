@@ -121,6 +121,10 @@ const FRIENDLY: Array<[RegExp, string]> = [
   [/too_many_items/, "You have reached the limit for days off."],
   [/service_locked_in_review/, "This service is being reviewed, so it can't be edited right now."],
   [/service_locked/, "This service can't be changed in its current state."],
+  [/not_eligible/, "You can review this after it has been delivered, or after the service is completed."],
+  [/already_reviewed/, "You have already reviewed this."],
+  [/invalid_rating/, "Choose a rating from 1 to 5 stars."],
+  [/review_body_required/, "Please write at least 10 characters about your experience."],
   [/payment_not_configured/, "Payment is not configured yet."],
   [/duplicate key|unique constraint/, "You already have an open request of that kind for this order."],
 ];

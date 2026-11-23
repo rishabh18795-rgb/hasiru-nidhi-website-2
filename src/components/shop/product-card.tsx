@@ -30,11 +30,11 @@ export function ProductCard({ product }: { product: ProductCardData }) {
       <div className="flex flex-1 flex-col p-4 sm:p-5">
         <p className="line-clamp-1 text-[11px] font-semibold uppercase tracking-wider text-forest-600">{product.category_name}</p>
         <h3 className="mt-1.5 font-display text-lg leading-snug text-forest-950"><Link href={href} className="hover:underline">{product.name}</Link></h3>
-        <p className="mt-1 text-xs text-ink/60">Sold by <Link href={`/vendors/${product.vendor_slug}`} className="underline underline-offset-2 hover:text-forest-800">{product.vendor_name}</Link></p>
+        <p className="mt-1 text-xs text-ink/65">Sold by <Link href={`/vendors/${product.vendor_slug}`} className="underline underline-offset-2 hover:text-forest-800">{product.vendor_name}</Link></p>
         {product.summary ? <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-ink/65">{product.summary}</p> : null}
         <p className="mt-auto pt-4">
           <span className="font-display text-xl text-forest-950">{min === max ? formatPrice(min) : `${formatPrice(min)}`}</span>
-          {min !== max ? <span className="ml-1 text-xs text-ink/55">onwards</span> : null}
+          {min !== max ? <span className="ml-1 text-xs text-ink/65">onwards</span> : null}
         </p>
       </div>
     </article>

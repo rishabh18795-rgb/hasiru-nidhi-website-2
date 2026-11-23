@@ -60,11 +60,11 @@ export default async function DemoStaysPage({ searchParams }: { searchParams: Pr
             </aside>
 
             <div>
-              <p className="text-sm text-ink/60" aria-live="polite" data-testid="demo-result-count">{total} {total === 1 ? "demo stay" : "demo stays"}{filters.pin ? ` for PIN ${filters.pin}` : ""}{filters.q ? ` for “${filters.q}”` : ""}</p>
+              <p className="text-sm text-ink/65" aria-live="polite" data-testid="demo-result-count">{total} {total === 1 ? "demo stay" : "demo stays"}{filters.pin ? ` for PIN ${filters.pin}` : ""}{filters.q ? ` for “${filters.q}”` : ""}</p>
               {results.length === 0 ? (
                 <div className="mt-4 rounded-2xl border border-dashed border-forest-900/20 bg-white/60 px-6 py-14 text-center">
                   <p className="font-display text-xl text-forest-950">No demo stays match those filters</p>
-                  <p className="mx-auto mt-2 max-w-md text-sm text-ink/60">Try different dates, fewer filters, or a broader destination.</p>
+                  <p className="mx-auto mt-2 max-w-md text-sm text-ink/65">Try different dates, fewer filters, or a broader destination.</p>
                   <Link href={action} className="mt-5 inline-flex h-10 items-center rounded-full bg-forest-800 px-5 text-sm font-medium text-cream hover:bg-forest-700">Clear all filters</Link>
                 </div>
               ) : (
@@ -75,7 +75,7 @@ export default async function DemoStaysPage({ searchParams }: { searchParams: Pr
                   {totalPages > 1 ? (
                     <nav aria-label="Pagination" className="mt-10 flex items-center justify-center gap-3">
                       {filters.page > 1 ? <Link href={`${action}${stayFiltersToQuery({ ...filters, page: filters.page - 1 })}`} className="rounded-full border border-forest-900/20 px-5 py-2 text-sm hover:bg-forest-50">Previous</Link> : null}
-                      <span className="text-sm text-ink/60">Page {filters.page} of {totalPages}</span>
+                      <span className="text-sm text-ink/65">Page {filters.page} of {totalPages}</span>
                       {filters.page < totalPages ? <Link href={`${action}${stayFiltersToQuery({ ...filters, page: filters.page + 1 })}`} className="rounded-full border border-forest-900/20 px-5 py-2 text-sm hover:bg-forest-50">Next</Link> : null}
                     </nav>
                   ) : null}

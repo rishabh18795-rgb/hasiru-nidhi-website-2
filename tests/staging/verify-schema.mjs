@@ -7,7 +7,7 @@ console.log("Staging schema check\n");
 
 const TABLES = ["profiles", "properties", "bookings", "vendors", "vendor_capabilities", "vendor_documents", "vendor_service_areas", "vendor_document_requirements", "product_categories", "products", "product_variants",
   "product_images", "inventory_movements", "customer_addresses", "cart_items", "checkouts", "orders", "order_shipping", "order_items", "order_status_history", "shipments", "shipment_events", "order_requests",
-  "order_disputes", "product_category_policies", "service_categories", "services", "service_images", "service_availability_rules", "service_time_off", "service_requests", "service_request_contact", "service_quotations", "service_appointments", "service_request_history", "marketplace_commission_rates", "platform_settings", "audit_logs", "notifications"];
+  "order_disputes", "product_category_policies", "service_categories", "services", "service_images", "service_availability_rules", "service_time_off", "service_requests", "service_request_contact", "service_quotations", "service_appointments", "service_request_history", "marketplace_commission_rates", "marketplace_reviews", "platform_settings", "audit_logs", "notifications"];
 
 for (const t of TABLES) await check(`table ${t} exists and the public (anon) key cannot read private rows`, async () => {
   const s = await c.service.from(t).select("*", { count: "exact", head: true });
@@ -44,7 +44,7 @@ await check("storage buckets exist with the right visibility", async () => {
   eq([by["product-images"], by["service-images"], by["vendor-documents"], by["property-images"], by["enquiry-photos"]], [true, true, false, true, false]);
 });
 await check("anonymous users cannot call privileged functions", async () => {
-  for (const fn of ["place_order", "save_product", "admin_review_product", "vendor_respond_order", "request_service", "save_service", "provider_send_quotation", "decide_quotation", "admin_review_service", "admin_set_marketplace_commission"]) {
+  for (const fn of ["place_order", "save_product", "admin_review_product", "vendor_respond_order", "request_service", "save_service", "provider_send_quotation", "decide_quotation", "admin_review_service", "admin_set_marketplace_commission", "submit_marketplace_review", "admin_moderate_marketplace_review"]) {
     const r = await c.anon.rpc(fn, {});
     assert(r.error, `${fn} should be refused`);
   }

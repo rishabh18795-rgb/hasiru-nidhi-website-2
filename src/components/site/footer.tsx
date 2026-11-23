@@ -21,7 +21,7 @@ export function Footer() {
             />
             <span className="font-display text-2xl text-cream">Hasiru Nidhi</span>
           </Link>
-          <p className="mt-5 max-w-sm text-sm leading-relaxed text-cream/60">
+          <p className="mt-5 max-w-sm text-sm leading-relaxed text-cream/75">
             {siteConfig.tagline} — a nature experience retreat off Kanakapura
             Road, Bengaluru. Cycling, gardening, farmhouse stays and slow days
             outdoors.
@@ -55,7 +55,7 @@ export function Footer() {
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className="text-sm text-cream/65 transition-colors hover:text-cream"
+                  className="text-sm text-cream/75 transition-colors hover:text-cream"
                 >
                   {item.label}
                 </Link>
@@ -71,7 +71,7 @@ export function Footer() {
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className="text-sm text-cream/65 transition-colors hover:text-cream"
+                  className="text-sm text-cream/75 transition-colors hover:text-cream"
                 >
                   {item.label}
                 </Link>
@@ -82,7 +82,7 @@ export function Footer() {
 
         <div>
           <p className="text-eyebrow text-sand-400">Visit Us</p>
-          <ul className="mt-5 flex flex-col gap-3 text-sm text-cream/65">
+          <ul className="mt-5 flex flex-col gap-3 text-sm text-cream/75">
             <li className="flex gap-3">
               <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-sand-400" />
               <span>

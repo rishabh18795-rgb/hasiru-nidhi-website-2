@@ -35,9 +35,9 @@ export default async function VendorStorePage({ params, searchParams }: { params
       <div className="container-nidhi">
         <p className="text-eyebrow">Seller</p>
         <h1 className="mt-3 text-4xl font-medium tracking-tight text-forest-950 sm:text-5xl">{store.business_name}</h1>
-        <p className="mt-2 flex items-center gap-1.5 text-sm text-ink/60">{store.city ? <><MapPin className="h-3.5 w-3.5" aria-hidden="true" />{[store.city, store.state].filter(Boolean).join(", ")} · </> : null}{store.product_count} {store.product_count === 1 ? "product" : "products"}</p>
+        <p className="mt-2 flex items-center gap-1.5 text-sm text-ink/65">{store.city ? <><MapPin className="h-3.5 w-3.5" aria-hidden="true" />{[store.city, store.state].filter(Boolean).join(", ")} · </> : null}{store.product_count} {store.product_count === 1 ? "product" : "products"}</p>
         {store.description ? <p className="mt-4 max-w-3xl text-base leading-relaxed text-ink/70">{store.description}</p> : null}
-        <p className="mt-3 text-xs text-ink/55">Verified by Hasiru Nidhi. This seller ships their own orders to the PIN codes they have listed.</p>
+        <p className="mt-3 text-xs text-ink/65">Verified by Hasiru Nidhi. This seller ships their own orders to the PIN codes they have listed.</p>
 
         {outcome.error ? (
           <div role="alert" className="mt-10 rounded-2xl border border-red-200 bg-red-50 p-6 text-sm text-red-800">We couldn&apos;t load this seller&apos;s products right now. <a href={base} className="underline">Retry</a></div>
@@ -49,7 +49,7 @@ export default async function VendorStorePage({ params, searchParams }: { params
             {totalPages > 1 ? (
               <nav aria-label="Pagination" className="mt-10 flex items-center justify-center gap-3">
                 {filters.page > 1 ? <Link rel="prev" href={`${base}${shopFiltersToQuery({ page: filters.page - 1 })}`} className="rounded-full border border-forest-900/20 bg-white px-5 py-2 text-sm font-medium text-forest-900 hover:bg-forest-50">Previous</Link> : null}
-                <span className="text-sm text-ink/60">Page {filters.page} of {totalPages}</span>
+                <span className="text-sm text-ink/65">Page {filters.page} of {totalPages}</span>
                 {filters.page < totalPages ? <Link rel="next" href={`${base}${shopFiltersToQuery({ page: filters.page + 1 })}`} className="rounded-full border border-forest-900/20 bg-white px-5 py-2 text-sm font-medium text-forest-900 hover:bg-forest-50">Next</Link> : null}
               </nav>
             ) : null}

@@ -26,7 +26,7 @@ function Line({ line }: { line: CartLine }) {
       <Link href={`/shop/p/${line.product_slug}`} className="relative h-24 w-24 shrink-0 overflow-hidden rounded-2xl bg-forest-50">{img ? <Image src={img} alt="" fill sizes="96px" className="object-cover" /> : null}</Link>
       <div className="min-w-0 flex-1">
         <Link href={`/shop/p/${line.product_slug}`} className="font-display text-lg leading-snug text-forest-950 hover:underline">{line.product_name}</Link>
-        <p className="text-sm text-ink/60">{line.variant_name}{options ? ` · ${options}` : ""}</p>
+        <p className="text-sm text-ink/65">{line.variant_name}{options ? ` · ${options}` : ""}</p>
         <p className="mt-0.5 text-sm text-ink/70">{formatPrice(line.unit_price_inr)} each</p>
         {line.issue ? <p role="alert" className="mt-1 flex items-center gap-1.5 text-sm font-medium text-red-700"><AlertTriangle className="h-4 w-4" aria-hidden="true" />{ISSUE[line.issue]}{line.issue === "limited_stock" ? `: only ${line.max_qty} available` : ""}</p> : null}
         {error ? <p role="alert" className="mt-1 text-sm text-red-700">{error}</p> : null}
@@ -38,7 +38,7 @@ function Line({ line }: { line: CartLine }) {
           </div>
           <div className="flex items-center gap-4">
             <p className="font-display text-lg text-forest-950">{formatPrice(line.line_total_inr)}</p>
-            <button type="button" onClick={() => set(0)} disabled={pending} aria-label={`Remove ${line.product_name}`} className="rounded-full p-2 text-ink/50 hover:bg-red-50 hover:text-red-700"><Trash2 className="h-4 w-4" /></button>
+            <button type="button" onClick={() => set(0)} disabled={pending} aria-label={`Remove ${line.product_name}`} className="rounded-full p-2 text-ink/65 hover:bg-red-50 hover:text-red-700"><Trash2 className="h-4 w-4" /></button>
           </div>
         </div>
       </div>

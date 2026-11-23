@@ -28,7 +28,7 @@ export function WizardProgress({ propertyId, current }: { propertyId?: string; c
               {done ? <Check className="h-4 w-4" aria-hidden="true" /> : i + 1}
             </span>
           );
-          const label = <span className={cn("mt-1.5 block text-center text-[11px] leading-tight", active ? "font-semibold text-forest-950" : "text-ink/60")}>{s.short}</span>;
+          const label = <span className={cn("mt-1.5 block text-center text-[11px] leading-tight", active ? "font-semibold text-forest-950" : "text-ink/65")}>{s.short}</span>;
           return (
             <li key={s.key} className="flex flex-1 items-start last:flex-none" aria-current={active ? "step" : undefined}>
               <div className="flex w-14 flex-col items-center">

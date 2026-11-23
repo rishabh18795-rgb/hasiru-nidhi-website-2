@@ -59,7 +59,7 @@ export function ContactForm() {
         <h3 className="mt-4 font-display text-2xl text-forest-950">
           Thank you — we&apos;ve received your message.
         </h3>
-        <p className="mt-2 max-w-sm text-sm leading-relaxed text-ink/60">
+        <p className="mt-2 max-w-sm text-sm leading-relaxed text-ink/65">
           Our team will reply to you soon.
         </p>
         <Button

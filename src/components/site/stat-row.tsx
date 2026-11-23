@@ -18,7 +18,7 @@ export function StatRow({ tone = "dark" }: { tone?: "dark" | "light" }) {
           <p
             className={cn(
               "mt-2 text-sm leading-snug",
-              tone === "dark" ? "text-ink/60" : "text-cream/60"
+              tone === "dark" ? "text-ink/65" : "text-cream/75"
             )}
           >
             {stat.label}

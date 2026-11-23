@@ -41,8 +41,8 @@ export async function HostCta({ becomeNotice, className }: { becomeNotice?: bool
         {role === "host" || !session ? <Link href="/host/properties" className={secondary}><Building2 className="h-4 w-4" aria-hidden="true" /> Manage My Properties</Link> : null}
         {role === "admin" ? <Link href="/admin" className={secondary}><KeyRound className="h-4 w-4" aria-hidden="true" /> Open the admin area</Link> : null}
       </div>
-      {!session ? <p className="text-sm text-ink/60">Create an account, verify your email, and you&apos;ll go straight to the listing steps. Already hosting? Log in and pick up where you left off.</p> : null}
-      {role === "admin" ? <p className="text-sm text-ink/60">Administrator accounts review listings; they don&apos;t host. Use a separate host account to list a property.</p> : null}
+      {!session ? <p className="text-sm text-ink/65">Create an account, verify your email, and you&apos;ll go straight to the listing steps. Already hosting? Log in and pick up where you left off.</p> : null}
+      {role === "admin" ? <p className="text-sm text-ink/65">Administrator accounts review listings; they don&apos;t host. Use a separate host account to list a property.</p> : null}
     </div>
   );
 }

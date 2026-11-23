@@ -44,7 +44,7 @@ export default async function DemoStayPage({ params, searchParams }: { params: P
       <div className="pt-20"><DemoModeBanner /></div>
       <article className="bg-cream pb-24 pt-8">
         <div className="container-nidhi">
-          <nav aria-label="Breadcrumb" className="mb-5 text-xs text-ink/55">
+          <nav aria-label="Breadcrumb" className="mb-5 text-xs text-ink/65">
             <Link href="/demo/stays" className="hover:text-forest-900">Demo stays</Link> / <span className="text-ink/80">{d.name}</span>
           </nav>
           <div className="mb-3 flex flex-wrap items-center gap-2">
@@ -92,7 +92,7 @@ export default async function DemoStayPage({ params, searchParams }: { params: P
 
               <section aria-labelledby="availability">
                 <h2 id="availability" className="font-display text-2xl text-forest-950">Availability</h2>
-                <p className="mt-2 text-sm text-ink/60">Struck-through dates are blocked in this demo. Everything else is shown as open.</p>
+                <p className="mt-2 text-sm text-ink/65">Struck-through dates are blocked in this demo. Everything else is shown as open.</p>
                 <div className="mt-4"><AvailabilityCalendar ranges={demoUnavailable(d, today)} /></div>
               </section>
 

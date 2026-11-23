@@ -91,7 +91,7 @@ export default async function StayPage({ params, searchParams }: { params: Param
     <article className="bg-cream pb-24 pt-28">
       {jsonLd ? <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} /> : null}
       <div className="container-nidhi">
-        <nav aria-label="Breadcrumb" className="mb-5 text-xs text-ink/55">
+        <nav aria-label="Breadcrumb" className="mb-5 text-xs text-ink/65">
           <Link href="/" className="hover:text-forest-900">Home</Link> / <Link href="/stays" className="hover:text-forest-900">Stays</Link> / <span className="text-ink/80">{p.name}</span>
         </nav>
 
@@ -155,7 +155,7 @@ export default async function StayPage({ params, searchParams }: { params: Param
                     <li key={r.id} className="rounded-xl bg-white p-4 ring-1 ring-forest-900/10">
                       <p className="font-medium text-forest-950">{r.name}</p>
                       <p className="mt-1 text-sm text-ink/65">Sleeps {r.capacity} · {r.quantity} available{r.price_inr !== null ? ` · ${formatINR(r.price_inr)}` : ""}</p>
-                      {r.description ? <p className="mt-2 text-sm text-ink/60">{r.description}</p> : null}
+                      {r.description ? <p className="mt-2 text-sm text-ink/65">{r.description}</p> : null}
                     </li>
                   ))}
                 </ul>
@@ -198,7 +198,7 @@ export default async function StayPage({ params, searchParams }: { params: Param
                   {p.tax_percent ? <div className="flex justify-between gap-4"><dt>Taxes</dt><dd>{p.tax_percent}%</dd></div> : null}
                   <div className="flex justify-between gap-4"><dt>Stay length</dt><dd>{p.min_nights}–{p.max_nights} night{p.max_nights === 1 ? "" : "s"}</dd></div>
                 </dl>
-                <p className="mt-3 text-xs text-ink/55">Enter your dates in the booking panel to see the total for your stay.</p>
+                <p className="mt-3 text-xs text-ink/65">Enter your dates in the booking panel to see the total for your stay.</p>
               </section>
             ) : null}
 
@@ -233,14 +233,14 @@ export default async function StayPage({ params, searchParams }: { params: Param
             <section aria-labelledby="reviews">
               <h2 id="reviews" className="font-display text-2xl text-forest-950">Reviews</h2>
               {stay.reviews.length === 0 ? (
-                <p className="mt-3 text-sm text-ink/60">No reviews yet. Only guests who have completed a confirmed stay can leave a review.</p>
+                <p className="mt-3 text-sm text-ink/65">No reviews yet. Only guests who have completed a confirmed stay can leave a review.</p>
               ) : (
                 <ul className="mt-4 space-y-4">
                   {stay.reviews.map((r) => (
                     <li key={r.id} className="rounded-xl bg-white p-4 ring-1 ring-forest-900/10">
                       <p className="flex items-center gap-1 text-sm" aria-label={`${r.rating} out of 5`}>
                         {Array.from({ length: 5 }).map((_, i) => <Star key={i} className={`h-4 w-4 ${i < r.rating ? "fill-sand-500 text-sand-500" : "text-ink/20"}`} aria-hidden="true" />)}
-                        <span className="ml-2 text-xs text-ink/50">Verified stay · {formatDate(r.created_at)}</span>
+                        <span className="ml-2 text-xs text-ink/65">Verified stay · {formatDate(r.created_at)}</span>
                       </p>
                       {r.comment ? <p className="mt-2 text-sm text-ink/80">{r.comment}</p> : null}
                     </li>
@@ -263,7 +263,7 @@ export default async function StayPage({ params, searchParams }: { params: Param
                 <ContactHostForm propertyId={p.id} propertyName={p.name} />
               </details>
               <details className="mt-4">
-                <summary className="cursor-pointer text-sm text-ink/60 underline underline-offset-2">Report this listing</summary>
+                <summary className="cursor-pointer text-sm text-ink/65 underline underline-offset-2">Report this listing</summary>
                 <ReportForm propertyId={p.id} />
               </details>
             </section>

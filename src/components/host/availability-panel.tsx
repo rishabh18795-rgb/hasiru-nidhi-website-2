@@ -31,17 +31,17 @@ export async function AvailabilityPanel({ supabase, propertyId }: { supabase: Su
       <Card>
         <CardTitle>Next three months</CardTitle>
         <AvailabilityCalendar ranges={ranges} />
-        <p className="mt-3 text-xs text-ink/60">Every date is open unless it is blocked or already confirmed. Shaded dates can&apos;t be booked.</p>
+        <p className="mt-3 text-xs text-ink/65">Every date is open unless it is blocked or already confirmed. Shaded dates can&apos;t be booked.</p>
       </Card>
       <Card><CardTitle>Block dates</CardTitle><BlockDatesForm propertyId={propertyId} minDate={today} /></Card>
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>
           <CardTitle>Blocked by you</CardTitle>
-          {blockList.length === 0 ? <p className="text-sm text-ink/55">No blocked dates.</p> : (
+          {blockList.length === 0 ? <p className="text-sm text-ink/65">No blocked dates.</p> : (
             <ul className="divide-y divide-forest-900/8">
               {blockList.map((b) => (
                 <li key={b.id} className="flex items-center justify-between gap-3 py-3 text-sm">
-                  <span>{formatDate(b.start_date)} → {formatDate(b.end_date)}{b.reason ? <span className="text-ink/55"> · {b.reason}</span> : null}</span>
+                  <span>{formatDate(b.start_date)} → {formatDate(b.end_date)}{b.reason ? <span className="text-ink/65"> · {b.reason}</span> : null}</span>
                   <form action={unblockDates.bind(null, b.id, propertyId)}><button type="submit" className="text-red-700 underline underline-offset-2">Unblock</button></form>
                 </li>
               ))}
@@ -50,13 +50,13 @@ export async function AvailabilityPanel({ supabase, propertyId }: { supabase: Su
         </Card>
         <Card>
           <CardTitle>Bookings on these dates</CardTitle>
-          {confirmedList.length + requestedList.length === 0 ? <p className="text-sm text-ink/55">No upcoming bookings or requests.</p> : (
+          {confirmedList.length + requestedList.length === 0 ? <p className="text-sm text-ink/65">No upcoming bookings or requests.</p> : (
             <ul className="divide-y divide-forest-900/8">
               {confirmedList.map((b, i) => <li key={`c${i}`} className="py-3 text-sm">{formatDate(b.check_in)} → {formatDate(b.check_out)} · {b.guest_name} <span className="ml-1 rounded-full bg-forest-100 px-2 py-0.5 text-xs text-forest-800">Confirmed</span></li>)}
               {requestedList.map((b, i) => <li key={`r${i}`} className="py-3 text-sm">{formatDate(b.check_in)} → {formatDate(b.check_out)} · {b.guest_name} <span className="ml-1 rounded-full bg-sand-100 px-2 py-0.5 text-xs text-earth-700">Requested</span></li>)}
             </ul>
           )}
-          <p className="mt-3 text-xs text-ink/60">Confirmed stays can&apos;t be blocked over, so you can&apos;t accidentally overwrite a reservation.</p>
+          <p className="mt-3 text-xs text-ink/65">Confirmed stays can&apos;t be blocked over, so you can&apos;t accidentally overwrite a reservation.</p>
         </Card>
       </div>
     </div>

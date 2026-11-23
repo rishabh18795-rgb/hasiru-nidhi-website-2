@@ -41,7 +41,7 @@ export function ListingPreview({ listing, editable = true }: { listing: HostList
             ))}
           </div>
         )}
-        {urls.length > 5 ? <p className="mt-2 text-xs text-ink/55">+ {urls.length - 5} more photograph{urls.length - 5 === 1 ? "" : "s"}</p> : null}
+        {urls.length > 5 ? <p className="mt-2 text-xs text-ink/65">+ {urls.length - 5} more photograph{urls.length - 5 === 1 ? "" : "s"}</p> : null}
       </Block>
 
       <Block title={p.name} edit={step("type")}>
@@ -51,9 +51,9 @@ export function ListingPreview({ listing, editable = true }: { listing: HostList
 
       <Block title="Location" edit={step("location")}>
         <dl className="grid gap-3 text-sm sm:grid-cols-2">
-          <div><dt className="text-xs uppercase tracking-wide text-ink/50">Shown to guests</dt><dd className="mt-0.5">{[p.region, p.city, p.state, p.postal_code && `PIN ${p.postal_code}`, p.country].filter(Boolean).join(", ") || "—"}</dd></div>
-          <div><dt className="text-xs uppercase tracking-wide text-ink/50">Map pin</dt><dd className="mt-0.5">{p.latitude !== null ? (p.location_precision === "exact" ? "Exact location" : "Approximate area (about 1 km)") : "No map pin"}</dd></div>
-          <div className="sm:col-span-2"><dt className="text-xs uppercase tracking-wide text-ink/50">Private address (guests see it only after a confirmed booking)</dt><dd className="mt-0.5">{priv.address_line || "—"}</dd></div>
+          <div><dt className="text-xs uppercase tracking-wide text-ink/65">Shown to guests</dt><dd className="mt-0.5">{[p.region, p.city, p.state, p.postal_code && `PIN ${p.postal_code}`, p.country].filter(Boolean).join(", ") || "—"}</dd></div>
+          <div><dt className="text-xs uppercase tracking-wide text-ink/65">Map pin</dt><dd className="mt-0.5">{p.latitude !== null ? (p.location_precision === "exact" ? "Exact location" : "Approximate area (about 1 km)") : "No map pin"}</dd></div>
+          <div className="sm:col-span-2"><dt className="text-xs uppercase tracking-wide text-ink/65">Private address (guests see it only after a confirmed booking)</dt><dd className="mt-0.5">{priv.address_line || "—"}</dd></div>
         </dl>
       </Block>
 
@@ -74,7 +74,7 @@ export function ListingPreview({ listing, editable = true }: { listing: HostList
       </Block>
 
       <Block title="Facilities & experiences" edit={step("amenities")}>
-        {amenities.length + experiences.length === 0 ? <p className="text-sm text-ink/60">None selected.</p> : (
+        {amenities.length + experiences.length === 0 ? <p className="text-sm text-ink/65">None selected.</p> : (
           <div className="flex flex-wrap gap-2">
             {amenities.map((a) => <span key={`a${a.id}`} className="rounded-full bg-forest-50 px-3 py-1 text-xs text-forest-900">{a.name}</span>)}
             {experiences.map((x) => <span key={`x${x.id}`} className="rounded-full bg-sand-100 px-3 py-1 text-xs text-earth-800">{x.name}</span>)}
@@ -85,7 +85,7 @@ export function ListingPreview({ listing, editable = true }: { listing: HostList
       <Block title="Pricing" edit={step("pricing")}>
         {p.price_inr === null ? <p className="text-sm text-red-700">No price set.</p> : (
           <>
-            <p className="text-sm"><span className="font-display text-2xl text-forest-950">{formatINR(p.price_inr)}</span> <span className="text-ink/60">{PRICE_UNIT_LABEL[p.price_unit]}</span></p>
+            <p className="text-sm"><span className="font-display text-2xl text-forest-950">{formatINR(p.price_inr)}</span> <span className="text-ink/65">{PRICE_UNIT_LABEL[p.price_unit]}</span></p>
             <ul className="mt-2 space-y-0.5 text-sm text-ink/70">
               {p.weekend_price_inr !== null ? <li>Weekend (Fri/Sat) nights: {formatINR(p.weekend_price_inr)}</li> : null}
               {p.included_guests !== null && p.extra_guest_fee_inr !== null ? <li>Includes {p.included_guests} guest{p.included_guests === 1 ? "" : "s"}; {formatINR(p.extra_guest_fee_inr)} per extra guest, per night</li> : null}

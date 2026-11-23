@@ -60,7 +60,7 @@ export default async function HostProperties({ searchParams }: { searchParams: P
                     <StatusBadge status={p.status} />
                     {p.status === "rejected" && p.review_kind === "changes_requested" ? <span className="rounded-full bg-sand-100 px-2.5 py-0.5 text-xs font-medium text-earth-700">Changes requested</span> : null}
                   </div>
-                  <p className="mt-1 text-sm text-ink/60">{[p.city, p.state].filter(Boolean).join(", ") || "Location not set"} · updated {formatDate(p.updated_at)}</p>
+                  <p className="mt-1 text-sm text-ink/65">{[p.city, p.state].filter(Boolean).join(", ") || "Location not set"} · updated {formatDate(p.updated_at)}</p>
                   {p.status === "rejected" && p.rejection_reason ? <p className="mt-2 text-sm text-red-700">{p.review_kind === "changes_requested" ? "Changes requested" : "Rejected"}: {p.rejection_reason}</p> : null}
                   {p.status === "suspended" && p.rejection_reason ? <p className="mt-2 text-sm text-red-700">Suspended: {p.rejection_reason}</p> : null}
                 </div>

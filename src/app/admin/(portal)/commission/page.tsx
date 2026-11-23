@@ -45,12 +45,12 @@ export default async function AdminCommission() {
         {rows.length === 0 ? <EmptyState title="No ledger entries yet" description="An entry is added when a host confirms a booking." /> : (
           <div className="overflow-x-auto rounded-2xl bg-white ring-1 ring-forest-900/10">
             <table className="w-full min-w-[40rem] text-left text-sm">
-              <thead className="text-xs uppercase tracking-wide text-ink/55"><tr><th className="p-3">When</th><th className="p-3">Entry</th><th className="p-3 text-right">Base</th><th className="p-3 text-right">Rate</th><th className="p-3 text-right">Commission</th><th className="p-3 text-right">Host share</th></tr></thead>
+              <thead className="text-xs uppercase tracking-wide text-ink/65"><tr><th className="p-3">When</th><th className="p-3">Entry</th><th className="p-3 text-right">Base</th><th className="p-3 text-right">Rate</th><th className="p-3 text-right">Commission</th><th className="p-3 text-right">Host share</th></tr></thead>
               <tbody>
                 {rows.map((r) => (
                   <tr key={r.id} className="border-t border-forest-900/8">
-                    <td className="p-3 text-ink/60">{formatDateTime(r.created_at)}</td>
-                    <td className="p-3 capitalize">{r.kind}{r.note ? <span className="block text-xs text-ink/50">{r.note}</span> : null}</td>
+                    <td className="p-3 text-ink/65">{formatDateTime(r.created_at)}</td>
+                    <td className="p-3 capitalize">{r.kind}{r.note ? <span className="block text-xs text-ink/65">{r.note}</span> : null}</td>
                     <td className="p-3 text-right">{formatINR(r.commissionable_inr)}</td>
                     <td className="p-3 text-right">{Number(r.commission_rate_percent)}%</td>
                     <td className="p-3 text-right font-medium">{formatINR(r.commission_inr)}</td>

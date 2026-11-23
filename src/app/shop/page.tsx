@@ -68,13 +68,13 @@ export default async function ShopPage() {
         <div className="container-nidhi">
           <SectionHeading eyebrow="Shop by category" title="Everything for a greener life." />
           <h2 id="cats-heading" className="sr-only">Categories</h2>
-          {categories.length === 0 ? <p className="mt-8 text-sm text-ink/60">Categories are being set up.</p> : (
+          {categories.length === 0 ? <p className="mt-8 text-sm text-ink/65">Categories are being set up.</p> : (
             <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {categories.map((c) => (
                 <li key={c.id}>
                   <Link href={`/shop/${c.slug}`} className="group flex h-full items-start gap-4 rounded-3xl bg-white p-5 ring-1 ring-forest-900/10 transition-shadow hover:shadow-lg hover:shadow-forest-950/10 focus-visible:outline-2 focus-visible:outline-forest-600">
                     <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-forest-800 text-cream"><CategoryIcon slug={c.slug} className="h-6 w-6" /></span>
-                    <span className="min-w-0"><span className="flex items-center gap-1 font-display text-lg text-forest-950">{c.name}<ArrowUpRight className="h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100" aria-hidden="true" /></span>{c.description ? <span className="mt-1 block text-sm text-ink/60">{c.description}</span> : null}</span>
+                    <span className="min-w-0"><span className="flex items-center gap-1 font-display text-lg text-forest-950">{c.name}<ArrowUpRight className="h-4 w-4 opacity-0 transition-opacity group-hover:opacity-100" aria-hidden="true" /></span>{c.description ? <span className="mt-1 block text-sm text-ink/65">{c.description}</span> : null}</span>
                   </Link>
                 </li>
               ))}
@@ -105,7 +105,7 @@ export default async function ShopPage() {
           ) : (
             <div className="mt-10 rounded-3xl border border-dashed border-forest-900/20 bg-white/60 px-6 py-14 text-center">
               <p className="font-display text-xl text-forest-950">No products are listed yet</p>
-              <p className="mx-auto mt-2 max-w-lg text-sm leading-relaxed text-ink/60">Products appear here only after a verified seller lists them and our team approves them. We never show sample products as if they were real.</p>
+              <p className="mx-auto mt-2 max-w-lg text-sm leading-relaxed text-ink/65">Products appear here only after a verified seller lists them and our team approves them. We never show sample products as if they were real.</p>
               <div className="mt-6 flex flex-wrap justify-center gap-3">
                 <LinkButton href="/become-a-vendor" className="rounded-full bg-forest-800 px-6 text-cream hover:bg-forest-700">Become a vendor</LinkButton>
                 <LinkButton href="/stays" variant="outline" className="rounded-full border-forest-800/25 px-6 text-forest-900 hover:bg-forest-900/5">Explore nature stays</LinkButton>
@@ -127,7 +127,7 @@ export default async function ShopPage() {
               </li>
             ))}
           </ul>
-          <p className="mt-8 text-sm text-cream/60">Ordering and online payment open in a later release. Today you can browse, compare and check delivery.</p>
+          <p className="mt-8 text-sm text-cream/75">Ordering and online payment open in a later release. Today you can browse, compare and check delivery.</p>
         </div>
       </section>
     </>

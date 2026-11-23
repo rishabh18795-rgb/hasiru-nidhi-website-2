@@ -51,8 +51,8 @@ export default async function AdminGardening({ searchParams }: { searchParams: P
             <li key={r.id}>
               <Card className="space-y-3">
                 <div className="flex flex-wrap items-start justify-between gap-2">
-                  <div><p className="font-medium text-forest-950">{r.name}</p><p className="text-sm text-ink/60">{[r.email, r.phone].filter(Boolean).join(" · ")}</p></div>
-                  <time className="text-xs text-ink/45" dateTime={r.created_at}>{formatDateTime(r.created_at)}</time>
+                  <div><p className="font-medium text-forest-950">{r.name}</p><p className="text-sm text-ink/65">{[r.email, r.phone].filter(Boolean).join(" · ")}</p></div>
+                  <time className="text-xs text-ink/65" dateTime={r.created_at}>{formatDateTime(r.created_at)}</time>
                 </div>
                 <DefinitionList items={[
                   { label: "Location", value: r.location }, { label: "PIN code", value: r.pin_code },
@@ -62,7 +62,7 @@ export default async function AdminGardening({ searchParams }: { searchParams: P
                 ]} />
                 {r.requirements ? <p className="whitespace-pre-line text-sm text-ink/80">{r.requirements}</p> : null}
                 {r.photo_paths?.length ? (
-                  <p className="text-sm">{signed[r.id]?.length ? signed[r.id].map((u, i) => <a key={i} href={u} target="_blank" rel="noreferrer noopener" className="mr-3 text-forest-700 underline">Photo {i + 1}</a>) : <span className="text-ink/55">{r.photo_paths.length} photo(s) attached — set SUPABASE_SERVICE_ROLE_KEY to view them here.</span>}</p>
+                  <p className="text-sm">{signed[r.id]?.length ? signed[r.id].map((u, i) => <a key={i} href={u} target="_blank" rel="noreferrer noopener" className="mr-3 text-forest-700 underline">Photo {i + 1}</a>) : <span className="text-ink/65">{r.photo_paths.length} photo(s) attached — set SUPABASE_SERVICE_ROLE_KEY to view them here.</span>}</p>
                 ) : null}
                 <TriageForm table="gardening_enquiries" id={r.id} status={r.status} notes={r.admin_notes} statuses={STATUSES} />
               </Card>

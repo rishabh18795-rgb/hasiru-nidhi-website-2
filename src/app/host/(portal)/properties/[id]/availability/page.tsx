@@ -18,7 +18,7 @@ export default async function AvailabilityPage({ params }: { params: Promise<{ i
       <div>
         <Link href={`/host/properties/${id}`} className="text-sm text-forest-700 underline">← {p.name}</Link>
         <h1 className="mt-2 text-3xl font-medium tracking-tight text-forest-950">Availability calendar</h1>
-        <p className="mt-1 text-sm text-ink/60">Block dates you can&apos;t host. Confirmed bookings block dates automatically, and you can&apos;t block nights that already have a confirmed stay.</p>
+        <p className="mt-1 text-sm text-ink/65">Block dates you can&apos;t host. Confirmed bookings block dates automatically, and you can&apos;t block nights that already have a confirmed stay.</p>
       </div>
       <AvailabilityPanel supabase={supabase} propertyId={id} />
     </div>

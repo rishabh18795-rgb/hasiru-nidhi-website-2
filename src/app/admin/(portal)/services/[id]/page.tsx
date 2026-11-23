@@ -36,8 +36,8 @@ export default async function AdminServiceDetail({ params }: { params: Promise<{
     <div className="space-y-6">
       <div>
         <Link href="/admin/services" className="text-sm text-forest-700 underline">← All services</Link>
-        <div className="mt-2 flex flex-wrap items-center gap-3"><h1 className="text-3xl font-medium tracking-tight text-forest-950">{service.name}</h1><StatusBadge status={service.status} />{service.is_featured ? <span className="text-xs text-ink/60">featured</span> : null}</div>
-        <p className="mt-1 text-sm text-ink/60">Submitted {service.submitted_at ? formatDateTime(service.submitted_at) : "—"} · /services/{service.slug}</p>
+        <div className="mt-2 flex flex-wrap items-center gap-3"><h1 className="text-3xl font-medium tracking-tight text-forest-950">{service.name}</h1><StatusBadge status={service.status} />{service.is_featured ? <span className="text-xs text-ink/65">featured</span> : null}</div>
+        <p className="mt-1 text-sm text-ink/65">Submitted {service.submitted_at ? formatDateTime(service.submitted_at) : "—"} · /services/{service.slug}</p>
       </div>
 
       <Card>
@@ -56,7 +56,7 @@ export default async function AdminServiceDetail({ params }: { params: Promise<{
       <Card>
         <CardTitle>Decision</CardTitle>
         <ServiceDecisionForm serviceId={service.id} status={service.status} />
-        {service.rejection_reason ? <p className="mt-3 text-sm text-ink/60">Last note recorded: {service.rejection_reason}</p> : null}
+        {service.rejection_reason ? <p className="mt-3 text-sm text-ink/65">Last note recorded: {service.rejection_reason}</p> : null}
         {service.status === "approved" ? (
           <form action={setServiceFeatured.bind(null, service.id, !service.is_featured)} className="mt-4"><button type="submit" className="h-9 rounded-full border border-forest-900/20 px-4 text-sm font-medium text-forest-900 hover:bg-forest-50">{service.is_featured ? "Remove from featured" : "Feature this service"}</button></form>
         ) : null}
@@ -71,13 +71,13 @@ export default async function AdminServiceDetail({ params }: { params: Promise<{
           { label: "Summary", value: service.summary },
           { label: "Availability", value: service.is_available ? "Accepting requests" : "Paused by the provider" },
         ]} />
-        <p className="mt-4 whitespace-pre-line text-sm leading-relaxed text-ink/80">{service.description || <span className="text-ink/40">No description.</span>}</p>
-        {service.attributes.length ? <dl className="mt-4 grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">{service.attributes.map((a) => <div key={a.label}><dt className="text-xs uppercase tracking-wide text-ink/50">{a.label}</dt><dd>{a.value}</dd></div>)}</dl> : null}
+        <p className="mt-4 whitespace-pre-line text-sm leading-relaxed text-ink/80">{service.description || <span className="text-ink/65">No description.</span>}</p>
+        {service.attributes.length ? <dl className="mt-4 grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">{service.attributes.map((a) => <div key={a.label}><dt className="text-xs uppercase tracking-wide text-ink/65">{a.label}</dt><dd>{a.value}</dd></div>)}</dl> : null}
       </Card>
 
       <Card>
         <CardTitle>Photos</CardTitle>
-        {images.length === 0 ? <p className="text-sm text-ink/60">No photos.</p> : (
+        {images.length === 0 ? <p className="text-sm text-ink/65">No photos.</p> : (
           <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4">{images.map((i) => <li key={i.id} className="relative aspect-square overflow-hidden rounded-xl bg-forest-50"><Image src={serviceImageUrl(i.path) ?? ""} alt={i.alt || service.name} fill sizes="20vw" className="object-cover" unoptimized={!serviceImageUrl(i.path)} /></li>)}</ul>
         )}
       </Card>

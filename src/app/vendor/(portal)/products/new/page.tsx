@@ -20,7 +20,7 @@ export default async function NewProductPage() {
       <div>
         <Link href="/vendor/products" className="text-sm text-forest-700 underline">← All products</Link>
         <h1 className="mt-2 text-3xl font-medium tracking-tight text-forest-950">New product</h1>
-        <p className="mt-1 text-sm text-ink/60">Start with the basics. After you save, you can add photos, variants with prices and stock, and submit it for review.</p>
+        <p className="mt-1 text-sm text-ink/65">Start with the basics. After you save, you can add photos, variants with prices and stock, and submit it for review.</p>
       </div>
       <Card><CardTitle>Product details</CardTitle><ProductForm product={null} categories={categories} /></Card>
     </div>
