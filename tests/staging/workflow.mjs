@@ -14,6 +14,9 @@ console.log(`Staging workflow run ${run}\n`);
 const JPG = fs.readFileSync(path.join(ROOT_DIR, "public/images/gardening/marigold-flowers-garden-karnataka.jpg"));
 const PDF = Buffer.from("%PDF-1.4\n1 0 obj<<>>endobj\ntrailer<<>>\n%%EOF\n");
 const rpc = async (u, fn, args = {}) => must(await u.client.rpc(fn, args), fn);
+// The Stay tables may hold records from other staging suites; this workflow must simply not CHANGE them.
+const stayCounts = async () => [(await svc.from("payments").select("id", { count: "exact", head: true })).count, (await svc.from("bookings").select("id", { count: "exact", head: true })).count, (await svc.from("commission_ledger").select("id", { count: "exact", head: true })).count];
+const stayBaseline = await stayCounts();
 
 // ------------------------------------------------------------------ identities (synthetic, staging only)
 const admin = await signedIn(env, c, "admin@staging.test", "Staging Admin");
@@ -260,7 +263,7 @@ await check("all-or-nothing: an out-of-stock line or an undeliverable seller fai
 await check("financial and Stay safety: no order or checkout is ever anything but unpaid; Nature Stay tables are untouched", async () => {
   eq((await svc.from("orders").select("id", { count: "exact", head: true }).neq("payment_status", "unpaid")).count, 0);
   eq((await svc.from("checkouts").select("id", { count: "exact", head: true }).neq("payment_status", "unpaid")).count, 0);
-  eq([(await svc.from("payments").select("id", { count: "exact", head: true })).count, (await svc.from("bookings").select("id", { count: "exact", head: true })).count, (await svc.from("commission_ledger").select("id", { count: "exact", head: true })).count], [0, 0, 0]);
+  eq(await stayCounts(), stayBaseline, "the order workflow must not change payments, bookings or the commission ledger");
 });
 
 console.log("\nStaging project:", env.NEXT_PUBLIC_SUPABASE_URL);

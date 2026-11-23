@@ -5,6 +5,7 @@ import { expect, test, type Browser, type BrowserContext, type Page } from "@pla
 type Any = any;
 
 let fx: Any;
+let stayBaseline: (number | null)[] = [];
 let svc: Any;
 const ctxs: BrowserContext[] = [];
 
@@ -26,6 +27,8 @@ async function signIn(page: Page, email: string, next = "/dashboard") {
 const money = (n: number) => `₹${n.toLocaleString("en-IN")}`;
 const one = async (q: Any) => { const { data, error } = await q; if (error) throw new Error(error.message); return data; };
 
+const stayCounts = async () => [(await svc.from("payments").select("id", { count: "exact", head: true })).count, (await svc.from("bookings").select("id", { count: "exact", head: true })).count, (await svc.from("commission_ledger").select("id", { count: "exact", head: true })).count];
+
 test.describe.configure({ mode: "serial" });
 
 let customer: Page, sellerA: Page, sellerB: Page, sellerC: Page, admin: Page;
@@ -38,6 +41,7 @@ test.beforeAll(async ({ browser }) => {
   const { seedFixtures } = await import("../staging/seed-ui.mjs");
   const { loadEnv, clients } = await import("../staging/lib.mjs");
   fx = await seedFixtures(test.info().project.name);
+  stayBaseline = await stayCounts();
   svc = clients(loadEnv()).service;
   customer = await newPage(browser); sellerA = await newPage(browser); sellerB = await newPage(browser); sellerC = await newPage(browser); admin = await newPage(browser);
 });
@@ -278,7 +282,7 @@ test.afterAll(async () => { await svc?.from("product_category_policies").delete(
 test("13. nothing was ever recorded as paid, stock adds up, and the Stay tables are untouched", async () => {
   expect((await svc.from("orders").select("id", { count: "exact", head: true }).neq("payment_status", "unpaid")).count).toBe(0);
   expect((await svc.from("checkouts").select("id", { count: "exact", head: true }).neq("payment_status", "unpaid")).count).toBe(0);
-  expect([(await svc.from("payments").select("id", { count: "exact", head: true })).count, (await svc.from("bookings").select("id", { count: "exact", head: true })).count, (await svc.from("commission_ledger").select("id", { count: "exact", head: true })).count]).toEqual([0, 0, 0]);
+  expect([(await svc.from("payments").select("id", { count: "exact", head: true })).count, (await svc.from("bookings").select("id", { count: "exact", head: true })).count, (await svc.from("commission_ledger").select("id", { count: "exact", head: true })).count]).toEqual(stayBaseline); // the order workflow must not change Stay tables
   const variantIds = Object.values(P()).flatMap((p) => p.variants.map((v) => v.id));
   for (const id of variantIds) {
     const v = await one(svc.from("product_variants").select("stock_on_hand").eq("id", id).single());
