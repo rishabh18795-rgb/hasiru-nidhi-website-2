@@ -2,6 +2,8 @@
 
 Branch: `marketplace/develop`. **Production has not been touched**: it still runs the original site and database, and every marketplace flag is OFF there. Nothing below is done to production until the owner approves this list.
 
+Soft launch without online payments: see `docs/SOFT_LAUNCH.md` (owner decisions of 24 Nov 2026, commission review, tax and legal items, checklist).
+
 ## 1. What has been verified (staging project, never production)
 
 See the table at the end of the latest progress report for the exact numbers. Coverage: typecheck and lint; unit and database tests against the real migrations in an in-process Postgres; the staging schema check; real-backend workflows (Auth, REST, Storage, RLS) for vendors, products, orders, services and the original Nature Stay; real-browser journeys on desktop and phone; a whole-site audit (every public, customer, vendor, host and admin page) for errors, broken images, sideways scrolling and accessibility.

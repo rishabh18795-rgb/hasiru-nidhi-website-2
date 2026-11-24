@@ -69,4 +69,15 @@ describe("commission foundation", () => {
     expect(await failure(db, admin, "insert into public.marketplace_commission_rates (vertical, rate_percent, note) values ('products', 5, 'direct')")).toMatch(/permission denied/i);
     expect(await failure(db, user, "select public.marketplace_commission_rate('products', null)")).toMatch(/permission denied/i);
   });
+
+  it("records a rate without deducting anything: only Stay bookings and the ledger carry commission amounts", async () => {
+    await set("products", null, 20, "Owner decision, 24 Nov 2026: 20 percent. No deduction until GST review.");
+    await set("services", null, 20, "Owner decision, 24 Nov 2026: 20 percent. No deduction until GST review.");
+    expect(await rate("products", plants)).toBe("20.00");
+    expect(await rate("services", gardening)).toBe("20.00");
+    // Tripwire: if a commission column appears on orders, order lines or service requests, deductions have been wired in and need review.
+    const { rows } = await db.query<{ t: string }>("select distinct table_name as t from information_schema.columns where table_schema = 'public' and column_name ilike '%commission%' order by 1");
+    expect(rows.map((r) => r.t)).toEqual(["booking_financials", "bookings", "commission_ledger"]);
+    expect((await db.query("select count(*)::int as n from public.commission_ledger")).rows[0]).toEqual({ n: 0 });
+  });
 });

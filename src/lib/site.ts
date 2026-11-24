@@ -4,6 +4,9 @@ function configured(name: string): string {
   return (process.env[name] ?? "").trim();
 }
 
+/** The official business mailbox, confirmed by the owner (24 Nov 2026). NEXT_PUBLIC_CONTACT_EMAIL overrides it (for example once a domain mailbox exists). */
+export const OFFICIAL_EMAIL = "hasirunidhiofficial@gmail.com";
+
 export const siteConfig = {
   name: "Hasiru Nidhi",
   legalName: "Hasiru Nidhi Horizons Private Limited",
@@ -24,11 +27,11 @@ export const siteConfig = {
     "sustainable tourism India",
   ],
   contact: {
-    // Contact channels come from environment configuration. They are intentionally EMPTY by
-    // default: this project never invents a business phone number or e-mail address.
+    // The phone number comes from environment configuration and is intentionally EMPTY by default: this project never invents a
+    // business phone number. The e-mail is the owner-confirmed official address, overridable by environment.
     phone: configured("NEXT_PUBLIC_CONTACT_PHONE"),
     phoneDisplay: configured("NEXT_PUBLIC_CONTACT_PHONE"),
-    email: configured("NEXT_PUBLIC_CONTACT_EMAIL"),
+    email: configured("NEXT_PUBLIC_CONTACT_EMAIL") || OFFICIAL_EMAIL,
     // Digits only, with country code (e.g. 9198XXXXXXXX). Admins can also set it in Admin > Settings.
     whatsappNumber: configured("NEXT_PUBLIC_WHATSAPP_NUMBER").replace(/\D/g, ""),
     address: {
