@@ -55,7 +55,7 @@ export function Footer() {
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className="text-sm text-cream/75 transition-colors hover:text-cream"
+                  className="inline-block py-1.5 text-sm text-cream/75 transition-colors hover:text-cream"
                 >
                   {item.label}
                 </Link>
@@ -71,7 +71,7 @@ export function Footer() {
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className="text-sm text-cream/75 transition-colors hover:text-cream"
+                  className="inline-block py-1.5 text-sm text-cream/75 transition-colors hover:text-cream"
                 >
                   {item.label}
                 </Link>
@@ -109,7 +109,7 @@ export function Footer() {
             ) : null}
             <li className="flex gap-3">
               <Mail className="h-4 w-4 shrink-0 text-sand-400" />
-              <Link href="/contact" className="hover:text-cream">
+              <Link href="/contact" className="inline-block py-1.5 hover:text-cream">
                 Send us a message
               </Link>
             </li>
@@ -124,7 +124,7 @@ export function Footer() {
           </p>
           <div className="flex gap-6">
             {footerLinks.legal.map((item) => (
-              <Link key={item.href} href={item.href} className="hover:text-cream/80">
+              <Link key={item.href} href={item.href} className="inline-block py-1.5 hover:text-cream/80">
                 {item.label}
               </Link>
             ))}

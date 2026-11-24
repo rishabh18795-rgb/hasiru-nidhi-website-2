@@ -45,7 +45,7 @@ export default async function ShopCategoryPage({ params, searchParams }: { param
   return (
     <section className="bg-cream pb-24 pt-32">
       <div className="container-nidhi">
-        <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-sm text-ink/65"><Link href="/shop" className="hover:underline">Shop</Link><ChevronRight className="h-3.5 w-3.5" aria-hidden="true" /><span aria-current="page" className="text-ink/80">{current?.name ?? "All products"}</span></nav>
+        <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-sm text-ink/65"><Link href="/shop" className="inline-block py-2 hover:underline">Shop</Link><ChevronRight className="h-3.5 w-3.5" aria-hidden="true" /><span aria-current="page" className="text-ink/80">{current?.name ?? "All products"}</span></nav>
         <h1 className="mt-3 max-w-3xl text-4xl font-medium tracking-tight text-forest-950 sm:text-5xl">{title}</h1>
         {current?.description ? <p className="mt-3 max-w-2xl text-base leading-relaxed text-ink/70">{current.description}</p> : null}
 

@@ -27,6 +27,7 @@ export function HeroBackdrop({ image }: { image: string }) {
             alt="Sunrise over paddy fields and coconut palms near Hasiru Nidhi, Karnataka"
             fill
             priority
+            quality={65}
             sizes="100vw"
             className="object-cover"
           />

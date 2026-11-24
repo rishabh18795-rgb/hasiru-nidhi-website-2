@@ -85,7 +85,7 @@ export default async function AdminProductDetail({ params }: { params: Promise<{
       <Card>
         <CardTitle>Variants and stock</CardTitle>
         {variants.length === 0 ? <p className="text-sm text-ink/65">No variants.</p> : (
-          <div className="overflow-x-auto"><table className="w-full min-w-[36rem] text-left text-sm"><thead className="text-xs uppercase tracking-wide text-ink/65"><tr><th className="py-2 pr-3">Variant</th><th className="py-2 pr-3">SKU</th><th className="py-2 pr-3">Options</th><th className="py-2 pr-3">Price</th><th className="py-2">Stock</th></tr></thead>
+          <div tabIndex={0} className="overflow-x-auto"><table className="w-full min-w-[36rem] text-left text-sm"><thead className="text-xs uppercase tracking-wide text-ink/65"><tr><th className="py-2 pr-3">Variant</th><th className="py-2 pr-3">SKU</th><th className="py-2 pr-3">Options</th><th className="py-2 pr-3">Price</th><th className="py-2">Stock</th></tr></thead>
             <tbody className="divide-y divide-forest-900/8">{variants.map((x) => <tr key={x.id}><td className="py-2 pr-3">{x.name}{!x.is_active ? <span className="ml-2 text-xs text-ink/65">not offered</span> : null}</td><td className="py-2 pr-3 text-ink/65">{x.sku}</td><td className="whitespace-pre-line py-2 pr-3 text-xs text-ink/65">{optionsToText(x.options) || "—"}</td><td className="py-2 pr-3">{formatPrice(x.price_inr)}</td><td className="py-2">{x.track_inventory ? x.stock_on_hand : "Not tracked"}</td></tr>)}</tbody></table></div>
         )}
         {movements.length ? (

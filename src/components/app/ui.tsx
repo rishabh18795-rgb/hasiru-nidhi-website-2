@@ -39,7 +39,9 @@ export function AppPage({
 }
 
 export function Card({ className, children, id }: { className?: string; children: ReactNode; id?: string }) {
-  return <div id={id} className={cn("rounded-2xl border border-forest-900/10 bg-white p-6 shadow-sm shadow-forest-950/[0.03]", className)}>{children}</div>;
+  // A card that scrolls sideways (wide tables) must be reachable and scrollable with the keyboard.
+  const scrolls = Boolean(className?.includes("overflow-x-auto"));
+  return <div id={id} tabIndex={scrolls ? 0 : undefined} className={cn("rounded-2xl border border-forest-900/10 bg-white p-6 shadow-sm shadow-forest-950/[0.03]", scrolls && "focus-visible:outline-2 focus-visible:outline-forest-600", className)}>{children}</div>;
 }
 
 export function CardTitle({ children, aside }: { children: ReactNode; aside?: ReactNode }) {

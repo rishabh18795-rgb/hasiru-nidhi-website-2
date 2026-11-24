@@ -41,7 +41,7 @@ export function PageHero({
       <div className="absolute inset-0 bg-gradient-to-t from-forest-950 via-forest-950/55 to-forest-950/20" />
       <div className="container-nidhi relative pb-16">
         <nav className="mb-6 flex items-center gap-2 text-xs text-cream/75">
-          <Link href="/" className="hover:text-cream">
+          <Link href="/" className="inline-block py-2 hover:text-cream">
             Home
           </Link>
           <ChevronRight className="h-3 w-3" />

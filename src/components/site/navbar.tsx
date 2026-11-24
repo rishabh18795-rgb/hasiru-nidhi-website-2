@@ -87,7 +87,7 @@ export function Navbar({ announcement }: { announcement?: string }) {
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-all duration-500",
         solid
-          ? "glass rounded-none border-x-0 border-t-0 shadow-[0_1px_0_0_rgba(23,32,26,0.06)]"
+          ? "border-b border-forest-900/10 bg-cream shadow-[0_1px_0_0_rgba(23,32,26,0.04)]"
           : "bg-transparent"
       )}
     >
@@ -103,7 +103,7 @@ export function Navbar({ announcement }: { announcement?: string }) {
             alt=""
             width={40}
             height={40}
-            className="h-10 w-10 object-contain"
+            className="h-10 w-10 rounded-sm object-contain"
             priority
           />
           <span

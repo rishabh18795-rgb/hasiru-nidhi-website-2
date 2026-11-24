@@ -89,7 +89,7 @@ export default async function HostWallet() {
       <section aria-labelledby="bk-h" className="space-y-3">
         <h2 id="bk-h" className="text-lg font-medium text-forest-950">Booking-wise earnings</h2>
         {earning.length === 0 ? <EmptyState title="No earnings yet" description="Earnings appear here once you confirm a booking request." /> : (
-          <div className="overflow-x-auto rounded-2xl bg-white ring-1 ring-forest-900/10">
+          <div tabIndex={0} className="overflow-x-auto rounded-2xl bg-white ring-1 ring-forest-900/10">
             <table className="w-full min-w-[46rem] text-left text-sm">
               <thead className="text-xs uppercase tracking-wide text-ink/65">
                 <tr><th className="p-3">Stay</th><th className="p-3 text-right">Guest total</th><th className="p-3 text-right">Commission</th><th className="p-3 text-right">Your share</th><th className="p-3">Payment</th><th className="p-3">Settlement</th></tr>
@@ -115,7 +115,7 @@ export default async function HostWallet() {
         <h2 id="led-h" className="text-lg font-medium text-forest-950">Transaction history</h2>
         <p className="text-sm text-ink/65">Each line is an immutable ledger entry tied to a booking. Reversals appear as negative lines when a confirmed booking is cancelled or a refund is recorded.</p>
         {entries.length === 0 ? <EmptyState title="No transactions yet" description="A ledger entry is created when you confirm a booking." /> : (
-          <div className="overflow-x-auto rounded-2xl bg-white ring-1 ring-forest-900/10">
+          <div tabIndex={0} className="overflow-x-auto rounded-2xl bg-white ring-1 ring-forest-900/10">
             <table className="w-full min-w-[44rem] text-left text-sm">
               <thead className="text-xs uppercase tracking-wide text-ink/65">
                 <tr><th className="p-3">Date</th><th className="p-3">Entry</th><th className="p-3">Booking</th><th className="p-3 text-right">Base</th><th className="p-3 text-right">Commission</th><th className="p-3 text-right">Your share</th></tr>

@@ -51,6 +51,8 @@ const nextConfig: NextConfig = {
     root: path.resolve(__dirname),
   },
   images: {
+    // AVIF first (typically ~30% smaller than WebP for photographs), WebP as the fallback.
+    formats: ["image/avif", "image/webp"],
     // Property photographs uploaded by hosts live in a public Supabase Storage bucket.
     // Production Supabase is https on the default port, which is what this resolves to. (A local test backend can use http and a port.)
     remotePatterns: supabaseHost

@@ -43,7 +43,7 @@ export default async function AdminCommission() {
       <section aria-labelledby="ledger-h" className="space-y-3">
         <h2 id="ledger-h" className="text-lg font-medium text-forest-950">Ledger (append-only)</h2>
         {rows.length === 0 ? <EmptyState title="No ledger entries yet" description="An entry is added when a host confirms a booking." /> : (
-          <div className="overflow-x-auto rounded-2xl bg-white ring-1 ring-forest-900/10">
+          <div tabIndex={0} className="overflow-x-auto rounded-2xl bg-white ring-1 ring-forest-900/10">
             <table className="w-full min-w-[40rem] text-left text-sm">
               <thead className="text-xs uppercase tracking-wide text-ink/65"><tr><th className="p-3">When</th><th className="p-3">Entry</th><th className="p-3 text-right">Base</th><th className="p-3 text-right">Rate</th><th className="p-3 text-right">Commission</th><th className="p-3 text-right">Host share</th></tr></thead>
               <tbody>

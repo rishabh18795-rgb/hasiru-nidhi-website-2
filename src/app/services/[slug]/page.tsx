@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   if (!service) return { title: "Services", robots: { index: false, follow: true } };
   return {
     title: `${service.name}: ${service.category.name}`,
-    description: (service.summary || service.description).slice(0, 155),
+    description: [service.summary, service.description].filter(Boolean).join(" ").replace(/\s+/g, " ").slice(0, 155),
     alternates: { canonical: `/services/${service.slug}` },
   };
 }
@@ -57,7 +57,7 @@ export default async function ServicePage({ params }: { params: Params }) {
       <section className="bg-cream pb-20 pt-32">
         <div className="container-nidhi">
           <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1.5 text-sm text-ink/65">
-            <Link href="/services" className="hover:underline">Services</Link><ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
+            <Link href="/services" className="inline-block py-2 hover:underline">Services</Link><ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
             <Link href={`/services?category=${service.category.slug}`} className="hover:underline">{service.category.name}</Link><ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
             <span aria-current="page" className="text-ink/80">{service.name}</span>
           </nav>

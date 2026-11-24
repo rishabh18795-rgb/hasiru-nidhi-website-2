@@ -3,6 +3,11 @@ import type { MetadataRoute } from "next";
 import { siteConfig } from "@/lib/site";
 import { blogPosts } from "@/lib/content";
 import { listApprovedSlugs } from "@/lib/data/stays";
+import { getMarketplaceFlags } from "@/lib/flags";
+import { searchProducts, getShopCategories } from "@/lib/data/shop";
+import { searchServices, getServiceCategories } from "@/lib/data/services";
+import { parseShopFilters } from "@/lib/shop/filters";
+import { parseServiceFilters } from "@/lib/services/filters";
 
 export const revalidate = 3600;
 
@@ -55,5 +60,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  return [...routes, ...posts, ...stays];
+  // Shop and Services appear only while an administrator has switched them ON, and only approved, public listings are listed (the public search
+  // functions never return anything else). Bounded to a few pages so a large catalogue cannot slow the sitemap down.
+  const flags = await getMarketplaceFlags();
+  const market: MetadataRoute.Sitemap = [];
+  if (flags.products) {
+    market.push({ url: `${siteConfig.url}/shop`, lastModified: now, changeFrequency: "daily", priority: 0.8 });
+    for (const c of await getShopCategories()) market.push({ url: `${siteConfig.url}/shop/${c.slug}`, lastModified: now, changeFrequency: "daily", priority: 0.7 });
+    for (let page = 1; page <= 5; page++) {
+      const r = await searchProducts({ ...parseShopFilters({}), page }, null);
+      for (const p of r.results) market.push({ url: `${siteConfig.url}/shop/p/${p.slug}`, lastModified: now, changeFrequency: "weekly", priority: 0.6 });
+      if (r.results.length < 12) break;
+    }
+  }
+  if (flags.services) {
+    market.push({ url: `${siteConfig.url}/services`, lastModified: now, changeFrequency: "daily", priority: 0.8 });
+    void (await getServiceCategories());
+    for (let page = 1; page <= 5; page++) {
+      const r = await searchServices({ ...parseServiceFilters({}), page });
+      for (const sv of r.results) market.push({ url: `${siteConfig.url}/services/${sv.slug}`, lastModified: now, changeFrequency: "weekly", priority: 0.6 });
+      if (r.results.length < 12) break;
+    }
+  }
+
+  return [...routes, ...posts, ...stays, ...market];
 }

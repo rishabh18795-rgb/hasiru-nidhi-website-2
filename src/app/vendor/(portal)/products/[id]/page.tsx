@@ -67,7 +67,7 @@ export default async function VendorProductEditor({ params }: { params: Promise<
       <Card>
         <CardTitle>Stock history</CardTitle>
         {movements.length === 0 ? <p className="text-sm text-ink/65">No stock changes yet.</p> : (
-          <div className="overflow-x-auto"><table className="w-full min-w-[32rem] text-left text-sm"><thead className="text-xs uppercase tracking-wide text-ink/65"><tr><th className="py-2 pr-3">When</th><th className="py-2 pr-3">Variant</th><th className="py-2 pr-3">Change</th><th className="py-2 pr-3">Balance</th><th className="py-2">Reason</th></tr></thead>
+          <div tabIndex={0} className="overflow-x-auto"><table className="w-full min-w-[32rem] text-left text-sm"><thead className="text-xs uppercase tracking-wide text-ink/65"><tr><th className="py-2 pr-3">When</th><th className="py-2 pr-3">Variant</th><th className="py-2 pr-3">Change</th><th className="py-2 pr-3">Balance</th><th className="py-2">Reason</th></tr></thead>
             <tbody className="divide-y divide-forest-900/8">{movements.map((m) => (
               <tr key={m.id}><td className="py-2 pr-3 text-ink/65">{formatDateTime(m.created_at)}</td><td className="py-2 pr-3">{variantName.get(m.variant_id) ?? "—"}</td><td className={`py-2 pr-3 font-medium ${m.delta > 0 ? "text-forest-700" : "text-red-700"}`}>{m.delta > 0 ? `+${m.delta}` : m.delta}</td><td className="py-2 pr-3">{m.balance_after}</td><td className="py-2 text-ink/70">{INVENTORY_REASONS[m.reason]}{m.note ? ` · ${m.note}` : ""}</td></tr>
             ))}</tbody></table></div>

@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   if (!product) return { title: "Shop", robots: { index: false, follow: true } };
   return {
     title: `${product.name}: ${product.category.name}`,
-    description: (product.summary || product.description).slice(0, 155),
+    description: [product.summary, product.description].filter(Boolean).join(" ").replace(/\s+/g, " ").slice(0, 155),
     alternates: { canonical: `/shop/p/${product.slug}` },
   };
 }
@@ -57,7 +57,7 @@ export default async function ProductPage({ params }: { params: Params }) {
       <section className="bg-cream pb-20 pt-32">
         <div className="container-nidhi">
           <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1.5 text-sm text-ink/65">
-            <Link href="/shop" className="hover:underline">Shop</Link><ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
+            <Link href="/shop" className="inline-block py-2 hover:underline">Shop</Link><ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
             <Link href={`/shop/${product.category.slug}`} className="hover:underline">{product.category.name}</Link><ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
             <span aria-current="page" className="text-ink/80">{product.name}</span>
           </nav>
