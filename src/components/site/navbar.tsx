@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, Menu, ShoppingBag } from "lucide-react";
 
@@ -54,9 +53,9 @@ function useShop(initial?: { products: boolean; services: boolean; orders: boole
   return state;
 }
 
-function CartLink({ count, solid, onNavigate }: { count: number; solid: boolean; onNavigate?: () => void }) {
+function CartLink({ count, onNavigate }: { count: number; onNavigate?: () => void }) {
   return (
-    <Link href="/cart" onClick={onNavigate} aria-label={count ? `Cart, ${count} item${count === 1 ? "" : "s"}` : "Cart"} className={cn("relative flex h-10 w-10 items-center justify-center rounded-full transition-colors", solid ? "text-forest-900 hover:bg-forest-900/5" : "text-cream hover:bg-white/10")}>
+    <Link href="/cart" onClick={onNavigate} aria-label={count ? `Cart, ${count} item${count === 1 ? "" : "s"}` : "Cart"} className={cn("relative flex h-10 w-10 items-center justify-center rounded-full transition-colors", "text-forest-900 hover:bg-forest-900/5 hero-top:text-cream hero-top:hover:bg-white/10")}>
       <ShoppingBag className="h-5 w-5" aria-hidden="true" />
       {count > 0 ? <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-sand-400 px-1 text-[11px] font-bold text-forest-950" data-testid="cart-count">{count}</span> : null}
     </Link>
@@ -71,7 +70,6 @@ export function Navbar({ announcement, flags }: { announcement?: string; flags?:
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  const pathname = usePathname();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -80,16 +78,15 @@ export function Navbar({ announcement, flags }: { announcement?: string; flags?:
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const isHome = pathname === "/";
-  const solid = scrolled || !isHome;
+  // The header is cream by default. Only the home page (it marks its hero with data-hero) lets it be transparent over the photograph, and only
+  // while the page is at the top (.nav-top). That is decided by CSS (see the hero-top variants in globals.css), not by the router's pathname:
+  // the pathname is unreliable while a static page is being prerendered, and a wrong server-rendered header stayed wrong until the visitor scrolled.
 
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-500",
-        solid
-          ? "border-b border-forest-900/10 bg-cream shadow-[0_1px_0_0_rgba(23,32,26,0.04)]"
-          : "bg-transparent"
+        "fixed inset-x-0 top-0 z-50 border-b border-forest-900/10 bg-cream shadow-[0_1px_0_0_rgba(23,32,26,0.04)] transition-all duration-500 hero-top-self:border-transparent hero-top-self:bg-transparent hero-top-self:shadow-none",
+        !scrolled && "nav-top"
       )}
     >
       {announcement ? (
@@ -109,8 +106,7 @@ export function Navbar({ announcement, flags }: { announcement?: string; flags?:
           />
           <span
             className={cn(
-              "whitespace-nowrap font-display text-xl tracking-tight transition-colors",
-              solid ? "text-forest-900" : "text-cream"
+              "whitespace-nowrap font-display text-xl tracking-tight text-forest-900 transition-colors hero-top:text-cream"
             )}
           >
             Hasiru Nidhi
@@ -134,10 +130,7 @@ export function Navbar({ announcement, flags }: { announcement?: string; flags?:
                 aria-haspopup={"children" in link && link.children ? "true" : undefined}
                 aria-expanded={"children" in link && link.children ? openDropdown === link.label : undefined}
                 className={cn(
-                  "flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-2 text-sm font-medium transition-colors",
-                  solid
-                    ? "text-forest-900/80 hover:bg-forest-900/5 hover:text-forest-900"
-                    : "text-cream/85 hover:bg-white/10 hover:text-cream"
+                  "flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-2 text-sm font-medium text-forest-900/80 transition-colors hover:bg-forest-900/5 hover:text-forest-900 hero-top:text-cream/85 hero-top:hover:bg-white/10 hero-top:hover:text-cream"
                 )}
               >
                 {link.label}
@@ -176,8 +169,8 @@ export function Navbar({ announcement, flags }: { announcement?: string; flags?:
         </div>
 
         <div className="hidden shrink-0 items-center gap-2 min-[1360px]:flex">
-          {shop.ordersOpen ? <CartLink count={shop.count} solid={solid} /> : null}
-          <AccountMenu solid={solid} />
+          {shop.ordersOpen ? <CartLink count={shop.count} /> : null}
+          <AccountMenu />
           <LinkButton
             href="/list-your-property"
             className="shrink-0 whitespace-nowrap rounded-full bg-forest-800 px-5 text-cream hover:bg-forest-700"
@@ -191,7 +184,7 @@ export function Navbar({ announcement, flags }: { announcement?: string; flags?:
           <Button
             variant="ghost"
             size="icon"
-            className={cn("shrink-0 min-[1360px]:hidden", solid ? "text-forest-900" : "text-cream")}
+            className="shrink-0 text-forest-900 min-[1360px]:hidden hero-top:text-cream"
             onClick={() => setMobileOpen(true)}
             aria-label="Open menu"
           >
@@ -236,7 +229,7 @@ export function Navbar({ announcement, flags }: { announcement?: string; flags?:
               {shop.ordersOpen ? <Link href="/cart" onClick={() => setMobileOpen(false)} className="flex items-center justify-between rounded-xl bg-forest-900/5 px-4 py-3 text-sm font-medium text-forest-900"><span className="flex items-center gap-2"><ShoppingBag className="h-4 w-4" aria-hidden="true" />Cart</span><span>{shop.count || ""}</span></Link> : null}
               <div className="flex items-center justify-between">
                 <span className="text-sm text-forest-900/70">Account</span>
-                <AccountMenu solid onNavigate={() => setMobileOpen(false)} />
+                <AccountMenu onNavigate={() => setMobileOpen(false)} />
               </div>
               <LinkButton
                 href="/book"

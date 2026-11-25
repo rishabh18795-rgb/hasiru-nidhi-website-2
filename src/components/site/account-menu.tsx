@@ -21,7 +21,7 @@ interface Me {
  * Reads the session in the browser so marketing pages remain static. This is display-only: every
  * protected route and action re-verifies the session and role on the server.
  */
-export function AccountMenu({ solid, onNavigate }: { solid: boolean; onNavigate?: () => void }) {
+export function AccountMenu({ onNavigate }: { onNavigate?: () => void }) {
   const supabase = useMemo(() => createBrowserSupabase(), []);
   const [loaded, setLoaded] = useState<Me | null | undefined>(undefined);
   // Without a configured backend there is nothing to load: treat as signed out.
@@ -78,7 +78,7 @@ export function AccountMenu({ solid, onNavigate }: { solid: boolean; onNavigate?
         onClick={onNavigate}
         className={cn(
           "inline-flex h-10 items-center gap-2 rounded-full px-4 text-sm font-medium transition-colors",
-          solid ? "text-forest-900 hover:bg-forest-900/5" : "text-cream hover:bg-white/10",
+          "text-forest-900 hover:bg-forest-900/5 hero-top:text-cream hero-top:hover:bg-white/10",
         )}
       >
         <User className="h-4 w-4" aria-hidden="true" />

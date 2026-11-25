@@ -75,3 +75,33 @@ test.describe("without JavaScript", () => {
     expect(await page.locator("section img[fetchpriority='high']").evaluate((i: HTMLImageElement) => i.complete && i.naturalWidth > 0)).toBe(true);
   });
 });
+
+/** The header must be transparent over the home hero at the top, cream elsewhere and once scrolled: decided by CSS, correct before any JavaScript runs. */
+const headerBg = (page: Page) => page.evaluate(() => getComputedStyle(document.querySelector("header")!).backgroundColor);
+const isTransparent = (c: string) => c === "rgba(0, 0, 0, 0)" || c === "transparent";
+
+test("header is transparent over the hero at the top of the home page, cream once scrolled, cream on other pages", async ({ page }) => {
+  await page.goto("/", { waitUntil: "load" });
+  await page.waitForTimeout(700);
+  expect(isTransparent(await headerBg(page))).toBe(true);
+  await page.evaluate(() => window.scrollTo(0, 600));
+  await page.waitForTimeout(900);
+  expect(isTransparent(await headerBg(page))).toBe(false);
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.waitForTimeout(900);
+  expect(isTransparent(await headerBg(page))).toBe(true);
+  await page.goto("/faq", { waitUntil: "load" });
+  await page.waitForTimeout(700);
+  expect(isTransparent(await headerBg(page))).toBe(false);
+});
+
+test.describe("header without JavaScript (the server-rendered first paint)", () => {
+  test.use({ javaScriptEnabled: false });
+  test("is already transparent on the home page and cream on another page", async ({ page }) => {
+    await page.goto("/", { waitUntil: "load" });
+    await page.waitForTimeout(700);
+    expect(isTransparent(await headerBg(page))).toBe(true);
+    await page.goto("/faq", { waitUntil: "load" });
+    expect(isTransparent(await headerBg(page))).toBe(false);
+  });
+});

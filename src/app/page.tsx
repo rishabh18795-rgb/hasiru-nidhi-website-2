@@ -41,7 +41,7 @@ export default async function HomePage() {
   return (
     <>
       {/* HERO */}
-      <section className="relative flex min-h-[100svh] items-center overflow-hidden bg-forest-950 py-32">
+      <section data-hero className="relative flex min-h-[100svh] items-center overflow-hidden bg-forest-950 py-32">
         <HeroBackdrop />
         <div className="container-nidhi relative flex flex-col items-start pt-20">
           <div className="hero-rise">

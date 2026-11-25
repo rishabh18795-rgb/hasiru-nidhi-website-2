@@ -156,6 +156,11 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* Header over the home-page photograph: the page marks its hero with data-hero, and the header carries .nav-top while the page is at the top.
+   Pure CSS so the first (server-rendered) paint is already right, on any host. hero-top-self styles the header itself; hero-top its contents. */
+@custom-variant hero-top-self (body:has([data-hero]) &.nav-top);
+@custom-variant hero-top (body:has([data-hero]) .nav-top &);
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
