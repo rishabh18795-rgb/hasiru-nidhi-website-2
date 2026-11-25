@@ -21,9 +21,10 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 
-/** The Shop link and cart appear only while an administrator has switched them ON. Read in the browser so marketing pages stay static. */
-function useShop(): { open: boolean; servicesOpen: boolean; ordersOpen: boolean; count: number } {
-  const [state, setState] = useState({ open: false, servicesOpen: false, ordersOpen: false, count: 0 });
+/** The Shop link and cart appear only while an administrator has switched them ON. Seeded from the server, then confirmed (and the cart count read) in the browser. */
+function useShop(initial?: { products: boolean; services: boolean; orders: boolean }): { open: boolean; servicesOpen: boolean; ordersOpen: boolean; count: number } {
+  // The server passes the flags it just read, so the Shop and Services links are in the first paint and the header does not shift when this effect confirms them.
+  const [state, setState] = useState({ open: initial?.products ?? false, servicesOpen: initial?.services ?? false, ordersOpen: initial?.orders ?? false, count: 0 });
   useEffect(() => {
     const supabase = createBrowserSupabase();
     if (!supabase) return;
@@ -64,8 +65,8 @@ function CartLink({ count, solid, onNavigate }: { count: number; solid: boolean;
 
 type NavEntry = (typeof navLinks)[number] | { label: string; href: string };
 
-export function Navbar({ announcement }: { announcement?: string }) {
-  const shop = useShop();
+export function Navbar({ announcement, flags }: { announcement?: string; flags?: { products: boolean; services: boolean; orders: boolean } }) {
+  const shop = useShop(flags);
   const links = useMemo<NavEntry[]>(() => [navLinks[0], navLinks[1], ...(shop.open ? [{ label: "Shop", href: "/shop" }] : []), ...(shop.servicesOpen ? [{ label: "Services", href: "/services" }] : []), ...navLinks.slice(2)], [shop.open, shop.servicesOpen]);
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -123,9 +124,15 @@ export function Navbar({ announcement }: { announcement?: string }) {
               className="relative shrink-0"
               onMouseEnter={() => "children" in link && setOpenDropdown(link.label)}
               onMouseLeave={() => setOpenDropdown(null)}
+              // Keyboard: the sub-menu opens when focus enters this item, closes when focus leaves it, and Escape dismisses it.
+              onFocus={() => "children" in link && setOpenDropdown(link.label)}
+              onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setOpenDropdown(null); }}
+              onKeyDown={(e) => { if (e.key === "Escape") setOpenDropdown(null); }}
             >
               <Link
                 href={link.href}
+                aria-haspopup={"children" in link && link.children ? "true" : undefined}
+                aria-expanded={"children" in link && link.children ? openDropdown === link.label : undefined}
                 className={cn(
                   "flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-2 text-sm font-medium transition-colors",
                   solid

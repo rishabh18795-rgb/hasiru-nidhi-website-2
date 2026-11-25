@@ -42,7 +42,7 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
           <SignInForm next={next || undefined} />
           {adminArea ? null : <p className="mt-6 text-center text-sm text-ink/65">
             {hostArea ? "New host?" : "New to Hasiru Nidhi?"}{" "}
-            <Link href={signUpHref} className="font-medium text-forest-800 underline underline-offset-2">
+            <Link href={signUpHref} className="inline-block py-2 font-medium text-forest-800 underline underline-offset-2">
               {hostArea ? "Create a host account" : "Create an account"}
             </Link>
           </p>}

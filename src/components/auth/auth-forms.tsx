@@ -25,7 +25,7 @@ export function SignInForm({ next, portal }: { next?: string; portal?: "host" | 
         <PasswordInput id="password" name="password" autoComplete="current-password" error={!!state?.fieldErrors?.password} />
       </Field>
       <div className="flex justify-end">
-        <Link href="/forgot-password" className="text-sm text-forest-700 underline underline-offset-2 hover:text-forest-900">
+        <Link href="/forgot-password" className="inline-block py-2 text-sm text-forest-700 underline underline-offset-2 hover:text-forest-900">
           Forgot your password?
         </Link>
       </div>

@@ -14,6 +14,8 @@ interface PageHeroProps {
   title: string;
   description: string;
   image: string;
+  /** CSS object-position for the photo, for portraits whose subject would otherwise be cropped (for example "50% 25%"). */
+  imagePosition?: string;
   crumb: string;
   primaryCta?: PageHeroCta;
   secondaryCta?: PageHeroCta;
@@ -24,6 +26,7 @@ export function PageHero({
   title,
   description,
   image,
+  imagePosition,
   crumb,
   primaryCta,
   secondaryCta,
@@ -35,10 +38,13 @@ export function PageHero({
         alt=""
         fill
         priority
+        quality={55}
         sizes="100vw"
-        className="object-cover opacity-55"
+        className="object-cover"
+        style={imagePosition ? { objectPosition: imagePosition } : undefined}
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-forest-950 via-forest-950/55 to-forest-950/20" />
+      <div className="absolute inset-0 bg-gradient-to-t from-forest-950 via-forest-950/45 to-forest-950/10" />
+      <div className="absolute inset-0 bg-gradient-to-r from-forest-950/75 via-forest-950/30 to-transparent" />
       <div className="container-nidhi relative pb-16">
         <nav className="mb-6 flex items-center gap-2 text-xs text-cream/75">
           <Link href="/" className="inline-block py-2 hover:text-cream">

@@ -52,7 +52,12 @@ const nextConfig: NextConfig = {
   },
   images: {
     // AVIF first (typically ~30% smaller than WebP for photographs), WebP as the fallback.
-    formats: ["image/avif", "image/webp"],
+    // WebP only: AVIF encodes ~4x slower on demand (measured 2.1 s vs 0.47 s for the hero), so the first visitor to each image waited longer for no real size win.
+    formats: ["image/webp"],
+    // 55 is used for full-width decorative photographs that sit under a dark overlay (PageHero); everything else stays at 75. (Before this list existed a requested quality of 65 was silently rounded to 75, so the earlier "smaller hero" change did nothing.)
+    qualities: [55, 75],
+    // Optimised images are re-encoded at most once a month instead of hourly: at low traffic nearly every visit would otherwise hit a cold re-encode. Uploaded photographs have unique, never-reused paths, so a long cache cannot show a stale image.
+    minimumCacheTTL: 60 * 60 * 24 * 30,
     // Property photographs uploaded by hosts live in a public Supabase Storage bucket.
     // Production Supabase is https on the default port, which is what this resolves to. (A local test backend can use http and a port.)
     remotePatterns: supabaseHost

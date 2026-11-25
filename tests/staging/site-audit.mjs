@@ -60,7 +60,7 @@ for (const [vp, opts] of Object.entries(VIEWPORTS)) {
         const res = await page.goto(route, { waitUntil: "load", timeout: 45000 });
         status = res?.status() ?? 0;
         await page.evaluate(async () => { for (let y = 0; y < document.body.scrollHeight; y += 700) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 60)); } window.scrollTo(0, 0); });
-        await page.waitForTimeout(500);
+        await page.waitForTimeout(1500); // let staggered reveal animations finish: axe reads mid-fade text colours as low contrast
       } catch (e) { add(vp, role, route, "navigation", String(e.message).slice(0, 120)); continue; }
       const expected404 = route === "/no-such-page";
       if (status >= 400 && !expected404) add(vp, role, route, "http", String(status));

@@ -73,7 +73,7 @@ export default async function ServicesPage({ searchParams }: { searchParams: SP 
             <div className="mt-4 rounded-2xl border border-forest-900/10 bg-white p-5 text-sm">
               <p className="font-medium text-forest-950">Not sure what you need?</p>
               <p className="mt-1 text-ink/65">Send a general gardening enquiry to our team. It works exactly as before.</p>
-              <Link href="/gardening#enquire" className="mt-3 inline-flex text-forest-700 underline">Gardening enquiry</Link>
+              <Link href="/gardening#enquire" className="mt-2 inline-flex py-2 text-forest-700 underline">Gardening enquiry</Link>
             </div>
           </aside>
 

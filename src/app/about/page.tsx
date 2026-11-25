@@ -68,7 +68,7 @@ export default function AboutPage() {
               <li key={item.title} className="flex flex-col rounded-2xl bg-white p-7 ring-1 ring-forest-900/8">
                 <h3 className="font-display text-xl text-forest-950">{item.title}</h3>
                 <p className="mt-2 flex-1 text-sm leading-relaxed text-ink/70">{item.copy}</p>
-                <Link href={item.href} className="mt-5 inline-flex w-fit items-center gap-1 text-sm font-medium text-forest-700 hover:text-forest-900">{item.cta} <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" /></Link>
+                <Link href={item.href} className="mt-3 inline-flex min-h-11 w-fit items-center gap-1 text-sm font-medium text-forest-700 hover:text-forest-900">{item.cta} <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" /></Link>
               </li>
             ))}
           </ul>

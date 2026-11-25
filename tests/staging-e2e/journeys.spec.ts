@@ -166,10 +166,11 @@ test("B5. a review cannot be written twice or by someone else (database refuses)
   await expect(rpc("host", "submit_marketplace_review", { p_kind: "product", p_ref: item, p_rating: 5, p_title: null, p_body: "Someone else reviewing it." })).rejects.toThrow(/not_found/);
 });
 
-test("C. the admin finance view: nothing is paid, commission is unconfigured, no revenue is claimed", async () => {
+test("C. the admin finance view: nothing is paid, commission is unconfigured or recorded-but-not-applied, no revenue is claimed", async () => {
   await admin.goto("/admin/marketplace-finance");
   await expect(admin.getByTestId("not-unpaid")).toHaveText("0");
-  await expect(admin.getByText("UNCONFIGURED").first()).toBeVisible();
+  // Owner decision 24 Nov 2026: a 20% rate is recorded on staging, but nothing is paid so nothing is applied. Either wording is acceptable; a claim of earned commission never is.
+  await expect(admin.getByText(/UNCONFIGURED|not applied: nothing is paid/).first()).toBeVisible();
   await expect(admin.getByText(/not available/i).first()).toBeVisible();
   await expect(admin.getByText(/Unpaid: payment not configured/i).first()).toBeVisible();
   await noSideScroll(admin, "the finance page");

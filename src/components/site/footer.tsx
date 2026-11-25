@@ -6,7 +6,7 @@ import { footerLinks, siteConfig } from "@/lib/site";
 import { basePath } from "@/lib/base-path";
 import { InstagramIcon, FacebookIcon, YoutubeIcon } from "@/components/site/social-icons";
 
-export function Footer() {
+export function Footer({ flags }: { flags?: { products: boolean; services: boolean } }) {
   return (
     <footer className="bg-forest-950 text-cream">
       <div className="container-nidhi grid gap-14 py-20 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
@@ -61,6 +61,8 @@ export function Footer() {
                 </Link>
               </li>
             ))}
+            {flags?.products ? <li><Link href="/shop" className="inline-block py-1.5 text-sm text-cream/75 transition-colors hover:text-cream">Shop</Link></li> : null}
+            {flags?.services ? <li><Link href="/services" className="inline-block py-1.5 text-sm text-cream/75 transition-colors hover:text-cream">Services</Link></li> : null}
           </ul>
         </div>
 
@@ -102,7 +104,7 @@ export function Footer() {
             {siteConfig.contact.email ? (
               <li className="flex gap-3">
                 <Mail className="h-4 w-4 shrink-0 text-sand-400" />
-                <a href={`mailto:${siteConfig.contact.email}`} className="hover:text-cream">
+                <a href={`mailto:${siteConfig.contact.email}`} className="inline-block py-1.5 hover:text-cream">
                   {siteConfig.contact.email}
                 </a>
               </li>

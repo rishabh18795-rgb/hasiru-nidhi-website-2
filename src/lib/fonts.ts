@@ -6,12 +6,22 @@ import localFont from "next/font/local";
  * SIL Open Font License 1.1 (see the LICENSE-*-OFL.txt files next to them). Latin subset only, as before.
  */
 export const fraunces = localFont({
-  src: [
-    { path: "../fonts/fraunces-latin-full-normal.woff2", style: "normal", weight: "100 900" },
-    { path: "../fonts/fraunces-latin-full-italic.woff2", style: "italic", weight: "100 900" },
-  ],
+  src: [{ path: "../fonts/fraunces-latin-full-normal.woff2", style: "normal", weight: "100 900" }],
   variable: "--font-display",
   display: "swap",
+});
+
+/**
+ * The italic is used once (the home-page tagline) but is 147 KB. In the same family as the upright it was preloaded on EVERY page and,
+ * on a slow phone connection, competed with the page's main photograph (measured: the Shop hero image finished loading at 4.1 s with both
+ * fonts ahead of it). It is its own family, not preloaded; the tagline asks for it with the `font-display-italic` class and falls back to the
+ * upright face's italic until it arrives.
+ */
+export const frauncesItalic = localFont({
+  src: [{ path: "../fonts/fraunces-latin-full-italic.woff2", style: "italic", weight: "100 900" }],
+  variable: "--font-fraunces-italic",
+  display: "swap",
+  preload: false,
 });
 
 export const manrope = localFont({

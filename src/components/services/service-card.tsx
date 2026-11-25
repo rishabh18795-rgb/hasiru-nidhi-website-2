@@ -25,7 +25,7 @@ export function ServiceCard({ service }: { service: ServiceCardData }) {
       </Link>
       <div className="flex flex-1 flex-col p-4 sm:p-5">
         <p className="line-clamp-1 text-[11px] font-semibold uppercase tracking-wider text-forest-600">{service.category_name}</p>
-        <h3 className="mt-1.5 font-display text-lg leading-snug text-forest-950"><Link href={href} className="hover:underline">{service.name}</Link></h3>
+        <h3 className="mt-1.5 font-display text-lg leading-snug text-forest-950"><Link href={href} className="inline-block py-0.5 hover:underline">{service.name}</Link></h3>
         <p className="mt-1 text-xs text-ink/65">By {service.vendor_name}{service.vendor_city ? <span className="ml-1 inline-flex items-center gap-0.5"><MapPin className="h-3 w-3" aria-hidden="true" />{service.vendor_city}</span> : null}</p>
         {service.summary ? <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-ink/65">{service.summary}</p> : null}
         <p className="mt-auto flex items-end justify-between gap-2 pt-4">

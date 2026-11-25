@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -25,6 +25,8 @@ export interface NavItem {
   /** Exact match only (for the overview route). */
   exact?: boolean;
   badge?: number;
+  /** Optional section heading shown (on wide screens) above the first item of each group. Items of one group must be adjacent. */
+  group?: string;
 }
 
 export function NavLinks({ items, label }: { items: NavItem[]; label: string }) {
@@ -39,12 +41,14 @@ export function NavLinks({ items, label }: { items: NavItem[]; label: string }) 
   }, [pathname]);
   return (
     <nav ref={ref} aria-label={label} className="-mx-1 flex gap-1 overflow-x-auto px-1 pb-1 lg:flex-col lg:overflow-visible lg:pb-0">
-      {items.map((item) => {
+      {items.map((item, index) => {
+        const showGroup = Boolean(item.group) && item.group !== items[index - 1]?.group;
         const Icon = ICONS[item.icon] ?? LayoutDashboard;
         const active = item.exact ? pathname === item.href : pathname === item.href || pathname.startsWith(`${item.href}/`);
         return (
+          <Fragment key={item.href}>
+            {showGroup ? <span className="mt-5 hidden px-3.5 pb-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-forest-900/70 lg:block">{item.group}</span> : null}
           <Link
-            key={item.href}
             href={item.href}
             aria-current={active ? "page" : undefined}
             className={cn(
@@ -55,9 +59,10 @@ export function NavLinks({ items, label }: { items: NavItem[]; label: string }) 
             <Icon className="h-4 w-4" aria-hidden="true" />
             {item.label}
             {item.badge ? (
-              <span className="ml-auto rounded-full bg-sand-400 px-1.5 text-[11px] font-semibold text-forest-950">{item.badge}</span>
+              <span className="ml-auto rounded-full bg-sand-400 px-1.5 text-[11px] font-semibold text-forest-950">{item.badge > 99 ? "99+" : item.badge}</span>
             ) : null}
           </Link>
+          </Fragment>
         );
       })}
     </nav>

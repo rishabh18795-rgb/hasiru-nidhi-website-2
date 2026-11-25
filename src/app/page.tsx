@@ -11,6 +11,7 @@ import { ExperienceCard } from "@/components/site/experience-card";
 import { TestimonialCard } from "@/components/site/testimonial-card";
 import { CtaBand } from "@/components/site/cta-band";
 import { HeroBackdrop } from "@/components/site/hero-backdrop";
+import { MarketplaceShowcase } from "@/components/site/marketplace-showcase";
 import {
   experiences,
   images,
@@ -41,33 +42,33 @@ export default async function HomePage() {
     <>
       {/* HERO */}
       <section className="relative flex min-h-[100svh] items-center overflow-hidden bg-forest-950 py-32">
-        <HeroBackdrop image={images.heroSunriseFields} />
+        <HeroBackdrop />
         <div className="container-nidhi relative flex flex-col items-start pt-20">
-          <Reveal>
+          <div className="hero-rise">
             <p className="text-eyebrow text-sand-300!">
               Curated nature stays
             </p>
-          </Reveal>
-          <Reveal delay={0.08}>
+          </div>
+          <div className="hero-rise" style={{ animationDelay: "0.04s" }}>
             <h1 className="mt-6 max-w-4xl font-display text-6xl font-medium leading-[1.02] tracking-tight text-cream sm:text-7xl lg:text-[5.5rem]">
               Escape the City.
               <br />
               Embrace Nature.
             </h1>
-          </Reveal>
-          <Reveal delay={0.14}>
-            <p className="mt-5 font-display text-2xl italic text-sand-300 sm:text-3xl">
+          </div>
+          <div className="hero-rise" style={{ animationDelay: "0.08s" }}>
+            <p className="mt-5 font-display-italic text-2xl italic text-sand-300 sm:text-3xl">
               Cultivating Nature, Creating Memories.
             </p>
-          </Reveal>
-          <Reveal delay={0.18}>
+          </div>
+          <div className="hero-rise" style={{ animationDelay: "0.1s" }}>
             <p className="mt-6 max-w-lg text-lg leading-relaxed text-cream/75">
               Find farm stays, cottages and eco-retreats hosted by people who love their land —
               reviewed by our team, requested directly with the host, with the price shown
               before you ask. Search by PIN code or place, pick your dates, and slow down.
             </p>
-          </Reveal>
-          <Reveal delay={0.28}>
+          </div>
+          <div className="hero-rise" style={{ animationDelay: "0.14s" }}>
             <div className="mt-10 flex flex-wrap items-center gap-4">
               <LinkButton
                 href="/stays"
@@ -86,11 +87,11 @@ export default async function HomePage() {
                 Become a Host
               </LinkButton>
             </div>
-          </Reveal>
-          <Reveal delay={0.38} className="mt-10 w-full max-w-5xl">
+          </div>
+          <div className="hero-rise mt-10 w-full max-w-5xl" style={{ animationDelay: "0.18s" }}>
             <StaySearchBar tone="dark" />
             <p className="mt-3 max-w-xl text-sm text-cream/75">Search by PIN code or place. You will see the full price breakdown before you send a request, and nothing is charged online.</p>
-          </Reveal>
+          </div>
         </div>
 
         <div className="absolute inset-x-0 bottom-8 flex flex-col items-center gap-2 text-cream/75">
@@ -100,7 +101,7 @@ export default async function HomePage() {
       </section>
 
       {/* PHILOSOPHY / STORY */}
-      <section className="bg-cream py-28">
+      <section className="bg-cream py-20 sm:py-28">
         <div className="container-nidhi grid gap-14 lg:grid-cols-2 lg:items-center">
           <Reveal className="relative aspect-[4/5] overflow-hidden rounded-[2.5rem]">
             <Image
@@ -134,7 +135,7 @@ export default async function HomePage() {
       </section>
 
       {/* FOUR PILLARS */}
-      <section className="bg-forest-950 py-28">
+      <section className="bg-forest-950 py-20 sm:py-28">
         <div className="container-nidhi">
           <SectionHeading
             eyebrow="Four Pillars"
@@ -154,7 +155,7 @@ export default async function HomePage() {
 
       {/* FEATURED STAYS + CATEGORIES */}
       {featuredStays.length > 0 || catalog.categories.length > 0 ? (
-        <section className="bg-cream pb-28">
+        <section className="bg-cream py-20 sm:py-28">
           <div className="container-nidhi">
             <div className="flex flex-wrap items-end justify-between gap-6">
               <SectionHeading eyebrow="Explore Stays" title="Find your quiet place in nature." className="mb-0" />
@@ -166,13 +167,20 @@ export default async function HomePage() {
             </div>
             {catalog.categories.length > 0 ? (
               <ul className="mt-8 flex flex-wrap gap-3" aria-label="Browse by type">
-                {catalog.categories.map((c) => (
+                {catalog.categories.slice(0, 6).map((c) => (
                   <li key={c.slug}>
                     <Link href={`/stays?category=${c.slug}`} className="inline-flex rounded-full bg-white px-5 py-2.5 text-sm text-forest-900 ring-1 ring-forest-900/12 transition-colors hover:bg-forest-50">
                       {c.name}
                     </Link>
                   </li>
                 ))}
+                {catalog.categories.length > 6 ? (
+                  <li>
+                    <Link href="/stays" className="inline-flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium text-forest-700 underline-offset-4 hover:text-forest-900 hover:underline">
+                      All {catalog.categories.length} types <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
+                    </Link>
+                  </li>
+                ) : null}
               </ul>
             ) : null}
             {featuredStays.length > 0 ? (
@@ -187,7 +195,7 @@ export default async function HomePage() {
       ) : null}
 
       {/* NATURE STAY SPOTLIGHT */}
-      <section className="bg-sand-50 py-28">
+      <section className="bg-sand-50 py-20 sm:py-28">
         <div className="container-nidhi grid gap-14 lg:grid-cols-2 lg:items-center">
           <div className="order-2 lg:order-1">
             <SectionHeading
@@ -237,6 +245,9 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* MARKETPLACE: shown only while Shop/Services are ON and real listings exist */}
+      <MarketplaceShowcase />
+
       {/* GARDENING SERVICES: a separate service line with its own enquiry flow (never part of stay search or booking) */}
       <section id="gardening-services" aria-labelledby="home-gardening-heading" className="bg-forest-50 py-24 sm:py-28">
         <div className="container-nidhi">
@@ -282,7 +293,7 @@ export default async function HomePage() {
       </section>
 
       {/* EXPERIENCES GRID */}
-      <section className="bg-cream py-28">
+      <section className="bg-cream py-20 sm:py-28">
         <div className="container-nidhi">
           <div className="flex flex-wrap items-end justify-between gap-6">
             <SectionHeading
@@ -312,7 +323,7 @@ export default async function HomePage() {
 
       {/* TESTIMONIALS — only rendered when real, verified quotes exist */}
       {testimonials.length > 0 ? (
-      <section className="bg-forest-50 py-28">
+      <section className="bg-forest-50 py-20 sm:py-28">
         <div className="container-nidhi">
           <SectionHeading
             eyebrow="Guest Notes"
@@ -332,38 +343,49 @@ export default async function HomePage() {
       ) : null}
 
       {/* PARTNER WITH US */}
-      <section className="bg-forest-950 py-24">
-        <div className="container-nidhi grid gap-10 lg:grid-cols-[1.2fr_1fr] lg:items-center">
-          <SectionHeading
-            eyebrow="For property owners"
-            title="Own a place in nature? List it with us."
-            description="Hasiru Nidhi is a marketplace for farm stays, cottages, homestays and eco-retreats. List your property with your own photographs and prices, keep control of your calendar, and answer booking requests from your host dashboard. Our team reviews every listing before it goes live."
-            tone="light"
-          />
-          <Reveal delay={0.1} className="flex flex-wrap gap-4 lg:justify-end">
-            <LinkButton href="/host/register" size="lg" className="rounded-full bg-sand-400 px-8 text-forest-950 hover:bg-sand-300">
-              Create a host account <ArrowUpRight className="h-4 w-4" />
-            </LinkButton>
-            <LinkButton href="/list-your-property" variant="outline" size="lg" className="rounded-full border-cream/30 bg-transparent px-8 text-cream hover:bg-cream/10">
-              How hosting works
-            </LinkButton>
+      <section className="bg-forest-950 py-20 sm:py-24">
+        <div className="container-nidhi grid gap-12 lg:grid-cols-2 lg:items-center">
+          <div>
+            <SectionHeading
+              eyebrow="For property owners"
+              title="Own a place in nature? List it with us."
+              description="Hasiru Nidhi is a marketplace for farm stays, cottages, homestays and eco-retreats. List your property with your own photographs and prices, keep control of your calendar, and answer booking requests from your host dashboard. Our team reviews every listing before it goes live."
+              tone="light"
+            />
+            <Reveal delay={0.1} className="mt-8 flex flex-wrap gap-4">
+              <LinkButton href="/host/register" size="lg" className="rounded-full bg-sand-400 px-8 text-forest-950 hover:bg-sand-300">
+                Create a host account <ArrowUpRight className="h-4 w-4" />
+              </LinkButton>
+              <LinkButton href="/list-your-property" variant="outline" size="lg" className="rounded-full border-cream/30 bg-transparent px-8 text-cream hover:bg-cream/10">
+                How hosting works
+              </LinkButton>
+            </Reveal>
+          </div>
+          <Reveal delay={0.1} className="relative aspect-[4/3] overflow-hidden rounded-[2rem]">
+            <Image
+              src={images.cozyInterior}
+              alt="A shaded farmhouse verandah corridor, the kind of space hosts list on Hasiru Nidhi"
+              fill
+              sizes="(min-width: 1024px) 45vw, 90vw"
+              className="object-cover"
+            />
           </Reveal>
         </div>
       </section>
 
       {/* TRUST + COMPANY: only statements the platform actually enforces */}
-      <section aria-labelledby="trust-heading" className="bg-cream py-24">
+      <section aria-labelledby="trust-heading" className="bg-cream py-20 sm:py-24">
         <div className="container-nidhi">
           <SectionHeading eyebrow="Why Hasiru Nidhi" title="Stays you can request with confidence." className="mb-0" />
           <h2 id="trust-heading" className="sr-only">Why book with Hasiru Nidhi</h2>
-          <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <ul className="mt-12 grid gap-y-10 border-t border-forest-900/10 pt-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-y-0 lg:divide-x lg:divide-forest-900/10">
             {[
               { icon: ShieldCheck, title: "Every listing is reviewed", copy: "Hosts submit their property and our team reviews it before it appears in search." },
               { icon: BadgeCheck, title: "Request to book", copy: "You send a request and the host confirms. Nothing is booked until they accept." },
               { icon: CalendarCheck, title: "No double bookings", copy: "A date can be confirmed for only one guest, however many people ask." },
               { icon: Receipt, title: "Clear prices", copy: "See the nightly rate, extra-guest and fee breakdown before you send a request." },
             ].map((item) => (
-              <li key={item.title} className="rounded-2xl bg-white p-6 ring-1 ring-forest-900/8">
+              <li key={item.title} className="lg:px-8 lg:first:pl-0 lg:last:pr-0">
                 <item.icon className="h-6 w-6 text-forest-700" aria-hidden="true" />
                 <h3 className="mt-4 font-display text-lg text-forest-950">{item.title}</h3>
                 <p className="mt-1.5 text-sm leading-relaxed text-ink/65">{item.copy}</p>
@@ -380,7 +402,7 @@ export default async function HomePage() {
       </section>
 
       {/* GALLERY TEASER */}
-      <section className="bg-cream py-28">
+      <section className="bg-cream pb-20 pt-4 sm:pb-28 sm:pt-6">
         <div className="container-nidhi">
           <div className="flex flex-wrap items-end justify-between gap-6">
             <SectionHeading eyebrow="A Glimpse" title="The grounds, in a few frames." className="mb-0" />
@@ -394,30 +416,25 @@ export default async function HomePage() {
               </Link>
             </Reveal>
           </div>
-          <div className="mt-14 grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <div className="mt-14 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4 lg:grid-rows-2">
             {[
-              images.strawberryHarvest,
-              images.bonfireGroup,
-              images.rosePathway,
-              images.breakfastSpread,
-              images.kidsPlayingMisty,
-              images.cyclistsDuo,
-              images.seedlingsPots,
-              images.milkyWay,
-            ].map((src, i) => (
+              { src: images.rosePathway, alt: "A red-soil forest path at Hasiru Nidhi", lead: true },
+              { src: images.strawberryHarvest, alt: "A gardener among flower beds" },
+              { src: images.bonfireGroup, alt: "Friends around an evening bonfire" },
+              { src: images.breakfastSpread, alt: "A farm breakfast served on a banana leaf" },
+              { src: images.milkyWay, alt: "The Milky Way over the grounds at night" },
+            ].map((item, i) => (
               <Reveal
-                key={src}
+                key={item.src}
                 delay={(i % 4) * 0.06}
-                className={`relative overflow-hidden rounded-2xl ${
-                  i % 3 === 0 ? "aspect-[3/4]" : "aspect-square"
-                }`}
+                className={`relative overflow-hidden rounded-2xl ${item.lead ? "col-span-2 aspect-[4/3] lg:row-span-2 lg:aspect-auto" : "aspect-square"}`}
               >
                 <Image
-                  src={src}
-                  alt="Hasiru Nidhi grounds"
+                  src={item.src}
+                  alt={item.alt}
                   fill
-                  sizes="(min-width: 640px) 22vw, 45vw"
-                  className="object-cover transition-transform duration-700 hover:scale-110"
+                  sizes={item.lead ? "(min-width: 1024px) 50vw, 100vw" : "(min-width: 1024px) 25vw, 50vw"}
+                  className="object-cover transition-transform duration-700 hover:scale-105 motion-reduce:transition-none"
                 />
               </Reveal>
             ))}
@@ -426,7 +443,7 @@ export default async function HomePage() {
       </section>
 
       {/* JOURNAL TEASER */}
-      <section className="bg-sand-50 py-28">
+      <section className="bg-sand-50 py-20 sm:py-28">
         <div className="container-nidhi">
           <div className="flex flex-wrap items-end justify-between gap-6">
             <SectionHeading eyebrow="The Journal" title="Notes from the ground." className="mb-0" />
@@ -442,10 +459,10 @@ export default async function HomePage() {
           </div>
           <StaggerGroup className="mt-14 grid gap-6 lg:grid-cols-3">
             {recentPosts.map((post) => (
-              <StaggerItem key={post.slug}>
+              <StaggerItem key={post.slug} className="h-full">
                 <Link
                   href={`/blog/${post.slug}`}
-                  className="group flex flex-col overflow-hidden rounded-3xl bg-white ring-1 ring-forest-900/8"
+                  className="group flex h-full flex-col overflow-hidden rounded-3xl bg-white ring-1 ring-forest-900/8"
                 >
                   <div className="relative aspect-[4/3] overflow-hidden">
                     <Image

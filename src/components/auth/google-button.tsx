@@ -16,7 +16,11 @@ function GoogleMark() {
  * "Continue with Google". A real server-action form: the visitor's intent (host/customer) and destination travel to the server,
  * which keeps them in an httpOnly cookie; nothing about roles is put in the redirect URL.
  */
+/** Set NEXT_PUBLIC_GOOGLE_SIGNIN=off (Vercel) to hide Google sign-in while the provider is not enabled in Supabase. Shown by default. */
+const GOOGLE_OFF = process.env.NEXT_PUBLIC_GOOGLE_SIGNIN?.trim().toLowerCase() === "off";
+
 export function GoogleButton({ intent, next, label = "Continue with Google" }: { intent: "host" | "customer"; next?: string; label?: string }) {
+  if (GOOGLE_OFF) return null;
   return (
     <form action={signInWithGoogle}>
       <input type="hidden" name="intent" value={intent} />
@@ -33,6 +37,7 @@ export function GoogleButton({ intent, next, label = "Continue with Google" }: {
 }
 
 export function OrDivider() {
+  if (GOOGLE_OFF) return null;
   return (
     <div className="my-5 flex items-center gap-3 text-xs uppercase tracking-wide text-ink/65" role="separator" aria-label="or">
       <span className="h-px flex-1 bg-forest-900/10" /> or <span className="h-px flex-1 bg-forest-900/10" />

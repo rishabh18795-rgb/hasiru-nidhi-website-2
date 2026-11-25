@@ -49,6 +49,7 @@ export default async function ShopPage() {
         title="From the garden to your doorstep."
         description="Plants, tools, compost, handmade goods and farm produce from verified sellers, delivered only where they deliver."
         image={images.gardeningTools}
+        imagePosition="50% 18%"
         crumb="Shop"
       />
 

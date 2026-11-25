@@ -1,10 +1,11 @@
 import type { Metadata, Viewport } from "next";
 
-import { fraunces, manrope } from "@/lib/fonts";
+import { fraunces, frauncesItalic, manrope } from "@/lib/fonts";
 import { siteConfig } from "@/lib/site";
 import { basePath, siteOrigin } from "@/lib/base-path";
 import { Navbar } from "@/components/site/navbar";
 import { Footer } from "@/components/site/footer";
+import { getMarketplaceFlags } from "@/lib/flags";
 import { getPublicSettings } from "@/lib/data/catalog";
 import "./globals.css";
 
@@ -104,20 +105,20 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { announcement } = await getPublicSettings();
+  const [{ announcement }, flags] = await Promise.all([getPublicSettings(), getMarketplaceFlags()]);
   return (
     <html
       lang="en"
-      className={`${fraunces.variable} ${manrope.variable} h-full antialiased`}
+      className={`${fraunces.variable} ${frauncesItalic.variable} ${manrope.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-cream text-ink font-sans">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <Navbar announcement={announcement || undefined} />
+        <Navbar announcement={announcement || undefined} flags={flags} />
         <main className="flex-1">{children}</main>
-        <Footer />
+        <Footer flags={flags} />
       </body>
     </html>
   );
